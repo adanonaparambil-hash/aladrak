@@ -1,5 +1,6 @@
 import { future, offices, sustainability, groupCompanies } from "@/lib/content";
 import Reveal from "./Reveal";
+import { asset } from "@/lib/asset";
 
 export default function Future() {
   return (
@@ -8,7 +9,7 @@ export default function Future() {
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/projects/al-maskaan.jpg"
+          src={asset("/images/projects/al-maskaan.jpg")}
           alt=""
           className="w-full h-full object-cover opacity-20"
         />
@@ -30,7 +31,7 @@ export default function Future() {
             <figure className="rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-md shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/projects/dubai-ellington.jpg"
+                src={asset("/images/projects/dubai-ellington.jpg")}
                 alt="Ellington House, Dubai — architectural render"
                 className="w-full h-auto"
               />

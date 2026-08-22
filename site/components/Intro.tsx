@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { headOffice, introStatement, stats, vision, mission } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,7 +81,7 @@ export default function Intro() {
           <figure className="lg:col-span-7">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/about/company.jpg"
+              src={asset("/images/about/company.jpg")}
               alt="The Al Adrak head office at Halban, seen from the front"
               loading="lazy"
               className="w-full rounded-2xl border border-ink/10 shadow-[0_24px_60px_rgba(16,39,26,0.14)]"

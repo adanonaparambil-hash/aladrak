@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import NewsList from "@/components/NewsList";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "News — Al Adrak",
@@ -19,7 +20,7 @@ export default function NewsPage() {
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/hero-poster.jpg"
+            src={asset("/images/hero-poster.jpg")}
             alt=""
             className="w-full h-full object-cover opacity-20"
           />

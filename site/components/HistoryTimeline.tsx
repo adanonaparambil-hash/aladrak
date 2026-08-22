@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FOUNDED, years } from "@/lib/anniversary";
 import { motionOK } from "@/lib/intro";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,31 +21,31 @@ gsap.registerPlugin(ScrollTrigger);
 const STEP = 15; // degrees per year
 
 const MILESTONES = [
-  { year: "1986", img: "/images/team/founder.jpg", text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
-  { year: "1990", img: "/images/projects/villa-seeb.jpg", text: "Early growth: from minor contracts and maintenance to broader civil and building works across the Sultanate." },
-  { year: "1995", img: "/images/division-mechanical.jpg", text: "Diversification into mechanical, electrical and infrastructural engineering—laying the foundation for full EPC capabilities." },
-  { year: "2000", img: "/images/projects/rop.jpg", text: "Recognized as an established Omani contractor with a growing portfolio of government and institutional projects." },
-  { year: "2003", img: "/images/awards/cert-iso-9001.jpg", text: "Commitment to quality and HSE: ISO 9001, and later ISO 14001 and OHSAS 18001, become part of the Adrak way of life." },
-  { year: "2006", img: "/images/projects/mohe.jpg", text: "Major landmark projects take shape—strengthening our reputation in commercial, government and infrastructure sectors." },
-  { year: "2008", img: "/images/facilities/gallery-drone.jpg", text: "Navigating the global financial crisis while deepening EPC and project management capabilities for the long term." },
-  { year: "2010", img: "/images/projects/waljat.jpg", text: "Delivery of flagship projects including institutional and commercial buildings that define Oman’s built environment." },
-  { year: "2013", img: "/images/projects/kom4.jpg", text: "Regional ambition: laying the groundwork for expansion across the Middle East and the Indian Subcontinent." },
-  { year: "2015", img: "/images/blog/dr-thomas-alexander-receiving-the-achievement-aw.jpg", text: "Dr. Thomas Alexander receives Omani citizenship in recognition of his contributions to nation-building and the construction industry." },
-  { year: "2017", img: "/images/blog/adrak-developers-marks-first-key-handove.jpg", text: "Group diversification: Adrak Developers, hospitality and real estate ventures extend the Al Adrak footprint." },
-  { year: "2018", img: "/images/blog/al-adrak-s-dubai-journey-eh3-groundbreaking-cere.jpg", text: "Al Adrak Contracting Co LLC established in Dubai—UAE presence strengthens our regional delivery." },
-  { year: "2019", img: "/images/awards/award-forbes.jpg", text: "Forbes recognition: among Oman’s top unlisted companies and Top 100 in the GCC. American British Business Award, European Business Award." },
-  { year: "2020", img: "/images/projects/mazoon-dairy.jpg", text: "Landmark projects: Mazoon Dairy at Buraimi, Marriott Aloft Ghala, Cheltenham School Seeb, and continued delivery through challenging times." },
-  { year: "2022", img: "/images/head-office.jpg", text: "Al Adrak Contracting Co LLC in KSA and Adrak India expand the group—Oman, UAE, KSA and India now under one vision." },
-  { year: "2023", img: "/images/blog/business-leader-of-the-year-2023-dr-aadil-thoma.jpg", text: "Dr. Thomas Alexander named Iconic Business Leader of the Year. Workforce of 6,000+; order book exceeding $1 billion." },
-  { year: "2024", img: "/images/projects/adlife.jpg", text: "500,000 sqm construction capacity. Adrak Hotels, Adlife Hospital, Trinity College and support facilities underscore integrated capabilities." },
-  { year: "2025", img: "/images/projects/central-bank.jpg", text: "Central Bank of Oman, Muscat Insurance HQ, Hai Al Naseem Barka and more—a legacy of landmarks across the Sultanate." },
-  { year: "2026", img: "/images/projects/dubai-ellington.jpg", text: `We celebrate ${years()} years of Al Adrak—award-winning, internationally recognized, and committed to the next chapter of building Oman’s future.` },
+  { year: "1986", img: asset("/images/team/founder.jpg"), text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
+  { year: "1990", img: asset("/images/projects/villa-seeb.jpg"), text: "Early growth: from minor contracts and maintenance to broader civil and building works across the Sultanate." },
+  { year: "1995", img: asset("/images/division-mechanical.jpg"), text: "Diversification into mechanical, electrical and infrastructural engineering—laying the foundation for full EPC capabilities." },
+  { year: "2000", img: asset("/images/projects/rop.jpg"), text: "Recognized as an established Omani contractor with a growing portfolio of government and institutional projects." },
+  { year: "2003", img: asset("/images/awards/cert-iso-9001.jpg"), text: "Commitment to quality and HSE: ISO 9001, and later ISO 14001 and OHSAS 18001, become part of the Adrak way of life." },
+  { year: "2006", img: asset("/images/projects/mohe.jpg"), text: "Major landmark projects take shape—strengthening our reputation in commercial, government and infrastructure sectors." },
+  { year: "2008", img: asset("/images/facilities/gallery-drone.jpg"), text: "Navigating the global financial crisis while deepening EPC and project management capabilities for the long term." },
+  { year: "2010", img: asset("/images/projects/waljat.jpg"), text: "Delivery of flagship projects including institutional and commercial buildings that define Oman’s built environment." },
+  { year: "2013", img: asset("/images/projects/kom4.jpg"), text: "Regional ambition: laying the groundwork for expansion across the Middle East and the Indian Subcontinent." },
+  { year: "2015", img: asset("/images/blog/dr-thomas-alexander-receiving-the-achievement-aw.jpg"), text: "Dr. Thomas Alexander receives Omani citizenship in recognition of his contributions to nation-building and the construction industry." },
+  { year: "2017", img: asset("/images/blog/adrak-developers-marks-first-key-handove.jpg"), text: "Group diversification: Adrak Developers, hospitality and real estate ventures extend the Al Adrak footprint." },
+  { year: "2018", img: asset("/images/blog/al-adrak-s-dubai-journey-eh3-groundbreaking-cere.jpg"), text: "Al Adrak Contracting Co LLC established in Dubai—UAE presence strengthens our regional delivery." },
+  { year: "2019", img: asset("/images/awards/award-forbes.jpg"), text: "Forbes recognition: among Oman’s top unlisted companies and Top 100 in the GCC. American British Business Award, European Business Award." },
+  { year: "2020", img: asset("/images/projects/mazoon-dairy.jpg"), text: "Landmark projects: Mazoon Dairy at Buraimi, Marriott Aloft Ghala, Cheltenham School Seeb, and continued delivery through challenging times." },
+  { year: "2022", img: asset("/images/head-office.jpg"), text: "Al Adrak Contracting Co LLC in KSA and Adrak India expand the group—Oman, UAE, KSA and India now under one vision." },
+  { year: "2023", img: asset("/images/blog/business-leader-of-the-year-2023-dr-aadil-thoma.jpg"), text: "Dr. Thomas Alexander named Iconic Business Leader of the Year. Workforce of 6,000+; order book exceeding $1 billion." },
+  { year: "2024", img: asset("/images/projects/adlife.jpg"), text: "500,000 sqm construction capacity. Adrak Hotels, Adlife Hospital, Trinity College and support facilities underscore integrated capabilities." },
+  { year: "2025", img: asset("/images/projects/central-bank.jpg"), text: "Central Bank of Oman, Muscat Insurance HQ, Hai Al Naseem Barka and more—a legacy of landmarks across the Sultanate." },
+  { year: "2026", img: asset("/images/projects/dubai-ellington.jpg"), text: `We celebrate ${years()} years of Al Adrak—award-winning, internationally recognized, and committed to the next chapter of building Oman’s future.` },
 ];
 
 const RINGS = [
-  { src: "/images/timeline/circle-dots.svg", scale: 0.53, opacity: 0.5 },
-  { src: "/images/timeline/circle-dots-2.svg", scale: 0.545, opacity: 0.75 },
-  { src: "/images/timeline/circle-dots-3.svg", scale: 0.57, opacity: 1 },
+  { src: asset("/images/timeline/circle-dots.svg"), scale: 0.53, opacity: 0.5 },
+  { src: asset("/images/timeline/circle-dots-2.svg"), scale: 0.545, opacity: 0.75 },
+  { src: asset("/images/timeline/circle-dots-3.svg"), scale: 0.57, opacity: 1 },
 ];
 
 export default function HistoryTimeline() {

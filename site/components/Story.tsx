@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Reveal from "./Reveal";
+import { asset } from "@/lib/asset";
 
 import { yearsWord } from "@/lib/anniversary";
 
@@ -35,8 +36,8 @@ export default function Story() {
           <div className="relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/15 shadow-[0_40px_100px_rgba(0,0,0,0.55)] aspect-video">
             <video
               ref={vid}
-              src="/videos/story.mp4"
-              poster="/images/story-poster.jpg"
+              src={asset("/videos/story.mp4")}
+              poster={asset("/images/story-poster.jpg")}
               controls={playing}
               playsInline
               preload="metadata"

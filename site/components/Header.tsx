@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { site } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 const links = [
   { href: "/#about", label: "About" },
@@ -9,8 +10,8 @@ const links = [
   { href: "/#projects", label: "Projects" },
   { href: "/#facilities", label: "Facilities" },
   { href: "/#team", label: "Team" },
-  { href: "/news", label: "News" },
-  { href: "/careers", label: "Careers" },
+  { href: asset("/news"), label: "News" },
+  { href: asset("/careers"), label: "Careers" },
   { href: "/#contact", label: "Contact" },
 ];
 
@@ -53,7 +54,7 @@ export default function Header() {
         <a href="/#top" className="relative z-50 flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/logo.png"
+            src={asset("/images/logo.png")}
             alt="Al Adrak"
             className={`w-auto transition-all duration-500 ${
               scrolled ? "h-8 sm:h-9 md:h-10" : "h-10 sm:h-12 md:h-14"

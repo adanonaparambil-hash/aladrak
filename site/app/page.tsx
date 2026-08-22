@@ -19,11 +19,15 @@ import ProjectModal from "@/components/ProjectModal";
 import FacilityMedia from "@/components/FacilityMedia";
 
 /**
- * Regenerate daily so the derived year count rolls over on its own. Without
- * this the page is prerendered once at build time and the number would sit
- * frozen until the next deploy.
+ * This page used to carry `export const revalidate = 86400`, so the server
+ * re-rendered it daily and the derived year count rolled over on its own.
+ *
+ * A static export has no server to do that, and ISR is unsupported there, so
+ * the count is baked in at build time instead. The rollover is preserved by the
+ * deploy workflow rather than by the framework: `.github/workflows/pages.yml`
+ * rebuilds on a New Year schedule as well as on push, which re-evaluates
+ * `years()` and republishes. Same outcome, moved from runtime to CI.
  */
-export const revalidate = 86400;
 
 export default function Home() {
   return (

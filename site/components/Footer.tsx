@@ -1,5 +1,6 @@
 import { site } from "@/lib/content";
 import Reveal from "./Reveal";
+import { asset } from "@/lib/asset";
 
 export default function Footer() {
   return (
@@ -37,7 +38,7 @@ export default function Footer() {
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/logo-light.png"
+            src={asset("/images/logo-light.png")}
             alt="Al Adrak"
             className="h-10 w-auto"
           />
@@ -54,20 +55,20 @@ export default function Footer() {
             </a>
           ))}
           <a
-            href="/al-adrak-brochure.pdf"
+            href={asset("/al-adrak-brochure.pdf")}
             download
             className="label text-gold hover:text-cream transition-colors"
           >
             Brochure ↓
           </a>
           <a
-            href="/news"
+            href={asset("/news")}
             className="label text-gold hover:text-cream transition-colors"
           >
             News
           </a>
           <a
-            href="/careers"
+            href={asset("/careers")}
             className="label text-gold hover:text-cream transition-colors"
           >
             Careers

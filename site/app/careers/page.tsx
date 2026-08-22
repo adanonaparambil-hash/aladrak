@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { careers, lifeAtAdrak, site } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "Careers — Al Adrak",
@@ -20,7 +21,7 @@ export default function CareersPage() {
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/life/life-briefing.jpg"
+            src={asset("/images/life/life-briefing.jpg")}
             alt=""
             className="w-full h-full object-cover opacity-25"
           />

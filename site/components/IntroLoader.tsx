@@ -8,6 +8,7 @@ import { getLenis } from "./SmoothScroll";
 import { motionOK } from "@/lib/intro";
 import { leadership } from "@/lib/content";
 import { currentYear, FOUNDED, yearsWord } from "@/lib/anniversary";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -500,7 +501,7 @@ export default function IntroLoader() {
       <div data-intro-fade className="absolute top-6 left-7 sm:top-8 sm:left-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/logo.png"
+          src={asset("/images/logo.png")}
           alt="Al Adrak"
           className="w-[150px] sm:w-[min(20vw,300px)] h-auto drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]"
         />

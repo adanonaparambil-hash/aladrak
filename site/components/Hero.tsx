@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { site } from "@/lib/content";
 import { ARRIVAL_ORIGIN, ARRIVAL_SCALE, motionOK } from "@/lib/intro";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,8 +76,8 @@ export default function Hero() {
         {/* Desktop film */}
         <video
           data-hero-video="web"
-          src="/videos/hero-web.mp4"
-          poster="/images/hero-poster.jpg"
+          src={asset("/videos/hero-web.mp4")}
+          poster={asset("/images/hero-poster.jpg")}
           autoPlay
           loop
           muted
@@ -87,8 +88,8 @@ export default function Hero() {
         {/* Mobile (vertical re-frame) */}
         <video
           data-hero-video="mobile"
-          src="/videos/hero-mobile.mp4"
-          poster="/images/hero-poster.jpg"
+          src={asset("/videos/hero-mobile.mp4")}
+          poster={asset("/images/hero-poster.jpg")}
           autoPlay
           loop
           muted

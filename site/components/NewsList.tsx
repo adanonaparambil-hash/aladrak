@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import newsData from "@/lib/news-data.json";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +16,16 @@ type Post = {
   body: string[];
 };
 
-const posts = newsData as Post[];
+/**
+ * The image paths live in a JSON file, which cannot call asset() the way the
+ * TypeScript content module does, so the prefix is applied once here at the data
+ * boundary. Doing it here rather than at the two <img> tags means a third use
+ * site cannot forget it.
+ */
+const posts = (newsData as Post[]).map((p) => ({
+  ...p,
+  img: p.img ? asset(p.img) : null,
+}));
 
 /** News grid + GSAP article reader overlay. */
 export default function NewsList() {
