@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #0a0f0c;
+  --color-forest: #10271a;
+  --color-pine: #14301f;
+  --color-brand: #3d7345;
+  --color-leaf: #4e8355;
+  --color-gold: #c99b45;
+  --color-sand: #d8c9a3;
+  --color-cream: #f5f2ea;
+  --color-parchment: #ece6d8;
+  --color-taupe: #8c8272;
+
+  --font-display: var(--font-marcellus);
+  --font-serifit: var(--font-cormorant);
+  --font-label: var(--font-space);
+
+  --animate-marquee: marquee 48s linear infinite;
+  --animate-marquee-rev: marquee-rev 56s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+html {
+  scroll-behavior: initial;
+}
+
+/* the arrival overlay is up — lock the root, not body: `clip` keeps the sticky
+   hero and every pinned ScrollTrigger measuring correctly */
+html.is-intro {
+  overflow: clip;
+}
+
+/* ---- arrival overlay ---- */
+.intro-root {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  overflow: hidden;
+  /* the history section's own ground, so this reads as its prologue */
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-space), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* custom cursor active — hide the native one */
+.has-cursor-fx,
+.has-cursor-fx a,
+.has-cursor-fx button,
+.has-cursor-fx [role="button"] {
+  cursor: none;
+}
+
+/**
+ * Page shell.
+ *
+ * NO max-width. An earlier 1280px cap left 320px of dead gutter each side at
+ * 1920; a 1760px cap still left ~400px on the client's ~2560px display. The
+ * container is now padding-only, so it genuinely fills whatever screen it is
+ * on. Line length is not at risk: prose inside carries its own max-w-* measure.
+ *
+ *   1280 -> 1204 content (94%)
+ *   1920 -> 1805 content (94%)
+ *   2560 -> 2406 content (94%)
+ */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 3vw, 5.5rem);
+}
+
+/**
+ * Section heading.
+ *
+ * Fixed steps (text-4xl/5xl/6xl) topped out at 60px, so on a 2560 display a
+ * 2400px-wide column carried 60px type and the page read as small and empty.
+ * Fluid instead: 4.6vw matches the old 60px at 1280 exactly, then keeps the
+ * heading proportional as the screen grows.
+ *
+ *   1280 -> 59px (was 60)   1920 -> 88px   2560 -> 118px
+ */
+.h-section {
+  font-size: clamp(2.25rem, 4.6vw, 7.5rem);
+  line-height: 1.04;
+}
+
+/* hide scrollbars on snap carousels */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* tiny uppercase label — the signature device */
+.label {
+  font-family: var(--font-space), sans-serif;
+  /* was a flat 10px, which is proportionally invisible on a 2560 display.
+     Held at 10px through 1280 so nothing shifts at the sizes it was tuned for,
+     then allowed a little growth. Components needing it smaller use
+     .label-xs — never a hard-coded px size, which is what caused this. */
+  font-size: clamp(10px, 0.5vw, 13px);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+
+/**
+ * The smallest label tier.
+ *
+ * 31 places across the site hard-coded `!text-[8px]` / `!text-[8.5px]`. Eight
+ * pixels is effectively unreadable on a 2560 display, and it was the root of
+ * repeated "the text is too small" feedback. This keeps them small relative to
+ * their surroundings without pinning them to a pixel value.
+ *
+ *   1280 -> 9px    1920 -> 9.6px    2560 -> 12px
+ *
+ * Declared after .label so it wins the font-size (same specificity, later rule).
+ */
+.label-xs {
+  font-size: clamp(9px, 0.45vw, 12px);
+  letter-spacing: 0.3em;
+}
+
+/* word-reveal target */
+.reveal-word {
+  opacity: 0.15;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

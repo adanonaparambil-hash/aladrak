@@ -1,0 +1,217 @@
+import { future, offices, sustainability, groupCompanies } from "@/lib/content";
+import Reveal from "./Reveal";
+
+export default function Future() {
+  return (
+    <section id="contact" className="relative z-20 bg-ink text-cream overflow-hidden">
+      {/* dusk aerial backdrop */}
+      <div className="absolute inset-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/projects/al-maskaan.jpg"
+          alt=""
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/75 to-ink" />
+      </div>
+
+      <div className="relative shell py-28 md:py-40">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          <Reveal className="lg:col-span-7">
+            <p className="label text-gold mb-6">Commitment to the Future</p>
+            <h2 className="font-display h-section">
+              The next chapter is regional.
+            </h2>
+            <p className="font-light text-cream/80 text-lg leading-relaxed mt-8">
+              {future}
+            </p>
+          </Reveal>
+          <Reveal delay={0.15} tilt className="lg:col-span-5">
+            <figure className="rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-md shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/projects/dubai-ellington.jpg"
+                alt="Ellington House, Dubai — architectural render"
+                className="w-full h-auto"
+              />
+              <figcaption className="label text-cream/70 px-6 py-4">
+                Ellington House, Dubai — under development
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+
+        {/* Sustainability */}
+        <Reveal delay={0.1} className="mt-14">
+          <p className="label text-cream/70 mb-6">Reducing · Reusing · Recycling</p>
+          <div className="flex flex-wrap gap-3">
+            {sustainability.map((s) => (
+              <span
+                key={s}
+                className="px-6 py-2.5 bg-white/5 backdrop-blur-sm border border-white/15 rounded-full label text-cream/80 hover:border-gold hover:text-gold transition-colors duration-300"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Group companies — logo wall */}
+        <Reveal delay={0.15} className="mt-16">
+          <p className="label text-cream/50 mb-8">The Adrak Group</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {groupCompanies.map((g) => {
+              const tile = (
+                <div className="group h-full rounded-2xl bg-cream border border-white/20 overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+                  {g.img ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={g.img}
+                      alt={`${g.name} logo`}
+                      loading="lazy"
+                      className="w-full aspect-[2/1] object-contain bg-white p-4"
+                    />
+                  ) : (
+                    <div className="w-full aspect-[2/1] bg-white flex items-center justify-center p-4">
+                      <span className="font-display text-xl text-forest text-center leading-snug">
+                        {g.name}
+                      </span>
+                    </div>
+                  )}
+                  <div className="px-4 py-3 bg-cream border-t border-ink/10 flex items-center justify-between gap-2">
+                    <span className="label label-xs text-ink/70 leading-snug sm:truncate">
+                      {g.name}
+                    </span>
+                    {g.url && (
+                      <span className="label label-xs text-brand group-hover:text-gold transition-colors flex-none">
+                        Visit ↗
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+              return g.url ? (
+                <a
+                  key={g.name}
+                  href={g.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${g.name}`}
+                >
+                  {tile}
+                </a>
+              ) : (
+                <div key={g.name}>{tile}</div>
+              );
+            })}
+          </div>
+        </Reveal>
+
+        {/* Offices — each detail with its own icon, as on the Contact page */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-20 md:mt-24 pt-14 border-t border-white/10">
+          {offices.map((o, i) => {
+            const line =
+              "flex items-start gap-3 text-cream/80 font-light leading-relaxed text-[clamp(0.9375rem,0.85vw,1.25rem)]";
+            const icon = "flex-none mt-[0.35em] text-gold";
+            return (
+              <Reveal key={o.name} delay={i * 0.08} y={26}>
+                <div className="space-y-4">
+                  <p className="label text-gold">{o.name}</p>
+
+                  <p className={line}>
+                    <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+                      <path
+                        d="M7.5 1.5c-2.2 0-4 1.8-4 4 0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4Z"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        fill="none"
+                      />
+                      <circle cx="7.5" cy="5.5" r="1.4" fill="currentColor" />
+                    </svg>
+                    <span>
+                      {o.address.map((a) => (
+                        <span key={a} className="block">
+                          {a}
+                        </span>
+                      ))}
+                    </span>
+                  </p>
+
+                  {o.phone && (
+                    <p className={line}>
+                      <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+                        <path
+                          d="M3 2.5h2.2l1.1 2.7-1.5 1.1a7.4 7.4 0 0 0 3.9 3.9l1.1-1.5 2.7 1.1V12a1 1 0 0 1-1 1A10.5 10.5 0 0 1 2 3.5a1 1 0 0 1 1-1Z"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          fill="none"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span>
+                        <a
+                          href={`tel:${o.phone.replace(/[^0-9+]/g, "")}`}
+                          className="hover:text-gold transition-colors duration-300"
+                        >
+                          {o.phone}
+                        </a>
+                        {o.fax && (
+                          <span className="block text-cream/60">Fax: {o.fax}</span>
+                        )}
+                      </span>
+                    </p>
+                  )}
+
+                  <p className={line}>
+                    <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+                      <rect
+                        x="1.8"
+                        y="3.3"
+                        width="11.4"
+                        height="8.4"
+                        rx="1"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        fill="none"
+                      />
+                      <path d="M2.2 4 7.5 8.2 12.8 4" stroke="currentColor" strokeWidth="1.2" fill="none" />
+                    </svg>
+                    <a
+                      href={`mailto:${o.email}`}
+                      className="hover:text-gold transition-colors duration-300 break-all"
+                    >
+                      {o.email}
+                    </a>
+                  </p>
+
+                  {/* a maps SEARCH for the address — not a fabricated pin */}
+                  <p className={line}>
+                    <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+                      <path
+                        d="M13.2 1.8 1.8 6.3l4.3 1.6 1.6 4.3 5.5-10.4Z"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        fill="none"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                        `Al Adrak ${o.address.join(" ")}`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-gold transition-colors duration-300"
+                    >
+                      Location
+                    </a>
+                  </p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}

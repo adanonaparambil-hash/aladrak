@@ -1,0 +1,74 @@
+# NOTE: git does not support trailing comments on pattern lines — a comment
+# after a pattern becomes part of the pattern and silently matches nothing.
+# Keep every comment on its own line.
+
+# dependencies & build output
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Source media archives — NOT deliverables.
+# The Google Takeout photo archive is ~49GB and the raw video working folder
+# ~1.9GB. The site only needs the prepared copies under site/public.
+Images/
+vedio/
+
+# working artefacts
+review-shots/
+preview-thumbs/
+site/public/tmp-chk/
+
+# local caches from driving a headless browser
+.chrome-cache*/
+.cc*/
+.cd*/
+.ce*/
+.cf*/
+.cg*/
+.ch*/
+.ci*/
+.cj*/
+.ck*/
+.cl*/
+.cm*/
+.cn*/
+.co*/
+.cp*/
+.cq*/
+.cr*/
+.cs*/
+.ct*/
+.cu*/
+.cv*/
+.cw*/
+.cx*/
+.cy*/
+.cz*/
+.da*/
+.db*/
+.dc*/
+.dd*/
+.de*/
+.df*/
+.dg*/
+.dh*/
+.di*/
+.dj*/
+.dk*/
+
+# environment & secrets
+.env
+.env*.local
+.env.production
+
+# editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# duplicate of site/public/al-adrak-brochure.pdf (identical md5) — keep one copy
+271022124050Aladrak_Main_Brochure_35th_yr_Low_Res*.pdf

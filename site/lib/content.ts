@@ -1,0 +1,464 @@
+// Al Adrak — site content, sourced from the 35th-anniversary brochure + aladrak.com
+//
+// Anything that counts the company's age comes from lib/anniversary.ts — never
+// write the number in by hand, or it drifts (this file previously claimed "three
+// and a half decades" while the rest of the site said 40).
+import { years } from "./anniversary";
+export const site = {
+  name: "Al Adrak",
+  legalName: "Al Adrak Trading & Contracting Co LLC",
+  tagline: "Legacy of Landmarks",
+  heroSub:
+    "Oman's most established engineering & construction contractor — building the nation's landmarks since 1986.",
+  phone: "+968 2200 1300",
+  email: "info@aladrak.com",
+};
+
+export const stats = [
+  { value: years(), suffix: "", label: "Years of Excellence" },
+  { value: 450, suffix: "+", label: "Landmark Projects" },
+  { value: 6000, suffix: "+", label: "Strong Workforce" },
+  { value: 1, prefix: "$", suffix: "B+", label: "Order Book" },
+];
+
+export const vision =
+  "A leading national and regional market position, delivering world-class engineering construction with top-tier quality standards as the cornerstone of growth.";
+
+export const mission =
+  "Building long-term relationships based on integrity, performance, value, and client satisfaction.";
+
+export const introStatement = `For over ${years()} years, Al Adrak has shaped the skyline of the Sultanate — a wholly Omani, integrated construction house delivering turnkey landmarks with one hundred percent in-house capability.`;
+
+export const sectors = [
+  { name: "IT & Data Centres", desc: "Tier IV data centres and national technology hubs.", img: "/images/projects/central-bank.jpg" },
+  { name: "Commercial Buildings", desc: "Headquarters and iconic offices for banks and insurers.", img: "/images/projects/cba.jpg" },
+  { name: "Government Institutions", desc: "Ministries, authorities and civic landmarks.", img: "/images/projects/public-prosecution.jpg" },
+  { name: "Educational Institutions", desc: "Universities, colleges and international schools.", img: "/images/projects/cheltenham.jpg" },
+  { name: "Defense & Police", desc: "Secure campuses and specialist facilities.", img: "/images/projects/forensic-lab.jpg" },
+  { name: "Sports Facilities", desc: "Stadiums, Olympic pools and multi-purpose halls.", img: "/images/projects/al-maskaan.jpg" },
+  { name: "Residential Complexes", desc: "Villages, towers and 1,000-unit communities.", img: "/images/projects/hai-al-naseem.jpg" },
+  { name: "Tourism & Hospitality", desc: "Hotels, restaurants and leisure destinations.", img: "/images/projects/aloft.jpg" },
+  { name: "Infrastructure", desc: "Pipelines, roads, tunnels and utilities.", img: "/images/projects/earthworks.jpg" },
+  { name: "Hospitals", desc: "Multispecialty hospitals and clinical facilities.", img: "/images/projects/adlife.jpg" },
+  { name: "Industrial Facilities", desc: "Factories, warehouses and processing plants.", img: "/images/projects/mazoon-dairy.jpg" },
+];
+
+export const lifeAtAdrak = {
+  statement:
+    "A happy, skilled workforce builds better landmarks. From modern accommodation camps with sports and recreation facilities to training programmes and air-conditioned mess halls — Adrak invests in its people first.",
+  photos: [
+    { src: "/images/life/life-briefing.jpg", label: "Morning briefing on site" },
+    { src: "/images/life/life-3.jpg", label: "Life at the office" },
+  ],
+};
+
+export const expertise = [
+  {
+    no: "01",
+    key: "civil",
+    title: "Civil Engineering",
+    lead: "Foundations & high-rise structures",
+    img: "/images/projects/cba.jpg",
+    imgPos: "center 30%",
+    points: [
+      "Capacity to build 500,000 sqm annually",
+      "Largest single concrete pour on record — 8,500 m³",
+      "One of the tallest structures in the country at 51 m",
+      "Formwork & scaffolding inventory over 250,000 sqm",
+      "Post-tension system design and execution",
+    ],
+  },
+  {
+    no: "02",
+    key: "electrical",
+    title: "Electrical Engineering",
+    lead: "Generation, transmission & intelligent systems",
+    img: "/images/division-electrical.jpg",
+    imgPos: "center",
+    points: [
+      "Over 150 MVA generation capacity commissioned",
+      "Over 350 MVA transformer capacity commissioned",
+      "300+ km of 11KV transmission lines delivered",
+      "Tier IV data centre to Uptime Institute standards",
+      "Building automation, security & ELV systems",
+    ],
+  },
+  {
+    no: "03",
+    key: "mechanical",
+    title: "Mechanical Engineering",
+    lead: "HVAC, fire systems & public health utilities",
+    img: "/images/division-mechanical.jpg",
+    imgPos: "center",
+    points: [
+      "District cooling — 12,000 TR capacity delivered",
+      "Chillers — 20,000 TR capacity, peak unit 450 Ton",
+      "Automated firefighting with FM-200 gaseous systems",
+      "Fuel storage to 200,000 litres with automated fire release",
+      "Complete public health services & utilities",
+    ],
+  },
+  {
+    no: "04",
+    key: "infrastructure",
+    title: "Infrastructure Engineering",
+    lead: "Pipelines, roads, bridges & tunnels",
+    img: "/images/division-infra.jpg",
+    imgPos: "center",
+    points: [
+      "Largest pipeline in the country — 2.2 m dia over 24 km",
+      "Asphalt roads — 2 million sqm annual capacity",
+      "HV & LV power cabling up to 450 km annually",
+      "300 km of HDPE fire & water networks annually",
+      "Underground tunnels to 4 × 3.5 m over 500 m runs",
+    ],
+  },
+];
+
+export type Project = {
+  sector: string;
+  name: string;
+  place: string;
+  img: string;
+  desc: string;
+  specs?: string[];
+};
+
+export const projects: Project[] = [
+  { sector: "Government", name: "Public Prosecution Complex", place: "Airport Heights, Muscat", img: "/images/projects/public-prosecution.jpg", desc: "A monumental civic landmark — pointed-arch portals, reflecting pools and a soaring central atrium.", specs: ["Office complex for the Public Prosecution Directorates", "Monumental pointed-arch portal with reflecting pool", "Soaring stacked-ring central atrium", "Pergola & mashrabiya façade detailing"] },
+  { sector: "Commercial", name: "Ahli Bank Corporate HQ", place: "Wattayah, Muscat", img: "/images/projects/ahli-bank.jpg", desc: "Structural glazing, designed aluminium mashrabiya and a glass atrium — delivered live around an operating headquarters.", specs: ["Built around the live operating HQ with specialist shoring", "Structural glazing, spider glazing & designed glass atrium", "Radiant floor cooling over 800 m² with DOAS trench ducting", "2 × 350 TR air-cooled screw chillers", "Specialized epoxy floor system for the MLCP car park"] },
+  { sector: "IT & Data Centres", name: "Central Bank of Oman", place: "Muscat", img: "/images/projects/central-bank.jpg", desc: "One-metre-thick vault walls, 15 MW dual-redundant power and 2,000-ton cooling for the nation's most secure facility.", specs: ["1 m thick concrete currency-vault walls, 400-tonne dead load", "5.5 m floor-to-floor with 1 m HD raised flooring", "15 MW dual-redundant power supply", "4 × 1,100 KVA UPS — 15-minute full-facility backup", "AWACS early detection + FM-200 fire suppression"] },
+  { sector: "Residential", name: "SUROUH — Hai Al Naseem", place: "Barka", img: "/images/projects/hai-al-naseem.jpg", desc: "Oman's pilot PPP housing development — 1,051 residences balancing nature, tradition and modern living.", specs: ["1,051 apartments, villas, twin villas & townhouses", "460,000 sqm Rapid Wall + 160,000 sqm hollow-core slab", "27 substations, solar-powered street lighting", "100,000 sqm pavements & 80,000 sqm landscaping", "OMR 100 million — Ministry of Housing PPP pilot"] },
+  { sector: "Education", name: "Cheltenham International School", place: "Russail, Muscat", img: "/images/projects/cheltenham.jpg", desc: "International-standard campus for 1,400 students — Islamic arches, mashrabiya and a 25 m pool.", specs: ["1,400 students, 200 staff, 62 classrooms", "Amphitheatre, 25 m pool & multipurpose courts", "Omani marble, timber flooring & GRC cladding", "Islamic arches with aluminium mashrabiya", "Full building management system"] },
+  { sector: "Government", name: "Ministry of Higher Education", place: "Muscat", img: "/images/projects/mohe.jpg", desc: "Among the most luxurious government buildings — 4 MW power, 960-ton cooling, a stunning façade.", specs: ["Among Oman's most luxurious government buildings", "4 MW power capacity", "960-tonne cooling", "Signature façade & interiors"] },
+  { sector: "Government", name: "Public Authority for Craft Industries", place: "Muscat", img: "/images/projects/paci.jpg", desc: "A 16,000 sqm sculptured headquarters — a showcase of Omani culture and heritage.", specs: ["16,000 sqm sculptured HQ building", "A showcase of Omani culture & heritage", "400-tonne cooling, 3 MW power"] },
+  { sector: "Industrial", name: "Mazoon Dairy", place: "Al Sunaynah", img: "/images/projects/mazoon-dairy.jpg", desc: "MEED Industrial Project of the Year — a 4 km × 4 km integrated dairy city for 7,500+ cows.", specs: ["MEED Industrial Project of the Year", "4 km × 4 km integrated dairy farm for 7,500+ cows", "7,000 MT structural steel, 70,000 sqm asphalt", "23 × 11 KV substations", "Cold storage to −25 °C with walk-on ceilings"] },
+  { sector: "Hospitality", name: "Aloft Hotel by Marriott", place: "Ghala, Muscat", img: "/images/projects/aloft.jpg", desc: "Al Adrak's maiden hospitality investment — an international-brand hotel for the capital.", specs: ["Al Adrak's maiden hospitality investment", "Operated under an international Marriott brand", "Part of a 200-key hotel expansion programme"] },
+  { sector: "Education", name: "Buraimi University", place: "Al Buraimi", img: "/images/projects/buraimi-university.jpg", desc: "A premier 20,000 sqm campus — administration, teaching and hostel blocks with a unique steel-web façade.", specs: ["Administration, teaching & hostel blocks — 20,000 sqm", "3 MW power, 800-tonne cooling", "Unique steel-web façade design", "Post-tension slabs for durability"] },
+  { sector: "IT & Data Centres", name: "Knowledge Oasis Oman 4", place: "Muscat", img: "/images/projects/kom4.jpg", desc: "The technology hub of Oman — 40,000 sqm, a 5 MW power plant and 2,800-ton district cooling.", specs: ["Technology hub of Oman — 40,000 sqm", "Raft & post-tension design for cantilever structure", "2,800-tonne district cooling, 5 MW power plant", "100% raised-floor plug-and-play IT space"] },
+  { sector: "Defense & Police", name: "Forensic Laboratory — ROP", place: "As Sib, Muscat", img: "/images/projects/forensic-lab.jpg", desc: "A state-of-the-art laboratory facility delivered for the Royal Oman Police.", specs: ["State-of-the-art forensic science laboratory", "Delivered for the Royal Oman Police", "Specialist lab services & security systems"] },
+];
+
+// Extended portfolio — real photos from the archive
+export const moreProjects = [
+  { sector: "Commercial", name: "Muscat Insurance Headquarters", place: "Al Khuwair", img: "/images/projects/cba.jpg", desc: "An iconic 30,564 sqm headquarters in the heart of Muscat — 12 m deep secant-pile excavation, automated tower parking for 126 cars and ambient façade lighting." },
+  { sector: "Government", name: "Bait Al Reem", place: "Al Khuwair", img: "/images/projects/bait-al-reem.jpg", desc: "An architectural showpiece in the ministries district — 14,000 sqm with a 1,250-ton cooling system and 4 MW of power." },
+  { sector: "Commercial", name: "Facility Building, KOM", place: "Muscat", img: "/images/projects/fb-kom.jpg", desc: "One of the tallest building structures in Oman with a unique elliptical profile — hotel rooms, conference facilities, offices and restaurants." },
+  { sector: "Government", name: "Haya Water Headquarters", place: "Al Ansab", img: "/images/projects/haya.jpg", desc: "Modern, cutting-edge government office space — a futuristic open-office concept with 400-ton cooling and a 2 MW power plant." },
+  { sector: "Commercial", name: "OETC Head Office", place: "Al Mawalih", img: "/images/projects/oetc.jpg", desc: "Head office of Oman Electricity Transmission Company — 6,000 sqm with curved glass structures and state-of-the-art IT and security." },
+  { sector: "Residential", name: "Al Maskaan Village", place: "Oman", img: "/images/projects/al-maskaan.jpg", desc: "A complete residential village community — homes, amenities and infrastructure delivered as one integrated development." },
+  { sector: "Education", name: "Al Tamkeen International School", place: "Muscat", img: "/images/projects/tis.jpg", desc: "A modern international campus with a striking sky-lit atrium and world-class learning environments." },
+  { sector: "Education", name: "Waljat College", place: "Muscat", img: "/images/projects/waljat.jpg", desc: "Two teaching blocks of 8,000 sqm with smart-board lecture rooms — recognised by the client for delivery in just five months." },
+  { sector: "Education", name: "Mazoon College", place: "Muscat", img: "/images/projects/mazoon-college.jpg", desc: "A private university college with accommodation — 20,000 sqm, an 850-ton chiller plant and full building management systems." },
+  { sector: "Industrial", name: "Barzaman Bottling Factory", place: "Al Khawd", img: "/images/projects/barzaman.jpg", desc: "A complete water bottling factory delivered turnkey for the Barzaman Group at Al Khawd." },
+  { sector: "Industrial", name: "ABAAD Warehouse", place: "Muscat", img: "/images/projects/abaad.jpg", desc: "18,575 sqm of Twintec flooring, structural steel with sandwich-panel roofing and a 450 TR VRF cooling system." },
+  { sector: "Hospitality", name: "La Mer", place: "Muscat", img: "/images/projects/lamer.jpg", desc: "A luxurious restaurant seating 200, with a five-star kitchen built to serve 500 guests." },
+  { sector: "Government", name: "Wet Laboratory", place: "Muscat", img: "/images/projects/wet-lab.jpg", desc: "A specialised laboratory facility delivered for the Government of Oman to international standards." },
+  { sector: "Defense & Police", name: "Royal Oman Police Facility", place: "Muscat", img: "/images/projects/rop.jpg", desc: "A secure operational campus delivered for the Royal Oman Police." },
+  { sector: "Residential", name: "Villa Complex", place: "Al Qurm, Muscat", img: "/images/projects/villa-seeb.jpg", desc: "A high-end villa community in one of Muscat's most prestigious districts." },
+  { sector: "Infrastructure", name: "KOM Ring Road & Utilities", place: "Knowledge Oasis Muscat", img: "/images/projects/kom-ring-road.jpg", desc: "A 3.7 km dual carriageway plus 4.1 km single carriageway with 27 km of utility services, solar lighting and automated traffic control." },
+  { sector: "Industrial", name: "Central Processing Plant — Mazoon Dairy", place: "Al Sunaynah", img: "/images/projects/mdp-cpp.jpg", desc: "Process utilities, storage and 1,000 KVA substations serving Oman's national dairy city." },
+  { sector: "Commercial", name: "Office, Warehouse & Accommodation", place: "Halban, Muscat", img: "/images/head-office.jpg", desc: "Al Adrak's own integrated campus — head office, central warehouse, factories and staff accommodation." },
+  { sector: "International", name: "Ellington House 3 & 4", place: "Dubai, UAE", img: "/images/projects/dubai-ellington.jpg", desc: "Luxury residences under development in Dubai — Al Adrak's flagship UAE venture with Ellington Properties." },
+];
+
+// Delivered landmarks without a photo card — shown as a name wall
+export const projectNames = [
+  "Sohar University", "Special Task Force Campus", "Seeb Stadium", "AdLife Hospital",
+  "Mirbat Hospital", "Court Complex, Ibri", "Muscat Pavilion", "Knowledge Oasis Oman 3",
+  "Iraq Embassy", "Renaissance Complex, Duqm", "Residential Tower, Bausher",
+  "CCWS Sohar Port Pipeline — 2.2 m × 25 km",
+  "Olympic Indoor Pool, Nizwa", "Ministry of Sports Facilities", "Buraimi Border Roundabout",
+  "Bandar Al Khairan Resort", "Military Technological College", "Police Station Complex, Duqm",
+  "ROP Regional Headquarters, Sur", "Environment & Climate Affairs Building",
+  "Private Villa, Seeb", "Aqua Culture Centre",
+];
+
+export const facilities = [
+  { name: "Central Logistics", img: "/images/facilities/logistics.jpg", desc: "A heavily stocked central warehouse at Halban serving every live site across the Sultanate." },
+  { name: "Joinery & Carpentry", img: "/images/facilities/joinery.jpg", desc: "CNC-driven woodcraft — from arabesque doors to complete interior fit-out." },
+  { name: "Aluminium & Glazing", img: "/images/facilities/aluminium.jpg", desc: "A dedicated 2,000 sqm facility for doors, windows and structural glazing systems." },
+  { name: "Marble & Granite", img: "/images/facilities/marble.jpg", desc: "High-end Italian bridge saws, waterjet cutters and automatic edge polishers." },
+  { name: "Rebar Cut & Bend", img: "/images/facilities/rebar.jpg", desc: "3,800 sqm with shear lines, robot benders and automatic stirrup machines." },
+  { name: "Duct Fabrication", img: "/images/facilities/duct.jpg", desc: "Autoline and plasma cutting for AC ducting and pre-insulated systems." },
+  { name: "Metal Fabrication", img: "/images/facilities/metal.jpg", desc: "A skilled workforce and modern machinery for superior structural steelwork." },
+  { name: "Formwork & Scaffolding", img: "/images/facilities/formwork.jpg", desc: "A 13,500 sqm yard of PERI, Doka and cuplock systems — 350+ components." },
+  { name: "Plant & Machinery", img: "/images/facilities/plant.jpg", desc: "One of the largest equipment fleets in the country — 1,000+ units, centrally managed." },
+  { name: "Crusher & Quarries", img: "/images/facilities/crusher.jpg", desc: "Gabbro aggregate quarries at Duqm and Nakhal with mobile crushing units." },
+];
+
+export type ShopFloorMedia = {
+  type: "video" | "img";
+  src: string;
+  label: string;
+  /** matches a facilities[].name — omitted where the shot spans the whole campus */
+  facility?: string;
+};
+
+/** The "step inside our factories" reel. `facility` is only set where the shot
+ *  is unambiguously that facility, so the detail view never claims more than we
+ *  actually know about a given clip. */
+export const shopFloor: ShopFloorMedia[] = [
+  { type: "video", src: "/videos/facilities/joinery.mp4", label: "CNC router carving an arabesque panel", facility: "Joinery & Carpentry" },
+  { type: "img", src: "/images/facilities/gallery-cws.jpg", label: "Joinery & carpentry workshop", facility: "Joinery & Carpentry" },
+  { type: "video", src: "/videos/facilities/duct.mp4", label: "Plasma cutting on the autoline", facility: "Duct Fabrication" },
+  { type: "img", src: "/images/facilities/gallery-drone.jpg", label: "The production campus from above" },
+  { type: "video", src: "/videos/facilities/aluminium.mp4", label: "Aluminium fabrication & structural glazing", facility: "Aluminium & Glazing" },
+  { type: "img", src: "/images/facilities/gallery-plant.jpg", label: "Central materials inventory" },
+  { type: "video", src: "/videos/facilities/logistics.mp4", label: "Central logistics yard at Halban", facility: "Central Logistics" },
+  { type: "img", src: "/images/facilities/gallery-crusher.jpg", label: "Nakhal crusher & quarry", facility: "Crusher & Quarries" },
+];
+
+export const leadership = {
+  founder: {
+    name: "Dr. Thomas Alexander",
+    role: "Founder & Chief Executive Director",
+    img: "/images/team/founder.jpg",
+    quote:
+      "Our dream is to be the best company in the Sultanate — not in terms of profits or volumes, but in terms of ethics and values.",
+    bio: "B.Tech Civil Engineering · Ph.D in Business Administration. Founded Al Adrak in 1986 and built it into Oman's No. 1 construction company.",
+    honors: [
+      "Forbes Top 100 Businessmen — Middle East",
+      "No. 1 Construction Company in Oman",
+      "Middle East Super 100 Award",
+    ],
+  },
+  adviser: {
+    name: "Sheikh Numan Harith Al Amri",
+    role: "Corporate Adviser",
+    img: "/images/team/sheikh.jpg",
+    quote:
+      "Few local engineering construction companies can match our contribution to Oman's urban and infrastructure development.",
+  },
+  directors: [
+    { name: "Dr. Aadil Thomas Alexander", role: "Executive Director", img: "/images/team/roster/aadil.jpg" },
+    { name: "Annie Thomas Alexander", role: "Director — Audit", img: "/images/team/roster/annie.jpg" },
+    { name: "Riyas Mohamed", role: "Chief Executive Officer", img: "/images/team/roster/riyas.jpg" },
+  ],
+  // Current key personnel, exactly as published on aladrak.com/team.php
+  roster: [
+    { name: "Biju K. Mammen", role: "Advisor — Plant & Machinery", img: "/images/team/roster/biju.jpg" },
+    { name: "Sunil Sasidharan", role: "General Manager — Projects", img: "/images/team/roster/sunil.jpg" },
+    { name: "Hari Prasad Shetty", role: "General Manager — Tendering & QS", img: "/images/team/roster/hariprasad.jpg" },
+    { name: "Ajith Kumar", role: "General Manager — Procurement", img: "/images/team/roster/ajith.jpg" },
+    { name: "Anoop Das", role: "General Manager — Design & Build", img: "/images/team/roster/anoop.jpg" },
+    { name: "Mahmood Masoud Rashid Al Ghafri", role: "DGM — HR & Administration", img: "/images/team/roster/mahmood.jpg" },
+    { name: "Muzna Sulaiman Salim Al Busaidi", role: "DGM — Corporate Communications", img: "/images/team/roster/muzna.jpg" },
+    { name: "Nauf Abdullah Sabil Al Bulushi", role: "DGM — Projects", img: "/images/team/roster/nauf.jpg" },
+    { name: "Huriya Hassan Hussain Al Balushi", role: "DGM — HR & Follow-up", img: "/images/team/roster/huriya.jpg" },
+    { name: "Gnanasekaran T", role: "DGM — Production & Sales", img: "/images/team/roster/gnanasekaran.jpg" },
+    { name: "Kausthubh Rai", role: "DGM — QA / QC", img: "/images/team/roster/kausthubh.jpg" },
+    { name: "Iman Khalifa Mohammed Al Shaafari", role: "DGM — Finance", img: "/images/team/roster/iman.jpg" },
+    { name: "Tibi John", role: "DGM — Finance", img: "/images/team/roster/tibi.jpg" },
+    { name: "Richard Sequira", role: "DGM — Facility Management", img: "/images/team/roster/richard.jpg" },
+    { name: "Rajan P", role: "DGM — Developers", img: "/images/team/roster/rajan.jpg" },
+    { name: "Visakh U B", role: "DGM — Projects", img: "/images/team/roster/visakh.jpg" },
+    { name: "Sayed Iftikhar Ali", role: "Manager — HSE", img: "/images/team/roster/iftikhar.jpg" },
+    { name: "Naveenkumar", role: "Manager — Logistics", img: "/images/team/roster/naveenkumar.jpg" },
+    { name: "Nawaf Khamis Al Zadjali", role: "Manager — HR", img: "/images/team/roster/nawaf.jpg" },
+  ],
+};
+
+export const headOffice = {
+  title: "One team. One vision.",
+  location: "Halban, just off the Muscat Expressway",
+  body: "Project management, planning and progress monitoring, design development, CAD, training, IT, finance, integrated facility management, procurement and logistics — all centrally controlled from the Head Office in coordination with every remote site. With multiple projects under execution across Oman and the region, Al Adrak's centralized management systems ensure the same values are delivered everywhere.",
+  img: "/images/head-office.jpg",
+  img2: "/images/head-office-3.jpg",
+};
+
+export const excellence = [
+  { title: "Health, Safety & Environment", desc: "A dedicated HSE team runs inspections and on-site reviews — the safety of people is priority number one." },
+  { title: "Rooted in the Community", desc: "A wholly Omani-owned company — recruiting and training local talent, patronising Omani SMEs and donating to local causes." },
+  { title: "Human Resource Development", desc: "Training programmes that attract young Omanis to rewarding careers across the group." },
+  { title: "Men at Work", desc: "Worker accommodation, air-conditioned mess halls and industrial kitchens — comparable with the best in the industry." },
+  { title: "Facilities Management", desc: "Integrated multi-site FM services backed by strong technical capability and market-leading compliance." },
+  { title: "Information Technology", desc: "A head-office data centre, central surveillance and app-based productivity monitoring underpin every project." },
+];
+
+export const certifications = ["ISO 9001", "ISO 14001", "ISO 45001", "Excellent Grade Contractor"];
+
+// Certificates — click to view the full TÜV NORD scan
+export const certificates = [
+  { name: "ISO 9001 : 2015", scope: "Quality Management", img: "/images/awards/cert-iso-9001.jpg" },
+  { name: "ISO 14001 : 2015", scope: "Environmental Management", img: "/images/awards/cert-iso-14001.jpg" },
+  { name: "ISO 45001 : 2018", scope: "Health & Safety Management", img: "/images/awards/cert-iso-45001.jpg" },
+];
+
+export const awards = [
+  { name: "Forbes Middle East", detail: "Top 100 Businessmen in the Middle East", img: "/images/awards/award-forbes.jpg" },
+  { name: "Achievement Forum — Top 100", detail: "Top 100 Register, London", img: "/images/awards/award-top100.jpg" },
+  { name: "Europe Business Assembly", detail: "International business excellence", img: "/images/awards/award-eba.jpg" },
+  { name: "ESQR", detail: "European Society for Quality Research", img: "/images/awards/award-esqr.jpg" },
+  { name: "Gray Matter", detail: "Brand excellence recognition", img: "/images/awards/award-graymatter.jpg" },
+  { name: "Golden Achievement Award", detail: "Dubai — 2020", img: "/images/awards/award-golden.jpg" },
+];
+
+export const awardMentions = [
+  "MEED Project Award 2023 — Aloft Hotel Muscat",
+  "Dossier Construction Awards 2023",
+  "Business Leader of the Year 2023 — Dr. Aadil Thomas Alexander",
+  "Oman Best Brand Awards 2019",
+  "Middle East Super 100 Award",
+  "MEED Industrial Project of the Year — Mazoon Dairy",
+];
+
+export const sustainability = [
+  "STP & RO plants at all facilities",
+  "Solar energy harvesting",
+  "Hybrid / EV fleet transition",
+  "Energy-efficient lighting & HVAC",
+  "Paperless office programme",
+];
+
+// Group companies — logos from the archive; URLs from the company's own "Website Links" file
+export const groupCompanies = [
+  { name: "AdLife Hospital", img: "/images/group/adlife.jpg", url: "https://www.adlifeoman.com" },
+  { name: "Adrak Hotels & Resorts", img: "/images/group/hotels.jpg", url: "https://adrakhotelsandresorts.com" },
+  { name: "Hai Al Naseem", img: "/images/group/hai-al-naseem.jpg", url: "https://www.haialnaseem.com" },
+  { name: "Al Maskaan Village", img: "/images/group/maskaan.jpg", url: "https://almaskaanvillage.com" },
+  { name: "Adante Realty", img: "/images/group/adante.jpg", url: "https://www.adanterealty.com" },
+  { name: "Insight Solutions", img: "/images/group/insight.jpg", url: "https://insightoman.org" },
+  { name: "Adrak Developers", img: "/images/group/developers.jpg", url: "https://www.haialnaseem.com" },
+  { name: "Adrak Builders", img: "/images/group/builders.jpg" },
+  { name: "Adrak Facilities", img: "/images/group/facilities.jpg" },
+  { name: "Adrak India", img: "/images/group/india.jpg" },
+  { name: "Adrak Ventures", img: "/images/group/ventures.jpg" },
+  { name: "Al Khaith Industries", img: "/images/group/khaith.jpg" },
+  { name: "Trufud Farm", url: "https://trufudoman.com" },
+  { name: "Trinity College", url: "https://thetrinitycollege.in" },
+];
+
+export const clients = [
+  "Central Bank of Oman", "Royal Oman Police", "Ministry of Defense", "Ministry of Health",
+  "Ministry of Higher Education", "Ahli Bank", "Haya Water", "Sultan Qaboos University",
+  "Mazoon Dairy", "Renaissance", "Oman Refinery Co.", "Saud Bahwan Group",
+  "Suhail Bahwan Group", "Zubair Corporation", "Madayn", "Ministry of Housing & Urban Planning",
+  "Public Prosecution", "Sohar University", "Muscat Insurance", "Al Maha Petroleum",
+];
+
+// Full clientele — every client from aladrak.com/clientele.php, categorized
+export const clientele = [
+  {
+    group: "Government & Public Sector",
+    names: [
+      "Government of Oman", "Ministry of Defense", "Ministry of Health", "Ministry of Higher Education",
+      "Ministry of Education", "Ministry of Justice", "Ministry of Foreign Affairs", "Ministry of Manpower",
+      "Ministry of Housing & Urban Planning", "Ministry of Agriculture & Fisheries",
+      "Ministry of Environment & Climate Affairs", "Ministry of Social Development",
+      "Ministry of Sports Affairs", "Ministry of Regional Municipalities & Water Resources",
+      "Royal Oman Police", "Public Prosecution", "Public Authority for Craft Industries",
+      "Public Establishment for Industrial Estates", "Madayn", "Haya Water",
+      "Oman Electricity Transmission Company",
+    ],
+  },
+  {
+    group: "Banking, Finance & Corporate",
+    names: [
+      "Central Bank of Oman", "Ahli Bank", "Muscat Insurance Company SAOG", "Al Maha Petroleum",
+      "Oman Gas Co.", "Oman Refinery Co.", "Saud Bahwan Group", "Suhail Bahwan Group",
+      "Zubair Corporation", "Shumookh Investment & Services", "Sohar International Development & Investment",
+      "Majis Industrial Services", "Renaissance", "Mazoon Dairy", "Barzaman Group",
+      "ASAAS", "Muscat Hills Joint Development",
+    ],
+  },
+  {
+    group: "Education, Health & Research",
+    names: [
+      "Sultan Qaboos University", "Sultan Qaboos University Hospital", "Sohar University",
+      "Waljat Colleges of Applied Sciences", "Mazoon College", "Al Buraimi College",
+      "The Research Council", "Al Tamkeen International School",
+    ],
+  },
+  {
+    group: "Diplomatic Missions",
+    names: ["Iraq Embassy", "Qatar Embassy"],
+  },
+];
+
+export type Office = {
+  name: string;
+  address: string[];
+  phone?: string;
+  fax?: string;
+  email: string;
+};
+
+/**
+ * Office contact details, transcribed from Al Adrak's own Contact Us page.
+ *
+ * Kept as discrete fields rather than a flat list of lines so the block can
+ * render each one with its proper icon, mark up tel:/mailto: links, and omit
+ * what a given office does not have (KSA has no published phone; only Oman
+ * publishes a fax).
+ */
+export const offices: Office[] = [
+  {
+    name: "Sultanate of Oman Office",
+    address: ["Express Highway Exit, Halban, Sultanate of Oman"],
+    phone: "+968 2200 1300",
+    fax: "+968 2200 1301",
+    email: "info@aladrak.com",
+  },
+  {
+    name: "UAE Office",
+    address: ["Office No.05,", "Schon Business Park, DIP-1, Dubai, UAE"],
+    phone: "+971 4 8049666",
+    email: "info.dxb@aladrak.com",
+  },
+  {
+    name: "KSA Office",
+    address: [
+      "P O Box: 45383, 11512 Riyadh, Office No-21,",
+      "East in Al-Khair 2 Commercial Building, Khurais Road,",
+      "Al Naseem, Al Gharbi, Riyadh",
+    ],
+    email: "info.ksa@aladrak.com",
+  },
+  {
+    name: "India Office",
+    address: [
+      "1st Floor, Trinity College of Engineering, Poovada,",
+      "Trinity Hills, Near Pravachambalam, Naruvamoodu P.O,",
+      "Trivandrum, Kerala, India - 695528",
+    ],
+    phone: "0471 – 391134",
+    email: "info@adrakindia.com",
+  },
+];
+
+export const careers = [
+  {
+    role: "Master Planner",
+    exp: "8+ years",
+    qual: "Graduation / Post-Graduation in Urban Design with an architectural background",
+    desc: "Work on large-scale urban design and master-planning projects of varying complexity, from idea to detailed design — residential, mixed-use and urban regeneration.",
+  },
+  {
+    role: "Rebar Detailer",
+    exp: "3–5 years",
+    qual: "Diploma / Degree in Civil Engineering",
+    desc: "Create reinforcement shop drawings using CADS RC or similar CAD programs, describing rebar and steel specifications for live projects.",
+  },
+  {
+    role: "Interior Designer",
+    exp: "10 years",
+    qual: "Bachelor's or Master's in Architecture",
+    desc: "Decorate interior spaces end-to-end — layout, colour, lighting, materials, custom furniture. AutoCAD, SketchUp, 3ds Max or Illustrator required.",
+  },
+  {
+    role: "Oracle Database Administrator",
+    exp: "5+ years",
+    qual: "B.Tech / BE / MCA or similar",
+    desc: "Administer Oracle databases with thorough knowledge of Oracle SQL — DDL, DML and DCL.",
+  },
+  {
+    role: "HSE Advisor",
+    exp: "10 years",
+    qual: "Any recognised degree; BE / B.Tech an advantage",
+    desc: "Champion site safety with strong knowledge of OSHA procedures and NEBOSH standards.",
+  },
+];
+
+export const future =
+  "Inspired by Oman Vision 2040, Al Adrak is expanding across the Middle East and the Indian subcontinent — a 200-key international hotel in Bousher, the OMR 100 million Hai Al Naseem development, Ellington House residences in Dubai, IPDS power-distribution schemes in Madhya Pradesh, and hospitality projects in Kerala.";
