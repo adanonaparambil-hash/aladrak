@@ -12,13 +12,21 @@ build/
 # Source media archives — NOT deliverables.
 # The Google Takeout photo archive is ~49GB and the raw video working folder
 # ~1.9GB. The site only needs the prepared copies under site/public.
-Images/
-vedio/
+#
+# NOTE: the leading slash matters, and is not cosmetic. Unanchored, `Images/`
+# matches a directory of that name at ANY depth — and because git on Windows
+# sets core.ignorecase=true, the match is case-insensitive too. So `Images/`
+# silently swallowed all 139 files of `site/public/images/`, and the site was
+# published with no photographs at all while looking perfect locally. Anchoring
+# each of these to the repository root is what confines them to the archives
+# they were written for.
+/Images/
+/vedio/
 
 # working artefacts
-review-shots/
-preview-thumbs/
-site/public/tmp-chk/
+/review-shots/
+/preview-thumbs/
+/site/public/tmp-chk/
 
 # local caches from driving a headless browser
 .chrome-cache*/
