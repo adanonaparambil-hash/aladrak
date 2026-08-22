@@ -1,21 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { site } from "@/lib/content";
 import { asset } from "@/lib/asset";
 
-const links = [
-  { href: asset("/#about"), label: "About" },
-  { href: asset("/#expertise"), label: "Expertise" },
-  { href: asset("/#projects"), label: "Projects" },
-  { href: asset("/#facilities"), label: "Facilities" },
-  { href: asset("/#team"), label: "Team" },
-  { href: asset("/news"), label: "News" },
-  { href: asset("/careers"), label: "Careers" },
-  { href: asset("/#contact"), label: "Contact" },
-];
+/**
+ * The sections all live on the home page, so these are anchors, not routes.
+ *
+ * On the home page itself they are emitted as bare "#about" — a fragment with no
+ * path at all. That is deliberately immune to where the site is mounted: it works
+ * at the domain root, under /aladrak/, behind a custom domain, and in a page a
+ * browser cached before any of that changed. An absolute "/#about" has to be
+ * rewritten for the deploy's base path, and if that rewrite is ever missed the
+ * link silently leaves the site — which is exactly what shipped.
+ *
+ * From another page there is no such section to jump to, so those links do need
+ * a path back to the home page, and that one goes through asset().
+ */
+const SECTIONS = ["about", "expertise", "projects", "facilities", "team"] as const;
 
 export default function Header() {
+  const pathname = usePathname();
+  // usePathname() reports the route without the base path, so "/" is the home page
+  const onHome = pathname === "/";
+  const section = (id: string) => (onHome ? `#${id}` : asset(`/#${id}`));
+
+  const links = [
+    ...SECTIONS.map((id) => ({
+      href: section(id),
+      label: id[0].toUpperCase() + id.slice(1),
+    })),
+    { href: asset("/news"), label: "News" },
+    { href: asset("/careers"), label: "Careers" },
+    { href: section("contact"), label: "Contact" },
+  ];
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -51,7 +71,7 @@ export default function Header() {
     >
       <div className="shell flex items-center justify-between">
         {/* Logo — true brand colors, transparent, soft light glow for legibility */}
-        <a href={asset("/#top")} className="relative z-50 flex items-center">
+        <a href={section("top")} className="relative z-50 flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/logo.png")}
