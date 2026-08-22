@@ -71,12 +71,15 @@ jobs:
       - name: Disable Jekyll
         run: touch site/out/.nojekyll
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          # Turns Pages on and points it at this workflow, so the site does not
-          # need anyone to visit repository settings first.
-          enablement: true
+      # NOTE: there is deliberately no `actions/configure-pages` step.
+      #
+      # It was here with `enablement: true`, to switch Pages on without anyone
+      # visiting repository settings, and the run failed on exactly that step —
+      # the workflow token was not allowed to create the Pages site. Its only
+      # other purpose is to report the deployment's base path back to the build,
+      # which this workflow does not use: NEXT_PUBLIC_BASE_PATH above is derived
+      # from the repository name directly. So the step was pure risk, and Pages
+      # is enabled once by hand in Settings instead.
 
       - uses: actions/upload-pages-artifact@v3
         with:
