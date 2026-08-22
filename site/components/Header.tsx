@@ -5,14 +5,14 @@ import { site } from "@/lib/content";
 import { asset } from "@/lib/asset";
 
 const links = [
-  { href: "/#about", label: "About" },
-  { href: "/#expertise", label: "Expertise" },
-  { href: "/#projects", label: "Projects" },
-  { href: "/#facilities", label: "Facilities" },
-  { href: "/#team", label: "Team" },
+  { href: asset("/#about"), label: "About" },
+  { href: asset("/#expertise"), label: "Expertise" },
+  { href: asset("/#projects"), label: "Projects" },
+  { href: asset("/#facilities"), label: "Facilities" },
+  { href: asset("/#team"), label: "Team" },
   { href: asset("/news"), label: "News" },
   { href: asset("/careers"), label: "Careers" },
-  { href: "/#contact", label: "Contact" },
+  { href: asset("/#contact"), label: "Contact" },
 ];
 
 export default function Header() {
@@ -51,7 +51,7 @@ export default function Header() {
     >
       <div className="shell flex items-center justify-between">
         {/* Logo — true brand colors, transparent, soft light glow for legibility */}
-        <a href="/#top" className="relative z-50 flex items-center">
+        <a href={asset("/#top")} className="relative z-50 flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/logo.png")}

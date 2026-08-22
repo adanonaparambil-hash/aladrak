@@ -48,7 +48,7 @@ export default function Footer() {
           {["About", "Expertise", "Projects", "Facilities", "Team"].map((l) => (
             <a
               key={l}
-              href={`/#${l.toLowerCase()}`}
+              href={asset(`/#${l.toLowerCase()}`)}
               className="label text-cream/60 hover:text-gold transition-colors"
             >
               {l}

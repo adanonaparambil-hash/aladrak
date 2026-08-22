@@ -65,6 +65,14 @@ jobs:
         run: npm run build
         working-directory: site
 
+      # Fails the deploy if any link or asset escapes the base path. Both of the
+      # bugs that reached production — a header whose every nav link left the
+      # site, and a .gitignore that excluded all the photographs — were invisible
+      # locally and would have been caught here.
+      - name: Check every URL sits under the base path
+        run: node scripts/check-base-path.mjs out
+        working-directory: site
+
       # Belt and braces: artifact deploys do not run Jekyll, but if the source
       # ever switches back to branch-based publishing this is what stops Jekyll
       # discarding the `_next` directory for starting with an underscore.
