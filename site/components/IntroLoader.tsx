@@ -7,86 +7,62 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis } from "./SmoothScroll";
 import { motionOK } from "@/lib/intro";
 import { leadership } from "@/lib/content";
-import { currentYear, FOUNDED, yearsWord } from "@/lib/anniversary";
 import { asset } from "@/lib/asset";
+import { currentYear, FOUNDED, years } from "@/lib/anniversary";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * The arrival — forty years told as the loading itself.
+ * The arrival — the anniversary counted out, 1986 to the present.
  *
- * This borrows the history section's year-wheel as the entrance: all 41 years
- * from 1986 to 2026 ride a dotted arc pivoted off the left edge of the screen,
- * and loading sweeps the wheel through them. The years ARE the progress — 1986
- * is 0%, 2026 is 100% — so the wait reads as Al Adrak's legacy passing rather
- * than as a spinner, and it previews the section it belongs to.
+ * The composition is a single centred dial: a glowing ring with the years
+ * climbing through the middle of it, the founding year and the present held on
+ * medallions either side, and a journey bar underneath tracking the same
+ * progress. Loading IS the count — the sweep from 1986 to now is the loading
+ * bar, so the wait reads as the company's history passing rather than as a
+ * spinner.
  *
- * Two deliberate departures from that section:
- *   - Every year is counter-rotated back to upright. In the history section the
- *     off-axis rows keep the wheel's rotation and their text renders diagonally,
- *     which reads as a broken layout rather than as depth.
- *   - The arc and its year ticks are drawn on canvas instead of using the
- *     circle-dots SVGs, whose dots scale with the ring and become 9px blobs at
- *     this radius. Canvas keeps them fine and lets the spine be genuinely dense.
+ * The years stack UPWARD only. The one being read sits on the centre line at
+ * full size; the years already passed recede above it, each smaller and fainter
+ * than the last, and nothing is drawn below — the future has not happened yet.
+ * That is what makes it read as a count rather than as a list.
+ *
+ * Everything is derived from the founding year, so this needs no edit when the
+ * anniversary rolls over; see lib/anniversary.ts.
+ *
+ * Two things are deliberately preserved from the previous pass:
+ *   - the receding ring tunnel and the star field, the same background device
+ *     the history section uses, so the intro reads as its prologue;
+ *   - the pacing, which is gated on the hero film being *playable* rather than
+ *     fully buffered — a 30MB film is playable long before buffered/duration
+ *     approaches 1, so gating on the fraction never lands.
  *
  * The hero underneath starts on its own and is never gated on this component,
  * so a failure here can only cost the animation, never the page.
  */
 
 const START_YEAR = FOUNDED;
-/** the wheel sweeps to the present, so it never stops short of today */
 const END_YEAR = currentYear();
-const SPAN = END_YEAR - START_YEAR; // 40
-/**
- * Degrees per year. The arc's radius is capped by the viewport width (the year
- * text starts at the radius and runs rightward), so on a narrow screen the only
- * way to keep 5deg from stacking the labels on top of each other is to open the
- * pitch up. 5deg puts ~14 years on a desktop arc; 8deg puts ~9 on a phone.
- */
-const STEP_WIDE = 5;
-const STEP_NARROW = 8;
-/**
- * How far off the axis a year is still drawn. A phone is tall relative to the
- * arc radius it can afford, so it shows a wider sweep to fill the height; a
- * desktop at 34deg already spans the full 900px.
- */
-const CULL_WIDE = 34;
-const CULL_NARROW = 44;
+const SPAN = END_YEAR - START_YEAR;
+const YEARS = Array.from({ length: SPAN + 1 }, (_, i) => START_YEAR + i);
+
 /** the sweep always takes at least this long, however fast the film buffers */
-const MIN_SWEEP = 3200;
-const SEEN_SWEEP = 1200;
-const LAND_HOLD = 700;
+const MIN_SWEEP = 3400;
+const SEEN_SWEEP = 1300;
+const LAND_HOLD = 900;
 const MAX_WAIT = 9000;
 const SEEN_KEY = "adrak-intro-seen";
 
 /**
- * The dotted field: radius factor, angular pitch in degrees, dot radius, alpha.
- * Nine concentric arcs make it read as a dense survey field rather than a lone
- * dotted line — but nothing sits between 0.94 and 1.06, which is the channel the
- * year text occupies. Dots crossing the years is what made the first pass look
- * cluttered.
+ * The upward stack. Spacing and size both decay geometrically with age, so the
+ * column converges instead of running off the top of the screen: with DECAY
+ * 0.86 the whole run of forty years occupies a finite ~7 rows of height, however
+ * many years there are to show.
  */
-const ARCS = [
-  { r: 0.62, pitch: 2.0, dot: 1.0, a: 0.12 },
-  { r: 0.7, pitch: 1.8, dot: 1.0, a: 0.16 },
-  { r: 0.78, pitch: 1.6, dot: 1.1, a: 0.2 },
-  { r: 0.86, pitch: 1.4, dot: 1.1, a: 0.25 },
-  { r: 0.93, pitch: 1.2, dot: 1.2, a: 0.32 },
-  { r: 1.07, pitch: 1.0, dot: 1.4, a: 0.62 },
-  { r: 1.13, pitch: 1.2, dot: 1.2, a: 0.46 },
-  { r: 1.19, pitch: 1.5, dot: 1.1, a: 0.32 },
-  { r: 1.26, pitch: 1.9, dot: 1.0, a: 0.22 },
-  { r: 1.34, pitch: 2.2, dot: 1.0, a: 0.16 },
-  { r: 1.45, pitch: 2.6, dot: 1.0, a: 0.12 },
-  { r: 1.57, pitch: 3.0, dot: 1.0, a: 0.09 },
-];
+const AGE_CULL = 9;
+const DECAY = 0.86;
 
-/**
- * The receding ring tunnel behind everything — the history section's own
- * background device. Rings of dots drift toward the viewer and are projected by
- * FOCAL/z, so they swell and fade. Centred on the reading axis, so the years
- * appear to arrive out of it.
- */
+/** The receding tunnel of dot rings, centred on the dial. */
 const TUNNEL = {
   rings: 14,
   ringsNarrow: 8,
@@ -96,16 +72,15 @@ const TUNNEL = {
   depth: 1500,
   focal: 520,
   baseR: 265,
-  speed: 150, // world units per second
-  alpha: 0.3,
+  speed: 150,
+  alpha: 0.26,
 };
-
-const YEARS = Array.from({ length: SPAN + 1 }, (_, i) => START_YEAR + i);
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const RAD = Math.PI / 180;
+const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
+
+type Star = { x: number; y: number; r: number; a: number; tw: number };
 
 export default function IntroLoader() {
   const pathname = usePathname();
@@ -115,11 +90,10 @@ export default function IntroLoader() {
   const [landed, setLanded] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const rows = useRef<(HTMLDivElement | null)[]>([]);
   const labels = useRef<(HTMLSpanElement | null)[]>([]);
-  const axis = useRef<HTMLDivElement>(null);
-  const wheelWrap = useRef<HTMLDivElement>(null);
+  const dial = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
+  const nowYear = useRef<HTMLSpanElement>(null);
   const exitRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -149,12 +123,16 @@ export default function IntroLoader() {
     /* ---------- layout ---------- */
     let vw = 0;
     let vh = 0;
-    let radius = 0;
-    let step = STEP_WIDE;
-    let maxScale = 1;
-    let cull = CULL_WIDE;
-    /** the arc's centre — lifted on a phone, where the quote sits beneath it */
+    let cx = 0;
     let cy = 0;
+    /** the dial's radius */
+    let R = 0;
+    /** type size of the year on the centre line */
+    let fontPx = 0;
+    /** spacing of the first step above the centre line */
+    let gap = 0;
+    let stars: Star[] = [];
+
     const layout = () => {
       vw = window.innerWidth;
       vh = window.innerHeight;
@@ -164,39 +142,49 @@ export default function IntroLoader() {
       cv.style.width = vw + "px";
       cv.style.height = vh + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // the arc's radius from a pivot at the left edge, vertical centre
+
       const narrow = vw < 640;
-      radius = narrow ? vw * 0.7 : Math.min(vw * 0.47, 820);
-      step = narrow ? STEP_NARROW : STEP_WIDE;
-      // the phone's base type is smaller, so the axis year is scaled up past 1
-      maxScale = narrow ? 1.45 : 1;
-      cull = narrow ? CULL_NARROW : CULL_WIDE;
-      cy = narrow ? vh * 0.4 : vh * 0.5;
-      if (wheelWrap.current) wheelWrap.current.style.top = `${cy}px`;
-      if (axis.current) axis.current.style.top = `${cy}px`;
-      // rows are pre-rotated once; only the wheel and the labels move
-      for (let i = 0; i <= SPAN; i++) {
-        const row = rows.current[i];
-        if (row) row.style.transform = `rotate(${i * step}deg)`;
-        const lb = labels.current[i];
-        if (lb) lb.style.left = `${radius}px`;
+      cx = vw / 2;
+      // lifted on a phone, where the quote and the bar share the lower screen
+      cy = narrow ? vh * 0.42 : vh * 0.5;
+      R = clamp(Math.min(vw * 0.19, vh * 0.36), 118, 320);
+      fontPx = clamp(R * 0.3, 30, 76);
+      gap = fontPx * 0.62;
+
+      if (dial.current) {
+        dial.current.style.left = `${cx}px`;
+        dial.current.style.top = `${cy}px`;
+        dial.current.style.width = `${R * 2}px`;
+        dial.current.style.height = `${R * 2}px`;
       }
-      if (axis.current) axis.current.style.left = `${radius - 54}px`;
+
+      // the star field is regenerated per layout so density follows the viewport
+      const count = narrow ? 70 : 150;
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * vw,
+        y: Math.random() * vh,
+        r: 0.5 + Math.random() * 1.3,
+        a: 0.18 + Math.random() * 0.5,
+        tw: Math.random() * Math.PI * 2,
+      }));
     };
     layout();
 
     /* ---------- one frame ---------- */
     const render = (p: number, tSec: number) => {
-      const rot = -p * SPAN * step;
-      // the dot field is drawn a little wider than the years, and fades out
-      // across that margin so nothing pops in at the edge of the sweep
-      const fadeSpan = cull + 12;
-      const band = cull + 14;
-
       ctx.clearRect(0, 0, vw, vh);
       const narrow = vw < 640;
 
-      /* the ring tunnel, behind everything — one fill per ring */
+      /* the star field, drifting and breathing */
+      for (const s of stars) {
+        const tw = 0.65 + 0.35 * Math.sin(tSec * 0.9 + s.tw);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245,242,234,${(s.a * tw).toFixed(3)})`;
+        ctx.fill();
+      }
+
+      /* the receding tunnel of dot rings, centred on the dial */
       const nRings = narrow ? TUNNEL.ringsNarrow : TUNNEL.rings;
       const perRing = narrow ? TUNNEL.perRingNarrow : TUNNEL.perRing;
       const drift = tSec * TUNNEL.speed;
@@ -207,116 +195,114 @@ export default function IntroLoader() {
         const proj = TUNNEL.focal / z;
         const rr = TUNNEL.baseR * proj;
         if (rr > Math.hypot(vw, vh)) continue;
-        // brightest mid-depth, gone at both ends, so nothing pops in or out
-        const fz = z / TUNNEL.depth;
-        const alpha = Math.sin(Math.PI * fz) * TUNNEL.alpha;
+        const alpha = Math.sin(Math.PI * (z / TUNNEL.depth)) * TUNNEL.alpha;
         if (alpha <= 0.01) continue;
         const dotR = Math.max(0.6, Math.min(2.6, 1.7 * proj));
-        // each ring counter-spins, as the history section's tunnel does
         const spin = tSec * (k % 2 === 0 ? 0.09 : -0.09) + k * 0.13;
         ctx.beginPath();
         for (let j = 0; j < perRing; j++) {
           const a = (j / perRing) * Math.PI * 2 + spin;
-          const x = radius + Math.cos(a) * rr;
-          const y = cy + Math.sin(a) * rr;
-          ctx.moveTo(x + dotR, y);
-          ctx.arc(x, y, dotR, 0, Math.PI * 2);
+          ctx.moveTo(cx + Math.cos(a) * rr + dotR, cy + Math.sin(a) * rr);
+          ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, dotR, 0, Math.PI * 2);
         }
         ctx.fillStyle = `rgba(245,242,234,${alpha})`;
         ctx.fill();
       }
 
-      /* the dotted spine, swept past the axis. Alpha varies per dot, so the
-         fade is quantised into buckets and each bucket filled once — a fill per
-         dot was ~700 draw calls a frame before the tunnel was added. */
-      const BUCKETS = 6;
-      for (const arc of ARCS) {
-        const rr = radius * arc.r;
-        const from = Math.ceil((-rot - band) / arc.pitch) * arc.pitch;
-        for (let b = 0; b < BUCKETS; b++) {
-          const lo = b / BUCKETS;
-          const hi = (b + 1) / BUCKETS;
-          let opened = false;
-          for (let w = from; w <= -rot + band; w += arc.pitch) {
-            const sAng = w + rot;
-            const fade = 1 - Math.min(1, Math.abs(sAng) / fadeSpan);
-            if (fade <= 0.02 || fade < lo || fade >= hi) continue;
-            if (!opened) {
-              ctx.beginPath();
-              opened = true;
-            }
-            const a = sAng * RAD;
-            const x = Math.cos(a) * rr;
-            const y = cy + Math.sin(a) * rr;
-            ctx.moveTo(x + arc.dot, y);
-            ctx.arc(x, y, arc.dot, 0, Math.PI * 2);
-          }
-          if (opened) {
-            ctx.fillStyle = `rgba(245,242,234,${arc.a * ((lo + hi) / 2)})`;
-            ctx.fill();
-          }
-        }
+      /* the dial: a faint full circle, a dotted inner ring, and two bright
+         crescents at the sides that carry the glow */
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(201,155,69,0.20)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      const innerR = R * 0.9;
+      const dots = narrow ? 84 : 150;
+      ctx.beginPath();
+      for (let j = 0; j < dots; j++) {
+        const a = (j / dots) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(a) * innerR;
+        const y = cy + Math.sin(a) * innerR;
+        ctx.moveTo(x + 0.9, y);
+        ctx.arc(x, y, 0.9, 0, Math.PI * 2);
       }
-      // a tick for every year of the span, decades heavier
-      for (let i = 0; i <= SPAN; i++) {
-        const s = i * step + rot;
-        if (Math.abs(s) > fadeSpan) continue;
-        const fade = 1 - Math.min(1, Math.abs(s) / fadeSpan);
-        const decade = (START_YEAR + i) % 10 === 0;
-        const a = s * RAD;
-        const rr = radius * 0.985;
+      ctx.fillStyle = "rgba(216,201,163,0.30)";
+      ctx.fill();
+
+      // the crescents brighten as the count advances, so the dial fills with it
+      const heat = 0.32 + 0.68 * p;
+      const breathe = 0.85 + 0.15 * Math.sin(tSec * 1.1);
+      ctx.save();
+      ctx.shadowColor = "rgba(201,155,69,0.85)";
+      ctx.shadowBlur = 26;
+      ctx.strokeStyle = `rgba(228,190,110,${(0.85 * heat * breathe).toFixed(3)})`;
+      ctx.lineWidth = 2.1;
+      for (const mid of [0, Math.PI]) {
         ctx.beginPath();
-        ctx.arc(Math.cos(a) * rr, cy + Math.sin(a) * rr, decade ? 3 : 2, 0, Math.PI * 2);
-        ctx.fillStyle = decade
-          ? `rgba(201,155,69,${0.9 * fade})`
-          : `rgba(216,201,163,${0.55 * fade})`;
-        ctx.fill();
+        ctx.arc(cx, cy, R, mid - 0.62, mid + 0.62);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      /* the progress arc — the same count, drawn round the dial from the top */
+      if (p > 0.001) {
+        ctx.save();
+        ctx.shadowColor = "rgba(201,155,69,0.6)";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2);
+        ctx.strokeStyle = "rgba(228,190,110,0.55)";
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+        ctx.restore();
       }
 
-      // the years themselves — upright on the arc, biggest on the axis
-      let nearest = 0;
-      let nearestD = Infinity;
+      /* the years: the one being counted on the centre line, the ones already
+         passed receding above it, nothing below */
+      const pos = p * SPAN;
       for (let i = 0; i <= SPAN; i++) {
         const lb = labels.current[i];
         if (!lb) continue;
-        const s = i * step + rot;
-        const a = Math.abs(s);
-        if (a < nearestD) {
-          nearestD = a;
-          nearest = i;
-        }
-        if (a > cull) {
+        const age = pos - i; // >0 already passed, <0 not yet reached
+        if (age < -0.5 || age > AGE_CULL) {
           if (lb.style.opacity !== "0") lb.style.opacity = "0";
           continue;
         }
-        const d = a / cull;
-        const near = Math.pow(1 - d, 2.2);
-        // counter-rotate by the row AND wheel rotation, so the year stays upright
-        lb.style.transform = `translateY(-50%) rotate(${-s}deg) scale(${lerp(0.34, maxScale, near)})`;
-        lb.style.opacity = `${Math.pow(1 - d, 1.45)}`;
-      }
-      for (let i = 0; i <= SPAN; i++) {
-        const lb = labels.current[i];
-        if (lb) lb.style.color = i === nearest ? "#f5f2ea" : "#d8c9a3";
-      }
-
-      // the wheel carries the rows; the labels above undo it to stay readable
-      for (let i = 0; i <= SPAN; i++) {
-        const row = rows.current[i];
-        if (row) row.style.transform = `rotate(${i * step + rot}deg)`;
+        const a = Math.max(0, age);
+        // geometric rise: spacing shrinks with age so the column converges
+        const rise = (gap * (1 - Math.pow(DECAY, a))) / (1 - DECAY);
+        const scale = 0.34 + 0.66 * Math.exp(-1.15 * a);
+        // fade in from just below the line, so a year arrives rather than blinks
+        const arriving = age < 0 ? 1 + age * 2 : 1;
+        lb.style.transform = `translate(-50%,-50%) translateY(${(-rise).toFixed(1)}px) scale(${scale.toFixed(3)})`;
+        lb.style.opacity = `${(Math.exp(-0.42 * a) * clamp01(arriving)).toFixed(3)}`;
+        lb.style.color = a < 0.5 ? "#f5f2ea" : "#d8c9a3";
       }
 
-      if (bar.current) bar.current.style.width = `${p * 100}%`;
+      if (bar.current) bar.current.style.width = `${(p * 100).toFixed(2)}%`;
+      if (nowYear.current) {
+        nowYear.current.textContent = String(START_YEAR + Math.round(pos));
+      }
     };
 
     let killed = false;
     const timers: number[] = [];
     let raf = 0;
 
-    /* ---------- reduced motion: landed on 2026, all content present ---------- */
+    /* ---------- reduced motion: landed on the present, all content shown ---------- */
     if (calm) {
       render(1, 0);
       setLanded(true);
+      // there is no animation frame here to re-measure in, so take one more
+      // reading once layout has certainly happened
+      timers.push(
+        window.setTimeout(() => {
+          if (killed) return;
+          layout();
+          render(1, 0);
+        }, 80)
+      );
       timers.push(
         window.setTimeout(
           () => {
@@ -344,7 +330,7 @@ export default function IntroLoader() {
       };
     }
 
-    /* ---------- sweep, paced by the film's readiness ---------- */
+    /* ---------- the count, paced by the film's readiness ---------- */
     const heroVids = Array.from(
       document.querySelectorAll<HTMLVideoElement>("video[data-hero-video]")
     );
@@ -352,8 +338,6 @@ export default function IntroLoader() {
     const heroActive =
       heroVids.find((v) => v.dataset.heroVideo === (wide ? "web" : "mobile")) ?? heroVids[0];
 
-    // readiness, not buffered fraction: a 30MB film is playable long before
-    // buffered/duration approaches 1, so gating on the fraction never lands
     let filmReady = !heroActive;
     if (heroActive) {
       if (heroActive.readyState >= 3) filmReady = true;
@@ -375,9 +359,15 @@ export default function IntroLoader() {
 
     const frame = (now: number) => {
       if (killed) return;
+      // Self-heal the measurements. A tab that is backgrounded or not yet laid
+      // out at mount reports a zero viewport, which pins the dial to the corner
+      // at its minimum radius and leaves it there, because nothing else would
+      // re-measure until a resize that may never come. Comparing is cheap;
+      // layout() only runs when the numbers actually changed.
+      if (vw !== window.innerWidth || vh !== window.innerHeight) layout();
       const elapsed = now - startedAt;
       const ramp = easeOutCubic(clamp01(elapsed / sweepMs));
-      // hold just short of 2026 until the film can actually play
+      // hold just short of the present until the film can actually play
       const next = Math.min(ramp, filmReady ? 1 : 0.88);
       if (next > target) target = next;
       shown += (target - shown) * 0.1;
@@ -415,8 +405,8 @@ export default function IntroLoader() {
           { autoAlpha: 0, duration: 0.3, ease: "power2.in" },
           0
         )
-        // the arc drifts on as it dissolves, so the reveal carries momentum
-        .to([cv, ...rows.current.filter(Boolean)], { scale: 1.05, duration: 0.9, ease: "power2.in" }, 0)
+        // the dial pushes forward as it dissolves, so the reveal carries momentum
+        .to([cv, dial.current], { scale: 1.06, duration: 0.9, ease: "power2.in" }, 0)
         .add(() => {
           html.classList.remove("is-intro");
           lenis?.start();
@@ -450,51 +440,78 @@ export default function IntroLoader() {
 
   if (!onHome || gone) return null;
 
+  const n = years();
+
   return (
     <div ref={root} className="intro-root" role="status" aria-live="polite">
-      {/* the history section's own ground and glow, so this reads as its prologue */}
+      {/* the ground glow the whole composition sits in */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse farthest-corner at 40% 50%, rgba(170,151,93,0.26) 0%, rgba(10,15,12,0) 70%)",
+            "radial-gradient(ellipse farthest-corner at 50% 50%, rgba(170,151,93,0.22) 0%, rgba(10,15,12,0) 68%)",
         }}
       />
 
-      {/* the dotted spine and the forty year ticks */}
+      {/* stars, tunnel, dial, progress arc */}
       <canvas ref={canvas} aria-hidden className="absolute inset-0 w-full h-full" />
 
-      {/* the years, pivoted off the left edge */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div ref={wheelWrap} className="absolute left-0 top-1/2 w-0 h-0">
+      {/* the dial's contents — sized and placed from layout() so the canvas and
+          the DOM agree on where the centre is at every viewport */}
+      <div
+        ref={dial}
+        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      >
+        {/* the years, stacked upward from the centre line */}
+        <div className="absolute left-1/2 top-1/2">
           {YEARS.map((y, i) => (
-            <div
+            <span
               key={y}
-              ref={(n) => {
-                rows.current[i] = n;
+              ref={(el) => {
+                labels.current[i] = el;
               }}
-              className="absolute left-0 top-0 w-0 h-0 will-change-transform"
-              style={{ transformOrigin: "0px 0px" }}
+              className="absolute left-0 top-0 font-display leading-none whitespace-nowrap tabular-nums"
+              style={{
+                opacity: 0,
+                fontSize: "clamp(1.9rem,4.4vw,4.6rem)",
+                transform: "translate(-50%,-50%)",
+              }}
             >
-              <span
-                ref={(n) => {
-                  labels.current[i] = n;
-                }}
-                className="absolute top-0 font-display leading-none whitespace-nowrap text-[6vw] sm:text-[3.2vw]"
-                style={{ opacity: 0, transformOrigin: "0% 50%" }}
-              >
-                {y}
-              </span>
-            </div>
+              {y}
+            </span>
           ))}
+        </div>
+
+        {/* what the count is of, directly under the year being read */}
+        <div className="absolute inset-x-0 top-1/2 mt-[clamp(1.6rem,3.4vw,3rem)] text-center">
+          <p className="label label-xs text-gold/85">{n} Years of Excellence</p>
+        </div>
+
+        {/* the standing claim, lower in the dial */}
+        <div
+          data-intro-fade
+          className="absolute inset-x-0 bottom-[8%] text-center"
+        >
+          <p className="font-display text-gold leading-none text-[clamp(1.8rem,3.6vw,3.4rem)]">
+            {n}
+            <span className="label label-xs text-cream/70 ml-2 align-middle">Years</span>
+          </p>
+          <p className="label label-xs text-cream/45 mt-2">of trust &amp; growth</p>
         </div>
       </div>
 
-      {/* the axis — whichever year crosses it is the one being read */}
-      <div
-        ref={axis}
-        aria-hidden
-        className="absolute top-1/2 -translate-y-1/2 h-px w-9 bg-gold/70"
+      {/* the two ends of the story, held either side of the dial */}
+      <Medallion
+        side="left"
+        year={START_YEAR}
+        kicker="Our beginning"
+        line="A vision was born"
+      />
+      <Medallion
+        side="right"
+        year={END_YEAR}
+        kicker="Our future"
+        line="A legacy continues"
       />
 
       {/* the name itself, not a text stand-in for it */}
@@ -511,13 +528,13 @@ export default function IntroLoader() {
       <figure
         data-intro-fade
         className="absolute z-10 px-7 text-center sm:text-left
-                   inset-x-0 bottom-[19vh] sm:inset-x-auto sm:bottom-auto
-                   sm:right-[5vw] sm:top-1/2 sm:-translate-y-1/2 sm:w-[26vw] sm:max-w-[380px] sm:px-0"
+                   inset-x-0 bottom-[22vh] sm:inset-x-auto sm:bottom-auto
+                   sm:right-[4vw] sm:top-1/2 sm:-translate-y-1/2 sm:w-[24vw] sm:max-w-[360px] sm:px-0"
       >
         <span aria-hidden className="hidden sm:block font-display text-gold text-5xl leading-none">
           &rdquo;
         </span>
-        <blockquote className="font-serifit italic text-cream/80 text-[clamp(1rem,1.15vw,1.75rem)] leading-snug sm:-mt-3">
+        <blockquote className="font-serifit italic text-cream/80 text-[clamp(1rem,1.1vw,1.6rem)] leading-snug sm:-mt-3">
           {leadership.founder.quote}
         </blockquote>
         <figcaption className="label label-xs text-sand/65 mt-4 sm:mt-6">
@@ -526,24 +543,30 @@ export default function IntroLoader() {
         </figcaption>
       </figure>
 
+      {/* the journey bar — the same progress, read as a span of years */}
       <div
         data-intro-fade
         className="absolute inset-x-0 bottom-[6vh] flex flex-col items-center px-6 text-center"
       >
         <p
           className={`label label-xs text-gold mb-4 transition-opacity duration-700 ${
-            landed ? "opacity-100" : "opacity-0"
+            landed ? "opacity-100" : "opacity-60"
           }`}
         >
-          {yearsWord()} years of landmarks
+          {n} Years Journey
         </p>
-        <div className="w-full max-w-[260px] sm:max-w-sm">
-          <div className="h-px w-full bg-cream/12">
-            <div ref={bar} className="h-px bg-gold" style={{ width: "0%" }} />
+        <div className="w-full max-w-[300px] sm:max-w-md">
+          <div className="relative h-px w-full bg-cream/12">
+            <div ref={bar} className="absolute inset-y-0 left-0 bg-gold" style={{ width: "0%" }} />
+            {/* end caps, so the line reads as a measured span */}
+            <span className="absolute -top-1 left-0 h-2 w-px bg-gold/70" />
+            <span className="absolute -top-1 right-0 h-2 w-px bg-gold/70" />
           </div>
           <div className="flex justify-between mt-2.5">
             <span className="label label-xs text-cream/35">{START_YEAR}</span>
-            <span className="label label-xs text-cream/35">{END_YEAR}</span>
+            <span ref={nowYear} className="label label-xs text-cream/35">
+              {END_YEAR}
+            </span>
           </div>
         </div>
       </div>
@@ -555,6 +578,43 @@ export default function IntroLoader() {
       >
         Skip
       </button>
+    </div>
+  );
+}
+
+/**
+ * One end of the story, on the dial's centre line.
+ *
+ * Hidden below `lg`: at narrow widths the dial already fills the screen and
+ * these would collide with it. They are decoration for the count, not content —
+ * both years are stated again on the journey bar underneath, which every
+ * viewport gets.
+ */
+function Medallion({
+  side,
+  year,
+  kicker,
+  line,
+}: {
+  side: "left" | "right";
+  year: number;
+  kicker: string;
+  line: string;
+}) {
+  const isLeft = side === "left";
+  return (
+    <div
+      data-intro-fade
+      className={`pointer-events-none absolute top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center
+                  ${isLeft ? "left-[13vw]" : "right-[13vw]"}`}
+    >
+      <span className="flex items-center justify-center rounded-full border border-gold/45 text-gold font-display w-[clamp(52px,4.4vw,74px)] h-[clamp(52px,4.4vw,74px)] text-[clamp(0.95rem,1.15vw,1.4rem)] tabular-nums">
+        {year}
+      </span>
+      <span className="label label-xs text-cream/55 mt-3">{kicker}</span>
+      <span className="font-serifit italic text-cream/40 text-[clamp(0.8rem,0.85vw,1rem)] mt-1">
+        {line}
+      </span>
     </div>
   );
 }
