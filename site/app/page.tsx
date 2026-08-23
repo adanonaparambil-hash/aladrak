@@ -35,6 +35,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Intro />
+      <HistoryTimeline />
       <Expertise />
       <Projects />
       <PortfolioGrid />
@@ -45,7 +46,6 @@ export default function Home() {
       <AwardsCerts />
       <Clients />
       <RoyalQuote />
-      <HistoryTimeline />
       <Story />
       <Future />
       <Footer />

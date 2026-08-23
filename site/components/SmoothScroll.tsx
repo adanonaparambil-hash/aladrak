@@ -19,6 +19,44 @@ export default function SmoothScroll({
 }: {
   children: React.ReactNode;
 }) {
+  /**
+   * Re-measure every ScrollTrigger once the page has actually settled.
+   *
+   * Five sections pin, and a pinned trigger caches the size of the element it
+   * pins at the moment it is created. That happens during mount — before the
+   * web fonts have swapped in and before images and videos have contributed
+   * their heights — so the cached numbers can be wrong, and for a pin they are
+   * not merely a bit off: the wrong measurement is baked into the spacer that
+   * holds the page open. A section measured at zero width produced a spacer
+   * 396,142px tall, which turned a 36,000px page into a 438,000px one with a
+   * quarter-million pixels of dead scroll. It was intermittent, because it
+   * depended on whether fonts happened to land before or after mount.
+   *
+   * `sort()` first, because these triggers are created by separate components
+   * whose effects do not necessarily run in page order, and GSAP has to refresh
+   * pinned triggers top-down for the spacing to come out right.
+   *
+   * This runs regardless of the reduced-motion branch below: fewer sections pin
+   * in that mode, but the ones that do still need honest measurements.
+   */
+  useEffect(() => {
+    let done = false;
+    const settle = () => {
+      if (done) return;
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    };
+    // fonts change text metrics, which changes section heights
+    document.fonts?.ready.then(settle).catch(() => settle());
+    // load covers images and video metadata
+    if (document.readyState === "complete") settle();
+    else window.addEventListener("load", settle);
+    return () => {
+      done = true;
+      window.removeEventListener("load", settle);
+    };
+  }, []);
+
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
