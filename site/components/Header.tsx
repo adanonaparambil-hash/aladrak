@@ -106,7 +106,10 @@ export default function Header() {
           <button
             aria-label="Menu"
             onClick={() => setOpen(!open)}
-            className="md:hidden relative z-50 flex flex-col gap-1.5 p-2"
+            // w-11 h-11 is the 44px minimum: p-2 around two 1px bars left this
+            // 40x24, the smallest target on the page and the one that opens the
+            // whole menu
+            className="md:hidden relative z-50 w-11 h-11 flex flex-col items-center justify-center gap-1.5"
           >
             <span
               className={`block h-px w-6 bg-cream transition-transform duration-300 ${open ? "translate-y-[3.5px] rotate-45" : ""}`}

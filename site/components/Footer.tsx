@@ -49,7 +49,9 @@ export default function Footer() {
             <a
               key={l}
               href={asset(`/#${l.toLowerCase()}`)}
-              className="label text-cream/60 hover:text-gold transition-colors"
+              // py-2.5 lifts these off a 19px line box; the gap-7 row already
+              // spaces them horizontally, so this only buys vertical reach
+              className="label text-cream/60 hover:text-gold transition-colors py-2.5"
             >
               {l}
             </a>
