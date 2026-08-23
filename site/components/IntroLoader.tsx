@@ -60,7 +60,29 @@ const SEEN_KEY = "adrak-intro-seen";
  * many years there are to show.
  */
 const AGE_CULL = 9;
-const DECAY = 0.86;
+const DECAY = 0.84;
+
+/**
+ * The founder's quote sits at right:4vw with width min(24vw, 360px), so its
+ * left edge is derived rather than guessed — an estimated band was what let the
+ * medallion land on top of it.
+ */
+const quoteLeftEdge = (vw: number) => vw * 0.96 - Math.min(vw * 0.24, 360);
+/** the medallion box, and the clearance it needs beyond the ring */
+const MED_W = 140;
+const MED_SPACE = MED_W + 12;
+/**
+ * The medallions are shown only where they are nearly free.
+ *
+ * A fixed breakpoint was wrong: switching them on at 1440 took 152px off each
+ * side and collapsed the ring from R=276 to R=149 the moment the window crossed
+ * that width — a jump you would see as the dial suddenly shrinking. Instead the
+ * radius is computed both ways and they appear only if keeping them costs less
+ * than this share of the ring, so the worst visible step is that same share.
+ */
+const MED_WORTH_IT = 0.88;
+/** below this the composition is too tight for them at any cost */
+const MED_MIN_VW = 1180;
 
 /** The receding tunnel of dot rings, centred on the dial. */
 const TUNNEL = {
@@ -93,7 +115,7 @@ export default function IntroLoader() {
   const labels = useRef<(HTMLSpanElement | null)[]>([]);
   const dial = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
-  const nowYear = useRef<HTMLSpanElement>(null);
+  const claim = useRef<HTMLSpanElement>(null);
   const exitRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -131,6 +153,8 @@ export default function IntroLoader() {
     let fontPx = 0;
     /** spacing of the first step above the centre line */
     let gap = 0;
+    /** how far the medallions reach beyond the ring at this width */
+    let medSpace = 0;
     let stars: Star[] = [];
 
     const layout = () => {
@@ -144,18 +168,55 @@ export default function IntroLoader() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const narrow = vw < 640;
+      const wide = vw >= 1024;
       cx = vw / 2;
       // lifted on a phone, where the quote and the bar share the lower screen
       cy = narrow ? vh * 0.42 : vh * 0.5;
-      R = clamp(Math.min(vw * 0.19, vh * 0.36), 118, 320);
-      fontPx = clamp(R * 0.3, 30, 76);
-      gap = fontPx * 0.62;
+
+      /**
+       * The radius is bounded by what the furniture leaves free, not chosen and
+       * hoped for. The founder's quote occupies a band down the right on wide
+       * screens and the medallions hang off the dial's sides, so the dial has to
+       * fit between them — the previous pass placed the medallions at a fixed
+       * 13vw from the viewport edge instead, which put the right one straight on
+       * top of the quote at 1900px wide.
+       */
+      const rightLimit = wide ? quoteLeftEdge(vw) - 16 : vw - 16;
+      // the radius the space allows, with the medallions and without them
+      const radiusFor = (med: number) =>
+        clamp(
+          Math.min(
+            vh * 0.36,
+            // the ring plus its medallion must stop short of the quote
+            rightLimit - med - cx,
+            // and stay clear of the left edge by the same margin
+            cx - med - 16
+          ),
+          104,
+          340
+        );
+      const bare = radiusFor(0);
+      const withMed = radiusFor(MED_SPACE);
+      const showMed = vw >= MED_MIN_VW && withMed >= bare * MED_WORTH_IT;
+      medSpace = showMed ? MED_SPACE : 0;
+      R = showMed ? withMed : bare;
+      fontPx = clamp(R * 0.28, 24, 92);
+      // the stack converges to gap/(1-DECAY); keep that inside the ring
+      gap = fontPx * 0.46;
 
       if (dial.current) {
         dial.current.style.left = `${cx}px`;
         dial.current.style.top = `${cy}px`;
         dial.current.style.width = `${R * 2}px`;
         dial.current.style.height = `${R * 2}px`;
+        // the medallions hang off the dial itself, so they track the ring at
+        // every width instead of being placed against the viewport
+        dial.current.dataset.med = showMed ? "1" : "0";
+      }
+      // the year type is sized from the radius, so the column keeps its
+      // proportion to the ring rather than to the viewport
+      for (const lb of labels.current) {
+        if (lb) lb.style.fontSize = `${fontPx}px`;
       }
 
       // the star field is regenerated per layout so density follows the viewport
@@ -217,44 +278,75 @@ export default function IntroLoader() {
       ctx.lineWidth = 1;
       ctx.stroke();
 
+      // the dotted inner ring, turning slowly so the dial is never static
       const innerR = R * 0.9;
       const dots = narrow ? 84 : 150;
+      const spinDots = tSec * 0.055;
       ctx.beginPath();
       for (let j = 0; j < dots; j++) {
-        const a = (j / dots) * Math.PI * 2 - Math.PI / 2;
+        const a = (j / dots) * Math.PI * 2 - Math.PI / 2 + spinDots;
         const x = cx + Math.cos(a) * innerR;
         const y = cy + Math.sin(a) * innerR;
         ctx.moveTo(x + 0.9, y);
         ctx.arc(x, y, 0.9, 0, Math.PI * 2);
       }
-      ctx.fillStyle = "rgba(216,201,163,0.30)";
+      ctx.fillStyle = "rgba(216,201,163,0.34)";
       ctx.fill();
 
-      // the crescents brighten as the count advances, so the dial fills with it
-      const heat = 0.32 + 0.68 * p;
-      const breathe = 0.85 + 0.15 * Math.sin(tSec * 1.1);
+      /**
+       * The two crescents that give the dial its light.
+       *
+       * Drawn as a gradient stroke in three passes — a wide soft bloom, a
+       * mid body, then a hot core — because a single stroke with shadowBlur
+       * reads as a uniformly thin gold circle, which is exactly how the previous
+       * pass came out. They also drift a little either side of the horizontal,
+       * so the light looks alive rather than painted on.
+       */
+      const heat = 0.34 + 0.66 * p;
+      const breathe = 0.82 + 0.18 * Math.sin(tSec * 1.05);
+      const sway = Math.sin(tSec * 0.35) * 0.16;
+      const passes: Array<[number, number, number]> = [
+        // [lineWidth, alpha, blur]
+        [13, 0.1, 34],
+        [5, 0.3, 20],
+        [1.8, 0.95, 10],
+      ];
       ctx.save();
-      ctx.shadowColor = "rgba(201,155,69,0.85)";
-      ctx.shadowBlur = 26;
-      ctx.strokeStyle = `rgba(228,190,110,${(0.85 * heat * breathe).toFixed(3)})`;
-      ctx.lineWidth = 2.1;
-      for (const mid of [0, Math.PI]) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, R, mid - 0.62, mid + 0.62);
-        ctx.stroke();
+      ctx.lineCap = "round";
+      for (const [lw, alpha, blur] of passes) {
+        ctx.shadowColor = "rgba(214,168,80,0.9)";
+        ctx.shadowBlur = blur;
+        ctx.lineWidth = lw;
+        for (const mid of [sway, Math.PI - sway]) {
+          const g = ctx.createLinearGradient(cx, cy - R, cx, cy + R);
+          g.addColorStop(0, "rgba(228,190,110,0)");
+          g.addColorStop(0.5, `rgba(246,220,155,${(alpha * heat * breathe).toFixed(3)})`);
+          g.addColorStop(1, "rgba(228,190,110,0)");
+          ctx.strokeStyle = g;
+          ctx.beginPath();
+          ctx.arc(cx, cy, R, mid - 0.66, mid + 0.66);
+          ctx.stroke();
+        }
       }
       ctx.restore();
 
-      /* the progress arc — the same count, drawn round the dial from the top */
+      /* the progress arc, and a travelling head that marks where the count is */
       if (p > 0.001) {
+        const head = -Math.PI / 2 + p * Math.PI * 2;
         ctx.save();
         ctx.shadowColor = "rgba(201,155,69,0.6)";
         ctx.shadowBlur = 12;
         ctx.beginPath();
-        ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2);
-        ctx.strokeStyle = "rgba(228,190,110,0.55)";
+        ctx.arc(cx, cy, R, -Math.PI / 2, head);
+        ctx.strokeStyle = "rgba(228,190,110,0.5)";
         ctx.lineWidth = 1.6;
         ctx.stroke();
+        // the head itself
+        ctx.beginPath();
+        ctx.arc(cx + Math.cos(head) * R, cy + Math.sin(head) * R, 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(250,236,198,0.95)";
+        ctx.shadowBlur = 18;
+        ctx.fill();
         ctx.restore();
       }
 
@@ -272,18 +364,23 @@ export default function IntroLoader() {
         const a = Math.max(0, age);
         // geometric rise: spacing shrinks with age so the column converges
         const rise = (gap * (1 - Math.pow(DECAY, a))) / (1 - DECAY);
-        const scale = 0.34 + 0.66 * Math.exp(-1.15 * a);
-        // fade in from just below the line, so a year arrives rather than blinks
+        // a hard drop after the centre line, so the year being counted reads as
+        // the subject and the ones above it as its history — a gentle falloff
+        // made the column look like a list of equals
+        const scale = 0.3 + 0.7 * Math.exp(-1.5 * a);
+        // arrive from just below the line rather than blinking into place
         const arriving = age < 0 ? 1 + age * 2 : 1;
-        lb.style.transform = `translate(-50%,-50%) translateY(${(-rise).toFixed(1)}px) scale(${scale.toFixed(3)})`;
+        const lift = age < 0 ? -age * gap * 1.6 : 0;
+        lb.style.transform =
+          `translate(-50%,-50%) translateY(${(-rise + lift).toFixed(1)}px) scale(${scale.toFixed(3)})`;
         lb.style.opacity = `${(Math.exp(-0.42 * a) * clamp01(arriving)).toFixed(3)}`;
         lb.style.color = a < 0.5 ? "#f5f2ea" : "#d8c9a3";
       }
 
       if (bar.current) bar.current.style.width = `${(p * 100).toFixed(2)}%`;
-      if (nowYear.current) {
-        nowYear.current.textContent = String(START_YEAR + Math.round(pos));
-      }
+      // the claim counts up with the years rather than stating the total from
+      // the first frame — the number arrives at the same moment the dial does
+      if (claim.current) claim.current.textContent = String(Math.round(pos));
     };
 
     let killed = false;
@@ -460,7 +557,8 @@ export default function IntroLoader() {
           the DOM agree on where the centre is at every viewport */}
       <div
         ref={dial}
-        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="intro-dial absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        data-med="0"
       >
         {/* the years, stacked upward from the centre line */}
         <div className="absolute left-1/2 top-1/2">
@@ -493,26 +591,31 @@ export default function IntroLoader() {
           className="absolute inset-x-0 bottom-[8%] text-center"
         >
           <p className="font-display text-gold leading-none text-[clamp(1.8rem,3.6vw,3.4rem)]">
-            {n}
+            <span ref={claim} className="tabular-nums">
+              {n}
+            </span>
             <span className="label label-xs text-cream/70 ml-2 align-middle">Years</span>
           </p>
           <p className="label label-xs text-cream/45 mt-2">of trust &amp; growth</p>
         </div>
-      </div>
 
-      {/* the two ends of the story, held either side of the dial */}
-      <Medallion
-        side="left"
-        year={START_YEAR}
-        kicker="Our beginning"
-        line="A vision was born"
-      />
-      <Medallion
-        side="right"
-        year={END_YEAR}
-        kicker="Our future"
-        line="A legacy continues"
-      />
+        {/* The two ends of the story, hung off the ring itself. Being children
+            of the dial is the point: they track the radius at every width, so
+            they cannot drift into the founder's quote the way viewport-anchored
+            placement did. */}
+        <Medallion
+          side="left"
+          year={START_YEAR}
+          kicker="Our beginning"
+          line="A vision was born"
+        />
+        <Medallion
+          side="right"
+          year={END_YEAR}
+          kicker="Our future"
+          line="A legacy continues"
+        />
+      </div>
 
       {/* the name itself, not a text stand-in for it */}
       <div data-intro-fade className="absolute top-6 left-7 sm:top-8 sm:left-10">
@@ -564,9 +667,7 @@ export default function IntroLoader() {
           </div>
           <div className="flex justify-between mt-2.5">
             <span className="label label-xs text-cream/35">{START_YEAR}</span>
-            <span ref={nowYear} className="label label-xs text-cream/35">
-              {END_YEAR}
-            </span>
+            <span className="label label-xs text-cream/35">{END_YEAR}</span>
           </div>
         </div>
       </div>
@@ -605,14 +706,20 @@ function Medallion({
   return (
     <div
       data-intro-fade
-      className={`pointer-events-none absolute top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center
-                  ${isLeft ? "left-[13vw]" : "right-[13vw]"}`}
+      className={`intro-med pointer-events-none absolute top-1/2 -translate-y-1/2 flex-col items-center w-[140px]
+                  ${isLeft ? "left-0 -translate-x-full" : "right-0 translate-x-full"}`}
     >
-      <span className="flex items-center justify-center rounded-full border border-gold/45 text-gold font-display w-[clamp(52px,4.4vw,74px)] h-[clamp(52px,4.4vw,74px)] text-[clamp(0.95rem,1.15vw,1.4rem)] tabular-nums">
+      {/* the connector, reaching from the medallion to the ring's edge */}
+      <span
+        aria-hidden
+        className={`absolute top-1/2 w-7 h-px bg-gradient-to-r from-transparent to-gold/60
+                    ${isLeft ? "right-2 rotate-180" : "left-2"}`}
+      />
+      <span className="flex items-center justify-center rounded-full border border-gold/45 text-gold font-display w-[clamp(52px,4.2vw,72px)] h-[clamp(52px,4.2vw,72px)] text-[clamp(0.95rem,1.1vw,1.35rem)] tabular-nums">
         {year}
       </span>
-      <span className="label label-xs text-cream/55 mt-3">{kicker}</span>
-      <span className="font-serifit italic text-cream/40 text-[clamp(0.8rem,0.85vw,1rem)] mt-1">
+      <span className="label label-xs text-cream/55 mt-3 whitespace-nowrap">{kicker}</span>
+      <span className="font-serifit italic text-cream/40 text-[clamp(0.8rem,0.85vw,1rem)] mt-1 whitespace-nowrap">
         {line}
       </span>
     </div>

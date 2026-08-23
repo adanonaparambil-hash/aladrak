@@ -50,6 +50,19 @@ html.is-intro {
   color: var(--color-cream);
 }
 
+/*
+ * The medallions either side of the dial are shown by the loader's own layout
+ * pass, not by a breakpoint: whether they fit depends on the radius the quote
+ * band leaves free, which is a calculation CSS cannot make. Hidden by default so
+ * they never flash in before that pass runs.
+ */
+.intro-med {
+  display: none;
+}
+.intro-dial[data-med="1"] .intro-med {
+  display: flex;
+}
+
 body {
   background: var(--color-ink);
   color: var(--color-cream);
