@@ -150,6 +150,34 @@ body {
   letter-spacing: 0.3em;
 }
 
+/**
+ * Phone floor for the label sizes.
+ *
+ * Both clamps above have a vw-based preferred term — 0.5vw and 0.45vw — which on
+ * a 375px handset is under two pixels. The floor therefore governs, so every
+ * label on a phone renders at its minimum: 10px, and 9px for .label-xs. At
+ * uppercase with 0.35em of letterspacing that is below comfortable reading size
+ * on a handset, and it was also the size of the hero's two primary buttons,
+ * which carry this same class.
+ *
+ * Desktop is deliberately untouched — the scale above was tuned at those widths
+ * and a global change would shift layouts that are already right.
+ */
+@media (max-width: 640px) {
+  .label {
+    font-size: 12px;
+  }
+  .label-xs {
+    font-size: 11px;
+  }
+  /* anything tappable carrying a label is a control, not a caption */
+  a.label,
+  button.label {
+    font-size: 12.5px;
+    letter-spacing: 0.28em;
+  }
+}
+
 /* word-reveal target */
 .reveal-word {
   opacity: 0.15;

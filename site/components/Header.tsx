@@ -139,7 +139,9 @@ export default function Header() {
               href={l.href}
               onClick={() => setOpen(false)}
               tabIndex={open ? 0 : -1}
-              className="font-display text-[7vw] min-[420px]:text-2xl leading-none text-cream/90 hover:text-gold transition-colors"
+              // py-2.5 is the touch target, not decoration: leading-none left
+              // these 26px tall, well under the 44px minimum for a thumb
+              className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
             >
               {l.label}
             </a>
