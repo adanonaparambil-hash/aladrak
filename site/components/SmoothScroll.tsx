@@ -61,7 +61,24 @@ export default function SmoothScroll({
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    const lenis = new Lenis({ lerp: 0.11, smoothWheel: true });
+    /**
+     * Scroll feel.
+     *
+     * lerp is how much of the remaining distance is covered each frame, so a
+     * lower number is a longer, softer glide. 0.11 arrived quickly and stopped
+     * abruptly; 0.085 carries momentum through the pinned sections, which is
+     * where the abruptness showed most.
+     *
+     * wheelMultiplier below 1 shortens each notch of the wheel, which is what
+     * stops a single flick throwing the page a whole screen and makes long
+     * sections feel controlled rather than skittish.
+     */
+    const lenis = new Lenis({
+      lerp: 0.085,
+      smoothWheel: true,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1.5,
+    });
     instance = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 

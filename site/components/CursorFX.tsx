@@ -1,214 +1,249 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
 import { motionOK } from "@/lib/intro";
 
 /**
- * The pointer.
+ * The pointer — a spark that leaves a trail of glitter behind it.
  *
- * A gold core with a ring chasing it, which is a common enough device — what
- * makes this one the site's own is that it carries the scroll. While the page is
- * moving, the ring becomes a progress dial: an arc draws round it showing how far
- * through the site you are, a chevron leans in the direction of travel, and the
- * whole thing stretches along the axis of movement. Stop, and it settles back to
- * a plain ring within a second. So the cursor answers "where am I" exactly when
- * that question comes up, and stays out of the way otherwise.
+ * The pointer itself is a small hot core inside a soft gold bloom. Moving it
+ * throws off sparks, more of them the faster it travels; each one drifts, cools
+ * from cream through gold, shrinks, twinkles, and vanishes within about a second.
+ * Hold still and the trail dies out entirely, leaving just the core — so the
+ * effect appears where the attention is and disappears the moment it is not
+ * wanted.
  *
- * Three things it does that the previous version did not:
- *   - squash and stretch along the direction of motion, which is what makes a
- *     trailing ring feel like it has weight rather than lag;
- *   - report scroll progress and direction, so scrolling has a response at the
- *     point of attention instead of only in the corner of the screen;
- *   - name the action it is over — a link reads "View", the brochure "Open" —
- *     rather than just growing.
+ * Drawn on one canvas rather than as DOM nodes, and composited with "lighter" so
+ * the sparks accumulate into a glow where they overlap instead of stacking as
+ * flat discs. A DOM node per particle would be hundreds of elements and layout
+ * work per frame; this is a few hundred arc fills on the GPU-backed canvas.
  *
- * It also fixes a real cost. The old version ran querySelectorAll for the tilt
- * targets and created a fresh GSAP tween for every one of them on every single
- * mousemove event — hundreds of tweens a second while the mouse moved. The
- * pointer's own position is now integrated in one rAF loop and written straight
- * to transforms; the tilt list is cached and driven by gsap.set, which allocates
- * nothing and still shares the element's transform with the hero's own tween.
- *
- * Nothing here runs on a touch device, and under reduced motion the pointer is
- * left entirely alone — the native cursor is the accessible default.
+ * Over anything clickable the bloom opens up and a thin ring closes around it,
+ * and a click throws a burst. Nothing here runs on touch, and under reduced
+ * motion the whole thing is skipped and the native cursor left in place.
  */
 
-/** how long after the last scroll the ring stays in progress mode */
-const SCROLL_HOLD = 900;
+/** ceiling on live sparks; the pool is allocated once and reused */
+const MAX_SPARKS = 320;
+/** seconds a spark lives at most */
+const LIFE = 1.05;
+
+type Spark = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  born: number;
+  life: number;
+  size: number;
+  /** 0 = cream hot, 1 = deep gold */
+  tone: number;
+  /** phase for the twinkle */
+  ph: number;
+};
 
 export default function CursorFX() {
-  const dot = useRef<HTMLDivElement>(null);
-  const ring = useRef<HTMLDivElement>(null);
-  const arc = useRef<SVGCircleElement>(null);
-  const chev = useRef<HTMLDivElement>(null);
-  const label = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
   const progress = useRef<SVGCircleElement>(null);
+  const pctText = useRef<HTMLSpanElement>(null);
   const wrap = useRef<HTMLButtonElement>(null);
-  const [pct, setPct] = useState(0);
 
   useEffect(() => {
-    // no pointer FX on touch, and none at all when motion is to be reduced
     if (window.matchMedia("(pointer: coarse)").matches) return;
     if (!motionOK()) return;
 
+    const cv = canvas.current;
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+
     document.documentElement.classList.add("has-cursor-fx");
 
-    /* ---------- pointer state, integrated once per frame ---------- */
-    let tx = window.innerWidth / 2;
-    let ty = window.innerHeight / 2;
-    let dx = tx;
-    let dy = ty;
-    let rx = tx;
-    let ry = ty;
-    /** ring scale target: 1 idle, larger over something interactive */
-    let hover = 0;
-    /** 0..1 how much of the scroll dial is showing */
-    let scrolling = 0;
-    let lastScroll = -9999;
-    /** +1 down, -1 up */
-    let dir = 1;
-    let scrollP = 0;
+    /* ---------- viewport ---------- */
+    let vw = 0;
+    let vh = 0;
+    let dpr = 1;
+    const resize = () => {
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(vw * dpr);
+      cv.height = Math.round(vh * dpr);
+      cv.style.width = vw + "px";
+      cv.style.height = vh + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
 
-    const RING_R = 21;
-    const ARC_C = 2 * Math.PI * RING_R;
+    /* ---------- pointer ---------- */
+    let tx = vw / 2;
+    let ty = vh / 2;
+    let px = tx;
+    let py = ty;
+    let hover = 0;
+    let hoverTarget = 0;
 
     const onMove = (e: MouseEvent) => {
       tx = e.clientX;
       ty = e.clientY;
     };
-
-    /* ---------- what is under the pointer ---------- */
-    const HINTS: Array<[string, string]> = [
-      ['a[href$=".pdf"]', "Open"],
-      ["a[href^=mailto]", "Write"],
-      ["a[href^=tel]", "Call"],
-      ["[data-cursor-label]", ""],
-      ["a, button, [role=button]", "View"],
-    ];
     const onOver = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      let text = "";
-      let found: Element | null = null;
-      for (const [sel, word] of HINTS) {
-        const hit = t.closest(sel);
-        if (hit) {
-          found = hit;
-          text = (hit as HTMLElement).dataset.cursorLabel || word;
-          break;
-        }
-      }
-      hover = found ? 1 : 0;
-      if (label.current) label.current.textContent = text;
+      const hit = (e.target as HTMLElement).closest(
+        "a, button, [role=button], input, textarea, select"
+      );
+      hoverTarget = hit ? 1 : 0;
     };
 
-    /* ---------- scroll: progress, direction, and the dial's dwell ---------- */
-    let lastY = window.scrollY;
+    /* ---------- the spark pool ---------- */
+    const pool: Spark[] = Array.from({ length: MAX_SPARKS }, () => ({
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      born: -99,
+      life: 0,
+      size: 0,
+      tone: 0,
+      ph: 0,
+    }));
+    let head = 0;
+
+    const emit = (x: number, y: number, n: number, t: number, spread: number) => {
+      for (let k = 0; k < n; k++) {
+        const s = pool[head];
+        head = (head + 1) % MAX_SPARKS;
+        const a = Math.random() * Math.PI * 2;
+        const sp = Math.random() * spread;
+        s.x = x + Math.cos(a) * 3;
+        s.y = y + Math.sin(a) * 3;
+        s.vx = Math.cos(a) * sp;
+        // a slight upward bias, so the trail behaves like embers not dust
+        s.vy = Math.sin(a) * sp - 6;
+        s.born = t;
+        s.life = LIFE * (0.5 + Math.random() * 0.5);
+        s.size = 0.6 + Math.random() * 1.9;
+        s.tone = Math.random();
+        s.ph = Math.random() * Math.PI * 2;
+      }
+    };
+
+    const onDown = (e: MouseEvent) => {
+      emit(e.clientX, e.clientY, 26, performance.now() / 1000, 190);
+    };
+
+    /* ---------- scroll: corner dial only, written imperatively ---------- */
+    const C = 2 * Math.PI * 20;
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollP = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      const delta = window.scrollY - lastY;
-      if (Math.abs(delta) > 0.5) dir = delta > 0 ? 1 : -1;
-      lastY = window.scrollY;
-      lastScroll = performance.now();
-
-      // the corner dial keeps its own job: jump back to the top
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
       if (progress.current) {
-        progress.current.style.strokeDashoffset = String(
-          2 * Math.PI * 20 * (1 - scrollP)
-        );
+        progress.current.style.strokeDashoffset = String(C * (1 - p));
       }
-      setPct(Math.round(scrollP * 100));
+      // textContent, not React state: setState here re-rendered the component on
+      // every scroll event, which is a frame's work thrown away sixty times a
+      // second for a number that is two characters wide
+      if (pctText.current) pctText.current.textContent = `${Math.round(p * 100)}%`;
       if (wrap.current) wrap.current.style.opacity = window.scrollY > 400 ? "1" : "0";
     };
     onScroll();
 
-    /* ---------- tilt targets, cached rather than re-queried per event ---------- */
+    /* ---------- tilt targets, cached ---------- */
     let tilts: HTMLElement[] = [];
     const collectTilts = () => {
       tilts = Array.from(document.querySelectorAll<HTMLElement>("[data-tilt]"));
     };
     collectTilts();
-    // sections mount and unmount as the page is used; refresh occasionally
-    // rather than on every mouse movement
     const tiltTimer = window.setInterval(collectTilts, 2000);
 
     /* ---------- one frame ---------- */
     let raf = 0;
-    let prevX = tx;
-    let prevY = ty;
-    const frame = (now: number) => {
-      // the core is quick, the ring lags — that gap is the whole effect
-      dx += (tx - dx) * 0.35;
-      dy += (ty - dy) * 0.35;
-      rx += (tx - rx) * 0.14;
-      ry += (ty - ry) * 0.14;
+    let prev = performance.now() / 1000;
+    const frame = (nowMs: number) => {
+      const t = nowMs / 1000;
+      const dt = Math.min(0.05, t - prev);
+      prev = t;
 
-      // velocity of the RING, not the mouse: it is the thing being deformed
-      const vx = rx - prevX;
-      const vy = ry - prevY;
-      prevX = rx;
-      prevY = ry;
-      const speed = Math.hypot(vx, vy);
-      const angle = speed > 0.4 ? (Math.atan2(vy, vx) * 180) / Math.PI : 0;
-      // squash and stretch, capped so fast flicks stay a ring and not a line
-      const stretch = Math.min(0.55, speed * 0.02);
+      // the core eases toward the true pointer; the gap is what the sparks fill
+      const lx = px;
+      const ly = py;
+      px += (tx - px) * 0.28;
+      py += (ty - py) * 0.28;
+      const speed = Math.hypot(px - lx, py - ly);
+      hover += (hoverTarget - hover) * 0.15;
 
-      scrolling += ((now - lastScroll < SCROLL_HOLD ? 1 : 0) - scrolling) * 0.12;
+      // sparks in proportion to travel, so a still pointer makes none at all
+      const n = Math.min(6, Math.floor(speed * 0.5 + hover * 1.2));
+      if (n > 0) emit(px, py, n, t, 26 + speed * 5);
 
-      if (dot.current) {
-        dot.current.style.transform =
-          `translate3d(${dx}px,${dy}px,0) translate(-50%,-50%) scale(${1 - hover * 0.55})`;
+      ctx.clearRect(0, 0, vw, vh);
+      ctx.globalCompositeOperation = "lighter";
+
+      /* the trail */
+      for (const s of pool) {
+        const age = t - s.born;
+        if (age < 0 || age > s.life) continue;
+        const f = age / s.life;
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        // drag, and a gentle sink once the ember has cooled
+        s.vx *= 0.94;
+        s.vy = s.vy * 0.94 + 26 * dt;
+        // fade out on a curve so the tail thins rather than cutting off
+        const fade = (1 - f) * (1 - f);
+        const twinkle = 0.55 + 0.45 * Math.sin(t * 14 + s.ph);
+        const alpha = fade * twinkle * 0.9;
+        if (alpha <= 0.01) continue;
+        // cream at birth, gold as it cools
+        const r = 246 - s.tone * 45 * f;
+        const g = 226 - s.tone * 71 * f;
+        const b = 170 - s.tone * 101 * f;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size * (1 - f * 0.65), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${alpha.toFixed(3)})`;
+        ctx.fill();
       }
-      if (ring.current) {
-        const s = 1 + hover * 0.85 + scrolling * 0.25;
-        ring.current.style.transform =
-          `translate3d(${rx}px,${ry}px,0) translate(-50%,-50%) rotate(${angle}deg)` +
-          ` scale(${(s * (1 + stretch)).toFixed(3)},${(s * (1 - stretch * 0.7)).toFixed(3)})`;
-        ring.current.style.borderColor = `rgba(201,155,69,${(0.5 + hover * 0.45).toFixed(2)})`;
-        ring.current.style.backgroundColor = `rgba(201,155,69,${(hover * 0.1).toFixed(3)})`;
+
+      /* the bloom, then the hot core on top of it */
+      const bloomR = 13 + hover * 16;
+      const bloom = ctx.createRadialGradient(px, py, 0, px, py, bloomR);
+      bloom.addColorStop(0, `rgba(246,226,170,${0.5 + hover * 0.2})`);
+      bloom.addColorStop(0.45, `rgba(201,155,69,${0.18 + hover * 0.12})`);
+      bloom.addColorStop(1, "rgba(201,155,69,0)");
+      ctx.beginPath();
+      ctx.arc(px, py, bloomR, 0, Math.PI * 2);
+      ctx.fillStyle = bloom;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(px, py, 2.6 - hover * 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,247,230,0.95)";
+      ctx.fill();
+
+      /* over something clickable, a ring closes in */
+      if (hover > 0.01) {
+        ctx.beginPath();
+        ctx.arc(px, py, 15 + (1 - hover) * 14, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(226,186,108,${(hover * 0.75).toFixed(3)})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
       }
-      if (arc.current) {
-        arc.current.style.strokeDashoffset = String(ARC_C * (1 - scrollP));
-        arc.current.style.opacity = (scrolling * 0.95).toFixed(3);
-      }
-      if (chev.current) {
-        chev.current.style.opacity = (scrolling * (1 - hover)).toFixed(3);
-        chev.current.style.transform =
-          `translate3d(${rx}px,${ry}px,0) translate(-50%,-50%) rotate(${dir > 0 ? 0 : 180}deg)`;
-      }
-      if (label.current) {
-        label.current.style.transform = `translate3d(${rx}px,${ry + 34}px,0) translate(-50%,0)`;
-        label.current.style.opacity = hover ? "0.95" : "0";
-      }
+
+      ctx.globalCompositeOperation = "source-over";
 
       /**
-       * Tilt, from the cached list.
-       *
-       * Through gsap.set, NOT by writing style.transform. The hero's content
-       * block is both the tilt target and the subject of a scrubbed
-       * gsap.to(..., { y: -120 }) as the curtain rises, and the two have to share
-       * one transform. Writing the property directly would overwrite that drift
-       * every frame and kill it; gsap.set composes with it, because GSAP keeps a
-       * single combined transform per element.
-       *
-       * gsap.set is also the cheap half of the old bug: the previous version
-       * called gsap.to per element on every mousemove, allocating a tween each
-       * time. This allocates none.
+       * Tilt, through gsap.set rather than a direct style write: the hero's
+       * content block is both a tilt target and the subject of a scrubbed
+       * gsap.to({ y: -120 }), and the two must share one transform.
        */
-      if (tilts.length) {
-        const vh = window.innerHeight;
-        for (const el of tilts) {
-          const r = el.getBoundingClientRect();
-          if (r.bottom < 0 || r.top > vh) continue;
-          const ox = (tx - (r.left + r.width / 2)) / r.width;
-          const oy = (ty - (r.top + r.height / 2)) / r.height;
-          gsap.set(el, {
-            rotationY: ox * 6,
-            rotationX: -oy * 6,
-            transformPerspective: 900,
-          });
-        }
+      for (const el of tilts) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) continue;
+        gsap.set(el, {
+          rotationY: ((tx - (r.left + r.width / 2)) / r.width) * 6,
+          rotationX: -((ty - (r.top + r.height / 2)) / r.height) * 6,
+          transformPerspective: 900,
+        });
       }
 
       raf = requestAnimationFrame(frame);
@@ -217,15 +252,18 @@ export default function CursorFX() {
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
+    window.addEventListener("mousedown", onDown, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", resize);
 
     return () => {
       cancelAnimationFrame(raf);
       window.clearInterval(tiltTimer);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
+      window.removeEventListener("mousedown", onDown);
       window.removeEventListener("scroll", onScroll);
-      // clear only what the tilt owns; the hero's own scrubbed y must survive
+      window.removeEventListener("resize", resize);
       for (const el of tilts) {
         gsap.set(el, { clearProps: "rotationX,rotationY,transformPerspective" });
       }
@@ -235,54 +273,11 @@ export default function CursorFX() {
 
   return (
     <>
-      {/* the core */}
-      <div
-        ref={dot}
+      {/* the pointer and its trail */}
+      <canvas
+        ref={canvas}
         aria-hidden
-        className="hidden md:block fixed top-0 left-0 w-[7px] h-[7px] rounded-full bg-gold pointer-events-none z-[200] will-change-transform"
-      />
-
-      {/* the ring, and the scroll dial drawn on it */}
-      <div
-        ref={ring}
-        aria-hidden
-        className="hidden md:block fixed top-0 left-0 w-[42px] h-[42px] rounded-full border border-gold/50 pointer-events-none z-[200] will-change-transform"
-      >
-        <svg viewBox="0 0 42 42" className="absolute -inset-px w-[44px] h-[44px] -rotate-90">
-          <circle
-            ref={arc}
-            cx="22"
-            cy="22"
-            r="21"
-            fill="none"
-            stroke="var(--color-gold)"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeDasharray={2 * Math.PI * 21}
-            strokeDashoffset={2 * Math.PI * 21}
-            style={{ opacity: 0 }}
-          />
-        </svg>
-      </div>
-
-      {/* direction of travel, shown only while the page is moving */}
-      <div
-        ref={chev}
-        aria-hidden
-        className="hidden md:block fixed top-0 left-0 pointer-events-none z-[201] text-gold will-change-transform"
-        style={{ opacity: 0 }}
-      >
-        <svg width="9" height="6" viewBox="0 0 9 6">
-          <path d="M0.5 0.5 L4.5 4.5 L8.5 0.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* what the thing under the pointer will do */}
-      <div
-        ref={label}
-        aria-hidden
-        className="hidden md:block fixed top-0 left-0 pointer-events-none z-[201] label label-xs text-gold whitespace-nowrap will-change-transform"
-        style={{ opacity: 0 }}
+        className="hidden md:block fixed inset-0 pointer-events-none z-[200]"
       />
 
       {/* corner dial — scroll position, and a way back to the top */}
@@ -307,7 +302,9 @@ export default function CursorFX() {
             strokeDashoffset={2 * Math.PI * 20}
           />
         </svg>
-        <span className="label label-xs text-cream/90">{pct}%</span>
+        <span ref={pctText} className="label label-xs text-cream/90">
+          0%
+        </span>
       </button>
     </>
   );
