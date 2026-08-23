@@ -35,11 +35,6 @@ export default function Home() {
       <Header />
       <Hero />
       <Intro />
-      {/* The history belongs directly after the company statement: the founding
-          story is what that statement is claiming, so the two read as one
-          argument. It used to sit near the foot of the page, after the client
-          logos, where almost nobody scrolled to it. */}
-      <HistoryTimeline />
       <Expertise />
       <Projects />
       <PortfolioGrid />
@@ -50,6 +45,7 @@ export default function Home() {
       <AwardsCerts />
       <Clients />
       <RoyalQuote />
+      <HistoryTimeline />
       <Story />
       <Future />
       <Footer />
