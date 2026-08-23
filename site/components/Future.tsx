@@ -114,6 +114,17 @@ export default function Future() {
             const line =
               "flex items-start gap-3 text-cream/80 font-light leading-relaxed text-[clamp(0.9375rem,0.85vw,1.25rem)]";
             const icon = "flex-none mt-[0.35em] text-gold";
+            /**
+             * Enlarges a contact link's hit area without moving anything.
+             *
+             * These sat on a 19px line box — the phone number, which on a
+             * handset is the single most important thing to be able to hit, was
+             * the hardest. Padding grows the box and the matching negative
+             * margin takes the growth back out of the layout, so the rows keep
+             * their spacing and the target roughly doubles. inline-block is what
+             * makes both apply.
+             */
+            const tap = "inline-block py-2 -my-2";
             return (
               <Reveal key={o.name} delay={i * 0.08} y={26}>
                 <div className="space-y-4">
@@ -152,7 +163,7 @@ export default function Future() {
                       <span>
                         <a
                           href={`tel:${o.phone.replace(/[^0-9+]/g, "")}`}
-                          className="hover:text-gold transition-colors duration-300"
+                          className={`hover:text-gold transition-colors duration-300 ${tap}`}
                         >
                           {o.phone}
                         </a>
@@ -179,7 +190,7 @@ export default function Future() {
                     </svg>
                     <a
                       href={`mailto:${o.email}`}
-                      className="hover:text-gold transition-colors duration-300 break-all"
+                      className={`hover:text-gold transition-colors duration-300 break-all ${tap}`}
                     >
                       {o.email}
                     </a>
@@ -202,7 +213,7 @@ export default function Future() {
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-gold transition-colors duration-300"
+                      className={`hover:text-gold transition-colors duration-300 ${tap}`}
                     >
                       Location
                     </a>
