@@ -29,6 +29,24 @@ const MAX_SPARKS = 320;
 /** seconds a spark lives at most */
 const LIFE = 1.05;
 
+/**
+ * The pointer's own dimensions, in CSS pixels.
+ *
+ * These matter more than they look. The native cursor is hidden while this is
+ * active, so whatever is drawn here IS the pointer — and the first pass drew a
+ * 2.6px core, roughly five pixels across, which is smaller than the arrow it
+ * replaced and too small to aim a click with. A native arrow is about 12px of
+ * visible mass, so the core is now in that region and the hover state grows
+ * rather than shrinks, since that is when precision is actually wanted.
+ */
+const CORE_R = 4.6;
+const CORE_R_HOVER = 6.2;
+const BLOOM_R = 19;
+const BLOOM_R_HOVER = 38;
+/** the ring that closes in over something clickable */
+const RING_R = 22;
+const RING_R_FAR = 18;
+
 type Spark = {
   x: number;
   y: number;
@@ -122,7 +140,9 @@ export default function CursorFX() {
         s.vy = Math.sin(a) * sp - 6;
         s.born = t;
         s.life = LIFE * (0.5 + Math.random() * 0.5);
-        s.size = 0.6 + Math.random() * 1.9;
+        // in proportion with the core above; too fine and the trail reads as
+        // dust rather than as sparks
+        s.size = 0.9 + Math.random() * 2.4;
         s.tone = Math.random();
         s.ph = Math.random() * Math.PI * 2;
       }
@@ -205,7 +225,7 @@ export default function CursorFX() {
       }
 
       /* the bloom, then the hot core on top of it */
-      const bloomR = 13 + hover * 16;
+      const bloomR = BLOOM_R + hover * (BLOOM_R_HOVER - BLOOM_R);
       const bloom = ctx.createRadialGradient(px, py, 0, px, py, bloomR);
       bloom.addColorStop(0, `rgba(246,226,170,${0.5 + hover * 0.2})`);
       bloom.addColorStop(0.45, `rgba(201,155,69,${0.18 + hover * 0.12})`);
@@ -215,17 +235,24 @@ export default function CursorFX() {
       ctx.fillStyle = bloom;
       ctx.fill();
 
+      // the core, with a thin dark rim so it stays findable on a pale section —
+      // a cream dot alone disappears against the parchment backgrounds
+      const coreR = CORE_R + hover * (CORE_R_HOVER - CORE_R);
       ctx.beginPath();
-      ctx.arc(px, py, 2.6 - hover * 1.1, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,247,230,0.95)";
+      ctx.arc(px, py, coreR + 1, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(16,24,19,0.35)";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(px, py, coreR, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,247,230,0.97)";
       ctx.fill();
 
       /* over something clickable, a ring closes in */
       if (hover > 0.01) {
         ctx.beginPath();
-        ctx.arc(px, py, 15 + (1 - hover) * 14, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(226,186,108,${(hover * 0.75).toFixed(3)})`;
-        ctx.lineWidth = 1.2;
+        ctx.arc(px, py, RING_R + (1 - hover) * RING_R_FAR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(226,186,108,${(hover * 0.8).toFixed(3)})`;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
       }
 
