@@ -46,12 +46,22 @@ const END_YEAR = currentYear();
 const SPAN = END_YEAR - START_YEAR;
 const YEARS = Array.from({ length: SPAN + 1 }, (_, i) => START_YEAR + i);
 
-/** the sweep always takes at least this long, however fast the film buffers */
-const MIN_SWEEP = 3400;
-const SEEN_SWEEP = 1300;
-const LAND_HOLD = 900;
-const MAX_WAIT = 9000;
+/**
+ * The sweep always takes at least this long, however fast the film buffers.
+ *
+ * Nearly double the first pass. Forty years went by in 3.4s, which is about
+ * eighty milliseconds a year — too quick to read any of them, so the count
+ * registered as a blur rather than as a history.
+ */
+const MIN_SWEEP = 6500;
+/** a second visit in the same session gets the short version */
+const SEEN_SWEEP = 2600;
+const LAND_HOLD = 1200;
+/** hard ceiling; must stay clear of MIN_SWEEP + LAND_HOLD */
+const MAX_WAIT = 11000;
 const SEEN_KEY = "adrak-intro-seen";
+/** the entrance, before the count begins */
+const ENTER_MS = 1000;
 
 /**
  * The upward stack. Spacing and size both decay geometrically with age, so the
@@ -61,6 +71,8 @@ const SEEN_KEY = "adrak-intro-seen";
  */
 const AGE_CULL = 9;
 const DECAY = 0.84;
+/** how long a decade ripple takes to travel out and fade, in seconds */
+const RIPPLE_LIFE = 1.6;
 
 /**
  * The founder's quote sits at right:4vw with width min(24vw, 360px), so its
@@ -99,6 +111,13 @@ const TUNNEL = {
 };
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+/**
+ * The count's own curve. An ease-out spends most of its speed at the start, so
+ * the first two decades blurred past before anything had settled. Smoothstep
+ * eases at both ends instead: the years pull away from 1986 gently, run at an
+ * even pace through the middle, and glide to rest on the present.
+ */
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
@@ -231,17 +250,50 @@ export default function IntroLoader() {
     };
     layout();
 
+    /** timestamps of decade crossings, for the ripples they throw off */
+    const ripples: number[] = [];
+    let lastDecade = -1;
+    /** when the year on the centre line last changed, for its landing pop */
+    let lastYear = -1;
+    let popAt = -99;
+
     /* ---------- one frame ---------- */
     const render = (p: number, tSec: number) => {
       ctx.clearRect(0, 0, vw, vh);
       const narrow = vw < 640;
 
-      /* the star field, drifting and breathing */
+      // milestones: a ripple each time the count crosses into a new decade,
+      // and a pop each time a new year settles on the centre line
+      const nowYearInt = START_YEAR + Math.round(p * SPAN);
+      const decade = Math.floor(nowYearInt / 10);
+      if (lastDecade === -1) lastDecade = decade;
+      else if (decade !== lastDecade) {
+        lastDecade = decade;
+        ripples.push(tSec);
+      }
+      if (lastYear === -1) lastYear = nowYearInt;
+      else if (nowYearInt !== lastYear) {
+        lastYear = nowYearInt;
+        popAt = tSec;
+      }
+
+      /**
+       * The entrance: the dial establishes itself before the count starts, so
+       * the years begin from a composition that is already there rather than
+       * appearing on top of one still assembling.
+       */
+      const ent = easeOutCubic(clamp01(tSec / (ENTER_MS / 1000)));
+
+      /* the star field, drifting and breathing. The drift is by depth — smaller
+         stars are read as further away and move least, which gives the field
+         parallax as the tunnel comes toward the viewer. */
       for (const s of stars) {
         const tw = 0.65 + 0.35 * Math.sin(tSec * 0.9 + s.tw);
+        const dy = (s.r - 0.5) * 5 * Math.sin(tSec * 0.06 + s.tw * 0.4);
+        const dx = (s.r - 0.5) * 7 * Math.cos(tSec * 0.045 + s.tw * 0.3);
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(245,242,234,${(s.a * tw).toFixed(3)})`;
+        ctx.arc(s.x + dx, s.y + dy, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245,242,234,${(s.a * tw * ent).toFixed(3)})`;
         ctx.fill();
       }
 
@@ -290,8 +342,74 @@ export default function IntroLoader() {
         ctx.moveTo(x + 0.9, y);
         ctx.arc(x, y, 0.9, 0, Math.PI * 2);
       }
-      ctx.fillStyle = "rgba(216,201,163,0.34)";
+      ctx.fillStyle = `rgba(216,201,163,${(0.34 * ent).toFixed(3)})`;
       ctx.fill();
+
+      /**
+       * A slow beam sweeping the dial, like a survey instrument. It is what
+       * stops the ring reading as a still image between year changes — the
+       * previous pass had nothing moving on the ring itself for a second at a
+       * time.
+       */
+      {
+        const beam = tSec * 0.45;
+        const g = ctx.createRadialGradient(cx, cy, R * 0.25, cx, cy, R);
+        g.addColorStop(0, "rgba(214,168,80,0)");
+        g.addColorStop(1, `rgba(226,186,108,${(0.1 * ent).toFixed(3)})`);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, R * 0.98, beam - 0.5, beam);
+        ctx.closePath();
+        ctx.fillStyle = g;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      /**
+       * Decade markers. Each decade the company passed gets a tick on the ring,
+       * dim until the count reaches it and lit afterwards, so the sweep leaves a
+       * visible trail of milestones rather than just a moving number.
+       */
+      for (let i = 0; i <= SPAN; i++) {
+        if ((START_YEAR + i) % 10 !== 0) continue;
+        const frac = i / SPAN;
+        const a = -Math.PI / 2 + frac * Math.PI * 2;
+        const reached = p >= frac;
+        const x0 = cx + Math.cos(a) * (R - 9);
+        const y0 = cy + Math.sin(a) * (R - 9);
+        const x1 = cx + Math.cos(a) * (R + 9);
+        const y1 = cy + Math.sin(a) * (R + 9);
+        ctx.save();
+        if (reached) {
+          ctx.shadowColor = "rgba(226,186,108,0.9)";
+          ctx.shadowBlur = 10;
+        }
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.strokeStyle = reached
+          ? `rgba(246,220,155,${(0.85 * ent).toFixed(3)})`
+          : `rgba(216,201,163,${(0.22 * ent).toFixed(3)})`;
+        ctx.lineWidth = reached ? 1.8 : 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      /* ripples thrown off as each decade is crossed */
+      for (let k = ripples.length - 1; k >= 0; k--) {
+        const age = tSec - ripples[k];
+        if (age > RIPPLE_LIFE) {
+          ripples.splice(k, 1);
+          continue;
+        }
+        const f = age / RIPPLE_LIFE;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * (0.55 + 0.62 * f), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(226,186,108,${(0.3 * (1 - f)).toFixed(3)})`;
+        ctx.lineWidth = 1.4 * (1 - f) + 0.3;
+        ctx.stroke();
+      }
 
       /**
        * The two crescents that give the dial its light.
@@ -367,7 +485,10 @@ export default function IntroLoader() {
         // a hard drop after the centre line, so the year being counted reads as
         // the subject and the ones above it as its history — a gentle falloff
         // made the column look like a list of equals
-        const scale = 0.3 + 0.7 * Math.exp(-1.5 * a);
+        let scale = 0.3 + 0.7 * Math.exp(-1.5 * a);
+        // the year on the line lands with a small pop, so each one is felt
+        // arriving instead of the column merely sliding
+        if (a < 0.5) scale *= 1 + 0.09 * Math.exp(-(tSec - popAt) * 9);
         // arrive from just below the line rather than blinking into place
         const arriving = age < 0 ? 1 + age * 2 : 1;
         const lift = age < 0 ? -age * gap * 1.6 : 0;
@@ -463,7 +584,8 @@ export default function IntroLoader() {
       // layout() only runs when the numbers actually changed.
       if (vw !== window.innerWidth || vh !== window.innerHeight) layout();
       const elapsed = now - startedAt;
-      const ramp = easeOutCubic(clamp01(elapsed / sweepMs));
+      // the entrance plays first; the count starts once the dial is established
+      const ramp = smoothstep(clamp01((elapsed - ENTER_MS) / sweepMs));
       // hold just short of the present until the film can actually play
       const next = Math.min(ramp, filmReady ? 1 : 0.88);
       if (next > target) target = next;
@@ -471,7 +593,7 @@ export default function IntroLoader() {
       if (target - shown < 0.0015) shown = target;
       render(shown, elapsed / 1000);
 
-      if (!landedFlag && shown >= 1 && elapsed >= sweepMs) {
+      if (!landedFlag && shown >= 1 && elapsed >= sweepMs + ENTER_MS) {
         landedFlag = true;
         setLanded(true);
         timers.push(window.setTimeout(() => exit(), LAND_HOLD));
@@ -479,6 +601,28 @@ export default function IntroLoader() {
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
+
+    /**
+     * The entrance for everything that is not canvas.
+     *
+     * Previously the logo, quote, medallions and journey bar were simply there
+     * on the first frame while the dial drew itself in behind them, which made
+     * the composition look assembled rather than arriving. They now come in
+     * around the dial: the name first, then the ends of the story from the sides
+     * they belong to, then the bar, then the quote last.
+     */
+    // scoped to the overlay, so these selectors cannot reach the page beneath
+    const enterCtx = gsap.context(() => {
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .from("[data-enter-logo]", { autoAlpha: 0, y: -18, duration: 0.8 }, 0.05)
+        .from("[data-enter-med-left]", { autoAlpha: 0, x: -34, duration: 0.9 }, 0.35)
+        .from("[data-enter-med-right]", { autoAlpha: 0, x: 34, duration: 0.9 }, 0.35)
+        .from("[data-enter-claim]", { autoAlpha: 0, y: 16, duration: 0.8 }, 0.5)
+        .from("[data-enter-bar]", { autoAlpha: 0, y: 18, duration: 0.8 }, 0.6)
+        .from("[data-enter-quote]", { autoAlpha: 0, x: 26, duration: 1 }, 0.75)
+        .from("[data-enter-skip]", { autoAlpha: 0, duration: 0.6 }, 1);
+    }, el);
 
     const onResize = () => layout();
     window.addEventListener("resize", onResize);
@@ -527,6 +671,7 @@ export default function IntroLoader() {
       killed = true;
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
+      enterCtx.revert();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("keydown", onKey);
       html.classList.remove("is-intro");
@@ -588,6 +733,7 @@ export default function IntroLoader() {
         {/* the standing claim, lower in the dial */}
         <div
           data-intro-fade
+          data-enter-claim
           className="absolute inset-x-0 bottom-[8%] text-center"
         >
           <p className="font-display text-gold leading-none text-[clamp(1.8rem,3.6vw,3.4rem)]">
@@ -618,7 +764,7 @@ export default function IntroLoader() {
       </div>
 
       {/* the name itself, not a text stand-in for it */}
-      <div data-intro-fade className="absolute top-6 left-7 sm:top-8 sm:left-10">
+      <div data-intro-fade data-enter-logo className="absolute top-6 left-7 sm:top-8 sm:left-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={asset("/images/logo.png")}
@@ -630,6 +776,7 @@ export default function IntroLoader() {
       {/* the founder's own words — his company is what the years are counting */}
       <figure
         data-intro-fade
+        data-enter-quote
         className="absolute z-10 px-7 text-center sm:text-left
                    inset-x-0 bottom-[22vh] sm:inset-x-auto sm:bottom-auto
                    sm:right-[4vw] sm:top-1/2 sm:-translate-y-1/2 sm:w-[24vw] sm:max-w-[360px] sm:px-0"
@@ -649,6 +796,7 @@ export default function IntroLoader() {
       {/* the journey bar — the same progress, read as a span of years */}
       <div
         data-intro-fade
+        data-enter-bar
         className="absolute inset-x-0 bottom-[6vh] flex flex-col items-center px-6 text-center"
       >
         <p
@@ -674,6 +822,7 @@ export default function IntroLoader() {
 
       <button
         data-intro-fade
+        data-enter-skip
         onClick={() => exitRef.current?.()}
         className="absolute top-6 right-6 px-5 py-2.5 rounded-full border border-cream/20 label label-xs text-cream/60 hover:text-ink hover:bg-sand hover:border-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sand transition-colors duration-300"
       >
@@ -706,6 +855,7 @@ function Medallion({
   return (
     <div
       data-intro-fade
+      {...(isLeft ? { "data-enter-med-left": "" } : { "data-enter-med-right": "" })}
       className={`intro-med pointer-events-none absolute top-1/2 -translate-y-1/2 flex-col items-center w-[140px]
                   ${isLeft ? "left-0 -translate-x-full" : "right-0 translate-x-full"}`}
     >
