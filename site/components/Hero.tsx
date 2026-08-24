@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { site } from "@/lib/content";
-import { ARRIVAL_ORIGIN, ARRIVAL_SCALE, motionOK } from "@/lib/intro";
+import { ARRIVAL_ORIGIN, ARRIVAL_SCALE, INTRO_DONE_EVENT, motionOK } from "@/lib/intro";
 import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -68,6 +68,52 @@ export default function Hero() {
       });
     });
     return () => ctx.revert();
+  }, []);
+
+  /**
+   * The film begins when the loader completes — from its first frame.
+   *
+   * The <video>s below keep their autoPlay on purpose. The loader's last stretch
+   * of progress is gated on this film reaching canplay, and iOS Safari will not
+   * buffer a video that has never attempted playback, whatever preload says —
+   * removing autoPlay would hang the loader at 88% until its ceiling on every
+   * phone. So the film plays invisibly under the opaque overlay, doing the
+   * buffering the loader is watching, and on the loader's exit event — fired
+   * while the overlay is still fully opaque — it is rewound to frame one. What
+   * the visitor sees: the loader finishes, and the landing film starts at its
+   * beginning.
+   *
+   * The timeout is the safety net: the loader's hard ceiling is 11s, so if its
+   * event never arrives (the component failed, or was removed), the rewind
+   * simply happens late rather than never. Rewinding an already-playing film is
+   * harmless.
+   */
+  useEffect(() => {
+    const vids = Array.from(
+      screen.current?.querySelectorAll<HTMLVideoElement>("video[data-hero-video]") ?? []
+    );
+    if (!vids.length) return;
+    let done = false;
+    const begin = () => {
+      if (done) return;
+      done = true;
+      for (const v of vids) {
+        try {
+          v.currentTime = 0;
+        } catch {
+          /* metadata not ready — it is already at the start then */
+        }
+        v.play().catch(() => {
+          /* muted inline play is permitted everywhere; if not, the poster stands */
+        });
+      }
+    };
+    window.addEventListener(INTRO_DONE_EVENT, begin);
+    const t = window.setTimeout(begin, 12000);
+    return () => {
+      window.removeEventListener(INTRO_DONE_EVENT, begin);
+      window.clearTimeout(t);
+    };
   }, []);
 
   return (

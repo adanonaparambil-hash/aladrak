@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis } from "./SmoothScroll";
-import { motionOK } from "@/lib/intro";
+import { INTRO_DONE_EVENT, motionOK } from "@/lib/intro";
 import { leadership } from "@/lib/content";
 import { asset } from "@/lib/asset";
 import { currentYear, FOUNDED, years } from "@/lib/anniversary";
@@ -37,8 +37,11 @@ gsap.registerPlugin(ScrollTrigger);
  *     fully buffered — a 30MB film is playable long before buffered/duration
  *     approaches 1, so gating on the fraction never lands.
  *
- * The hero underneath starts on its own and is never gated on this component,
- * so a failure here can only cost the animation, never the page.
+ * The hero underneath buffers and runs on its own and is never gated on this
+ * component, so a failure here can only cost the animation, never the page.
+ * Its VISIBLE start is synchronised though: INTRO_DONE_EVENT fires at the top
+ * of exit(), and the hero rewinds its film to frame one on it — with its own
+ * timeout fallback, so a dead loader delays the rewind rather than the film.
  */
 
 const START_YEAR = FOUNDED;
@@ -529,6 +532,7 @@ export default function IntroLoader() {
             html.classList.remove("is-intro");
             lenis?.start();
             ScrollTrigger.refresh();
+            window.dispatchEvent(new Event(INTRO_DONE_EVENT));
             gsap.to(el, { autoAlpha: 0, duration: 0.5, onComplete: () => setGone(true) });
           },
           seen ? 600 : 1900
@@ -641,6 +645,11 @@ export default function IntroLoader() {
       }
       gsap
         .timeline()
+        // announce the reveal FIRST, at position 0, while the overlay is still
+        // fully opaque — the hero rewinds its film to frame one on this event,
+        // and firing it any later would let a mid-film frame show through the
+        // dissolve before the jump back to the start
+        .add(() => window.dispatchEvent(new Event(INTRO_DONE_EVENT)), 0)
         .to(
           el.querySelectorAll("[data-intro-fade]"),
           { autoAlpha: 0, duration: 0.3, ease: "power2.in" },
