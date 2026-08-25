@@ -19,9 +19,12 @@ import { motionOK } from "@/lib/intro";
  * flat discs. A DOM node per particle would be hundreds of elements and layout
  * work per frame; this is a few hundred arc fills on the GPU-backed canvas.
  *
- * Over anything clickable the bloom opens up and a thin ring closes around it,
- * and a click throws a burst. Nothing here runs on touch, and under reduced
- * motion the whole thing is skipped and the native cursor left in place.
+ * Around all of it, always visible, is the grab circle — drawn at exactly the
+ * radius clicks snap within, so it is not decoration but the pointer's true
+ * reach: anything inside the circle is clickable. It sits quiet while empty and
+ * brightens, thickens and breathes when it has caught something; a click throws
+ * a burst. Nothing here runs on touch, and under reduced motion the whole thing
+ * is skipped and the native cursor left in place.
  */
 
 /** ceiling on live sparks; the pool is allocated once and reused */
@@ -41,11 +44,14 @@ const LIFE = 1.05;
  */
 const CORE_R = 4.6;
 const CORE_R_HOVER = 6.2;
-const BLOOM_R = 19;
-const BLOOM_R_HOVER = 38;
-/** the ring that closes in over something clickable */
-const RING_R = 22;
-const RING_R_FAR = 18;
+/**
+ * The bloom stays INSIDE the always-visible grab circle below — at hover it
+ * reads as the circle filling with light, not as the reach growing. Its old
+ * hover radius of 38 spilled well past the 24px circle, which overstated
+ * where a click would land.
+ */
+const BLOOM_R = 16;
+const BLOOM_R_HOVER = 23;
 
 /** everything the circle can act on */
 const INTERACTIVE = "a, button, [role=button], input, textarea, select, summary, [data-hit]";
@@ -359,13 +365,28 @@ export default function CursorFX() {
       ctx.fillStyle = "rgba(255,247,230,0.97)";
       ctx.fill();
 
-      /* over something clickable, a ring closes in */
-      if (hover > 0.01) {
+      /**
+       * The grab circle — always drawn, at exactly SNAP_R, because it IS the
+       * click area: anything inside this circle can be clicked. Showing it only
+       * on hover (the previous behaviour) meant the visitor could not see the
+       * reach until something was already caught, so the pointer read as
+       * "centre dot only" — which is precisely the complaint. Quiet when empty;
+       * when it catches something it brightens, thickens, and breathes.
+       */
+      {
+        const glow = 0.3 + hover * 0.6;
+        const pulse = hover > 0.01 ? 0.88 + 0.12 * Math.sin(t * 5.2) : 1;
+        ctx.save();
+        if (hover > 0.01) {
+          ctx.shadowColor = "rgba(226,186,108,0.8)";
+          ctx.shadowBlur = 10 * hover;
+        }
         ctx.beginPath();
-        ctx.arc(px, py, RING_R + (1 - hover) * RING_R_FAR, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(226,186,108,${(hover * 0.8).toFixed(3)})`;
-        ctx.lineWidth = 1.5;
+        ctx.arc(px, py, SNAP_R, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(226,186,108,${(glow * pulse).toFixed(3)})`;
+        ctx.lineWidth = 1.1 + hover * 0.8;
         ctx.stroke();
+        ctx.restore();
       }
 
       ctx.globalCompositeOperation = "source-over";
