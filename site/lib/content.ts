@@ -555,7 +555,7 @@ export const hse = {
   },
   pillars: [
     { no: "01", title: "Induction before the first shift", desc: "Every worker and every subcontractor is inducted before they set foot on a site — the hazards of that specific project, the rules that apply, and who to stop work with." },
-    { no: "02", title: "Toolbox talks, daily", desc: "A short briefing at the workface before each shift, on the task actually about to be done rather than on safety in the abstract." },
+    { no: "02", title: "Weekly toolbox talks", desc: "A briefing at the workface every week, on the work actually in hand — the hazards of the current stage, what changed since the last talk, and what to watch for in the days ahead." },
     { no: "03", title: "Working at height", desc: "A purpose-built scaffold rig on the campus, so erecting, inspecting and working from a scaffold is practised on the ground before it is done at height." },
     { no: "04", title: "Personal protective equipment", desc: "PPE is issued, fitted and checked — the training centre's equipment wall shows exactly what is required for each trade, and what good condition looks like." },
     { no: "05", title: "Emergency response", desc: "Fire drills, extinguisher handling and first-aid training, so the response to an incident is practised rather than improvised." },
@@ -563,7 +563,7 @@ export const hse = {
   ],
   gallery: [
     { src: asset("/images/hse/hse-ppe-wall.jpg"), label: "The PPE wall — what each trade is issued, and what good condition looks like" },
-    { src: asset("/images/hse/hse-toolbox.jpg"), label: "A toolbox talk before the shift" },
+    { src: asset("/images/hse/hse-toolbox.jpg"), label: "A weekly toolbox talk at the workface" },
     { src: asset("/images/hse/hse-classroom.jpg"), label: "A supervisor session in the training hall" },
     { src: asset("/images/hse/hse-noticeboard.jpg"), label: "Safety notices in the languages the workforce speaks" },
     { src: asset("/images/hse/hse-scaffold.jpg"), label: "The scaffold rig used for working-at-height training" },

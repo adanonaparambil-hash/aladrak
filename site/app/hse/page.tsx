@@ -18,14 +18,24 @@ export default function HsePage() {
 
       {/* Hero band */}
       <section className="relative pt-40 pb-20 md:pt-52 md:pb-28 overflow-hidden">
+        {/*
+          The photograph carries this page, so it is shown rather than hinted
+          at. It was at 25% under a full-width scrim, which buried the PPE wall
+          the section is about. Now it runs at full strength and legibility is
+          bought by direction instead: opaque at the left edge where the heading
+          sits, clearing to almost nothing on the right where the equipment and
+          the mannequin are. The vertical pass only seats it against the header
+          and the band below.
+        */}
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/hse/hse-ppe-wall.jpg")}
-            alt=""
-            className="w-full h-full object-cover opacity-25"
+            alt="The personal protective equipment wall at Al Adrak's training centre"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-transparent to-ink" />
         </div>
         <div className="relative shell">
           <Reveal>

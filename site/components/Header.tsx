@@ -133,8 +133,12 @@ export default function Header() {
                         className="block rounded-xl px-4 py-3 hover:bg-cream/[0.07] transition-colors duration-200"
                       >
                         <span className="label text-cream/90 block">{c.label}</span>
+                        {/* Not .label: at 0.3em tracking and uppercase these
+                            descriptions wrapped onto two lines and made the
+                            panel ragged. Plain sentence case is narrower, and
+                            reads better as a description than as a kicker. */}
                         {c.note && (
-                          <span className="label label-xs text-cream/45 block mt-1.5 leading-relaxed">
+                          <span className="block mt-1 text-[12px] leading-snug text-cream/45 whitespace-nowrap">
                             {c.note}
                           </span>
                         )}
