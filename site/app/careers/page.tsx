@@ -19,7 +19,7 @@ export default function CareersPage() {
 
       <PageHero
         img={asset("/images/life/careers-hero.jpg")}
-        alt="The Al Adrak head office at dusk"
+        alt="The Al Adrak head office at Halban"
         kicker="Careers at Al Adrak"
         title="Build the next landmark with us"
       >

@@ -35,10 +35,17 @@ export default function PageHero({
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={img} alt={alt} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/72 to-ink/15" />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/65 via-transparent to-ink" />
+        {/*
+          Much lighter than the first attempt, which was opaque at the left edge
+          and lost the PPE wall entirely. Contrast for the type is bought by the
+          text-shadow below instead: a shadow darkens only the pixels around each
+          glyph, where it is needed, rather than the whole left third of a
+          photograph that is there to be looked at.
+        */}
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/68 via-ink/38 to-ink/[0.03]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-transparent to-ink" />
       </div>
-      <div className="relative shell">
+      <div className="relative shell [text-shadow:0_2px_18px_rgba(10,15,12,0.95),0_1px_3px_rgba(10,15,12,0.9)]">
         <Reveal>
           <p className="label text-gold mb-6">{kicker}</p>
           <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
