@@ -41,10 +41,32 @@ export default function SmoothScroll({
    */
   useEffect(() => {
     let done = false;
+    /**
+     * A hash arrival must be re-landed after the pins take their true sizes.
+     * The browser jumps to the fragment before any pin-spacer exists; once the
+     * spacers inflate the page, that early position is thousands of pixels
+     * short of the section it named. Re-land after each refresh — unless the
+     * visitor has already taken over the scroll, in which case yanking them
+     * back would be worse than landing short.
+     */
+    let hashPending = !!window.location.hash;
+    const cancelLanding = () => {
+      hashPending = false;
+    };
+    window.addEventListener("wheel", cancelLanding, { passive: true, once: true });
+    window.addEventListener("touchstart", cancelLanding, { passive: true, once: true });
+
     const settle = () => {
       if (done) return;
       ScrollTrigger.sort();
       ScrollTrigger.refresh();
+      if (hashPending) {
+        const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        if (el) {
+          if (instance) instance.scrollTo(el, { immediate: true });
+          else el.scrollIntoView();
+        }
+      }
     };
     // fonts change text metrics, which changes section heights
     document.fonts?.ready.then(settle).catch(() => settle());
@@ -54,7 +76,37 @@ export default function SmoothScroll({
     return () => {
       done = true;
       window.removeEventListener("load", settle);
+      window.removeEventListener("wheel", cancelLanding);
+      window.removeEventListener("touchstart", cancelLanding);
     };
+  }, []);
+
+  /**
+   * Same-page section links travel through Lenis instead of teleporting.
+   *
+   * Two reasons. A native fragment jump while Lenis is animating gets
+   * overwritten by its very next frame write, so the click reads as "nothing
+   * happened" — sometimes reported as the page misbehaving on menu clicks. And
+   * even when it lands, teleporting through three pinned sections is
+   * disorienting; a driven scroll keeps the geography legible. Links to other
+   * pages fall through untouched, and under reduced motion (no Lenis) the
+   * native jump stands, as it should.
+   */
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest?.("a[href*='#']") as HTMLAnchorElement | null;
+      if (!a || !instance) return;
+      const url = new URL(a.href, window.location.href);
+      if (url.origin !== window.location.origin || url.pathname !== window.location.pathname) return;
+      const id = decodeURIComponent(url.hash.slice(1));
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      e.preventDefault();
+      window.history.pushState(null, "", url.hash);
+      instance.scrollTo(target, { duration: 1.4 });
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
   useEffect(() => {

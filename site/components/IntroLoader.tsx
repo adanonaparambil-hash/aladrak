@@ -142,6 +142,20 @@ export default function IntroLoader() {
 
   useEffect(() => {
     if (!onHome) return;
+    /**
+     * A hash arrival is targeted navigation — someone followed a link to a
+     * specific section, usually the header menu on the News or Careers page.
+     * The ceremony would steal that landing: it pins the page, scrolls to the
+     * top and plays the count, so clicking "About" over there looked like the
+     * site refreshing itself back to the start — which is exactly how it was
+     * reported. Skip the intro entirely, start the film at once, and let the
+     * page land where the visitor was actually going.
+     */
+    if (window.location.hash) {
+      window.dispatchEvent(new Event(INTRO_DONE_EVENT));
+      setGone(true);
+      return;
+    }
     const el = root.current;
     const cv = canvas.current;
     if (!el || !cv) return;
