@@ -143,15 +143,25 @@ export default function IntroLoader() {
   useEffect(() => {
     if (!onHome) return;
     /**
-     * A hash arrival is targeted navigation — someone followed a link to a
-     * specific section, usually the header menu on the News or Careers page.
-     * The ceremony would steal that landing: it pins the page, scrolls to the
-     * top and plays the count, so clicking "About" over there looked like the
-     * site refreshing itself back to the start — which is exactly how it was
-     * reported. Skip the intro entirely, start the film at once, and let the
-     * page land where the visitor was actually going.
+     * Skip the ceremony for a hash arrival — but only when it is genuinely
+     * someone following a link to a section, never on a reload.
+     *
+     * The first version of this skipped on ANY hash, which quietly broke the
+     * loader: the header's section links push their hash into the address bar,
+     * so once a visitor has clicked "About" even once, every refresh from then
+     * on carried a hash and got no intro at all. That is the "sometimes there
+     * is no loader" report, and it would have looked random from the outside
+     * because it depended on where the visitor had clicked earlier.
+     *
+     * The navigation type separates the two cases: "reload" means the page was
+     * refreshed and the arrival deserves its intro; "navigate" or
+     * "back_forward" with a hash means a link was followed to a section and the
+     * ceremony would steal the landing.
      */
-    if (window.location.hash) {
+    const navType = (
+      performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined
+    )?.type;
+    if (window.location.hash && navType !== "reload") {
       window.dispatchEvent(new Event(INTRO_DONE_EVENT));
       setGone(true);
       return;
@@ -675,6 +685,19 @@ export default function IntroLoader() {
           html.classList.remove("is-intro");
           lenis?.start();
           ScrollTrigger.refresh();
+          /**
+           * Reloading /#about now plays the intro, which begins by scrolling to
+           * the top — so the section named in the address bar has to be handed
+           * back afterwards, or a refresh silently moves the visitor to the top
+           * of the page. Immediate rather than animated: this is restoring a
+           * position, not travelling to a new one.
+           */
+          const id = decodeURIComponent(window.location.hash.slice(1));
+          const target = id ? document.getElementById(id) : null;
+          if (target) {
+            if (lenis) lenis.scrollTo(target, { immediate: true });
+            else target.scrollIntoView();
+          }
         }, 0.25)
         .to(el, { autoAlpha: 0, duration: 0.62, ease: "power2.inOut" }, 0.18)
         .add(() => {
