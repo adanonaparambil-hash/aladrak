@@ -75,6 +75,12 @@ export default function Footer() {
           >
             Careers
           </a>
+          <a
+            href={asset("/hse")}
+            className="label text-gold hover:text-cream transition-colors"
+          >
+            HSE
+          </a>
         </nav>
         <p className="label text-cream/70">
           © {new Date().getFullYear()} {site.legalName}

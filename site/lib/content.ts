@@ -531,6 +531,51 @@ export const offices: Office[] = [
   },
 ];
 
+/**
+ * Health, Safety & Environment.
+ *
+ * The training copy is the company's own, from the corporate profile; the rest
+ * describes what the training-centre photographs actually show — induction
+ * halls, the PPE wall, the multilingual notice board, the scaffold rig. No
+ * figures are claimed here. A safety page that quotes man-hours or incident
+ * rates without a source is worse than one that does not, because those are the
+ * numbers a client will check.
+ */
+export const hse = {
+  kicker: "Health, Safety & Environment",
+  title: "Everyone goes home the way they arrived",
+  lead: "Safety at Al Adrak is not a department that inspects the work after the fact — it is the condition the work is done under. Across every site in the Sultanate, the same standard applies to a 6,000-strong workforce: nobody starts without induction, nobody works at height without training, and nobody is asked to do a job they have not been equipped for.",
+  /** verbatim from the corporate profile's Training & Development section */
+  trainingQuote:
+    "Al Adrak recognizes that in a rapidly changing world, being in tune with the latest technology and skills is the only way to success. We have ensured that our employees have access to the best training facilities to equip them to deliver their best. In-house training facilities cater to the staff with the best teachers and learning environment.",
+  centre: {
+    title: "An in-house training centre",
+    body: "Rather than send people out for certification, Al Adrak built the classroom on its own campus. Inductions, toolbox talks, supervisor sessions and practical assessments all run here, in the languages the workforce actually speaks — so training happens before the shift, not after an incident.",
+    img: asset("/images/hse/hse-induction.jpg"),
+  },
+  pillars: [
+    { no: "01", title: "Induction before the first shift", desc: "Every worker and every subcontractor is inducted before they set foot on a site — the hazards of that specific project, the rules that apply, and who to stop work with." },
+    { no: "02", title: "Toolbox talks, daily", desc: "A short briefing at the workface before each shift, on the task actually about to be done rather than on safety in the abstract." },
+    { no: "03", title: "Working at height", desc: "A purpose-built scaffold rig on the campus, so erecting, inspecting and working from a scaffold is practised on the ground before it is done at height." },
+    { no: "04", title: "Personal protective equipment", desc: "PPE is issued, fitted and checked — the training centre's equipment wall shows exactly what is required for each trade, and what good condition looks like." },
+    { no: "05", title: "Emergency response", desc: "Fire drills, extinguisher handling and first-aid training, so the response to an incident is practised rather than improvised." },
+    { no: "06", title: "Environmental care", desc: "Waste segregation, dust and noise control, and protection of the ground and water around every site — the commitments behind the ISO 14001 certification." },
+  ],
+  gallery: [
+    { src: asset("/images/hse/hse-ppe-wall.jpg"), label: "The PPE wall — what each trade is issued, and what good condition looks like" },
+    { src: asset("/images/hse/hse-toolbox.jpg"), label: "A toolbox talk before the shift" },
+    { src: asset("/images/hse/hse-classroom.jpg"), label: "A supervisor session in the training hall" },
+    { src: asset("/images/hse/hse-noticeboard.jpg"), label: "Safety notices in the languages the workforce speaks" },
+    { src: asset("/images/hse/hse-scaffold.jpg"), label: "The scaffold rig used for working-at-height training" },
+    { src: asset("/images/hse/hse-ppe-brief.jpg"), label: "Protective equipment briefing" },
+  ],
+  certs: [
+    { code: "ISO 45001", desc: "Occupational health and safety management" },
+    { code: "ISO 14001", desc: "Environmental management" },
+    { code: "ISO 9001", desc: "Quality management" },
+  ],
+};
+
 export const careers = [
   {
     role: "Master Planner",

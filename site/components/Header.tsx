@@ -20,19 +20,38 @@ import { asset } from "@/lib/asset";
  */
 const SECTIONS = ["about", "expertise", "projects", "facilities", "team"] as const;
 
+type NavLink = { href: string; label: string; note?: string };
+type NavItem = NavLink | { label: string; children: NavLink[] };
+const hasChildren = (i: NavItem): i is { label: string; children: NavLink[] } =>
+  "children" in i;
+
 export default function Header() {
   const pathname = usePathname();
   // usePathname() reports the route without the base path, so "/" is the home page
   const onHome = pathname === "/";
   const section = (id: string) => (onHome ? `#${id}` : asset(`/#${id}`));
 
-  const links = [
+  /**
+   * Careers and HSE live under Resources rather than at the top level.
+   *
+   * They are the two standing reference pages — things a visitor comes looking
+   * for deliberately, rather than steps in the story the home page tells. A
+   * group keeps the top row to the narrative and leaves somewhere for the next
+   * such page to go.
+   */
+  const links: NavItem[] = [
     ...SECTIONS.map((id) => ({
       href: section(id),
       label: id[0].toUpperCase() + id.slice(1),
     })),
     { href: asset("/news"), label: "News" },
-    { href: asset("/careers"), label: "Careers" },
+    {
+      label: "Resources",
+      children: [
+        { href: asset("/careers"), label: "Careers", note: "Openings and life at Adrak" },
+        { href: asset("/hse"), label: "HSE", note: "Health, safety & environment" },
+      ],
+    },
     { href: section("contact"), label: "Contact" },
   ];
 
@@ -84,15 +103,56 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-9">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="label text-cream/70 hover:text-gold transition-colors duration-300"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            hasChildren(l) ? (
+              /* The group opens on hover AND on focus-within, so it is reachable
+                 by keyboard; the wrapper carries no gap between trigger and
+                 panel, or the pointer would cross dead space and close it. */
+              <div key={l.label} className="relative group/nav">
+                <button
+                  type="button"
+                  aria-haspopup="true"
+                  className="label text-cream/70 group-hover/nav:text-gold group-focus-within/nav:text-gold transition-colors duration-300 flex items-center gap-1.5"
+                >
+                  {l.label}
+                  <svg width="8" height="5" viewBox="0 0 8 5" aria-hidden className="opacity-70">
+                    <path d="M0.6 0.6 L4 4 L7.4 0.6" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                  </svg>
+                </button>
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible translate-y-1
+                             group-hover/nav:opacity-100 group-hover/nav:visible group-hover/nav:translate-y-0
+                             group-focus-within/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0
+                             transition-all duration-300"
+                >
+                  <div className="w-64 rounded-2xl border border-cream/15 bg-ink/95 backdrop-blur-xl shadow-[0_24px_60px_rgba(0,0,0,0.55)] p-2">
+                    {l.children.map((c) => (
+                      <a
+                        key={c.href}
+                        href={c.href}
+                        className="block rounded-xl px-4 py-3 hover:bg-cream/[0.07] transition-colors duration-200"
+                      >
+                        <span className="label text-cream/90 block">{c.label}</span>
+                        {c.note && (
+                          <span className="label label-xs text-cream/45 block mt-1.5 leading-relaxed">
+                            {c.note}
+                          </span>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                className="label text-cream/70 hover:text-gold transition-colors duration-300"
+              >
+                {l.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -136,19 +196,39 @@ export default function Header() {
         aria-hidden={!open}
       >
         <nav className="h-full overflow-y-auto overscroll-contain px-7 pt-24 pb-10 flex flex-col gap-5">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              tabIndex={open ? 0 : -1}
-              // py-2.5 is the touch target, not decoration: leading-none left
-              // these 26px tall, well under the 44px minimum for a thumb
-              className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            hasChildren(l) ? (
+              /* No dropdown on a phone — a hover panel has nothing to hover.
+                 The group becomes a labelled section with its pages listed
+                 under it, which is one tap instead of two. */
+              <div key={l.label} className="mt-2">
+                <span className="label label-xs text-gold/70 block mb-1">{l.label}</span>
+                {l.children.map((c) => (
+                  <a
+                    key={c.href}
+                    href={c.href}
+                    onClick={() => setOpen(false)}
+                    tabIndex={open ? 0 : -1}
+                    className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors block"
+                  >
+                    {c.label}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                tabIndex={open ? 0 : -1}
+                // py-2.5 is the touch target, not decoration: leading-none left
+                // these 26px tall, well under the 44px minimum for a thumb
+                className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
+              >
+                {l.label}
+              </a>
+            )
+          )}
           <a
             href={`mailto:${site.email}`}
             onClick={() => setOpen(false)}
