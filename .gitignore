@@ -80,3 +80,6 @@ Thumbs.db
 
 # duplicate of site/public/al-adrak-brochure.pdf (identical md5) — keep one copy
 271022124050Aladrak_Main_Brochure_35th_yr_Low_Res*.pdf
+
+# generated deliverable — rebuild with: node scripts-hse-doc.js
+Al-Adrak-HSE-page.docx
