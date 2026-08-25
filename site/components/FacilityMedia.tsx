@@ -97,35 +97,65 @@ export default function FacilityMedia() {
     setPl((p) => (p && i !== p.pos ? { ...p, pos: i } : p));
   }, []);
 
-  const pos = pl?.pos ?? null;
+  const isOpen = pl !== null;
+  const pos = pl?.pos ?? -1;
 
-  /* animate in on open, and whenever the reel steps to another clip */
+  /**
+   * The entrance runs ONCE per opening, not on every step.
+   *
+   * It used to be keyed on the position, so walking the gallery re-played the
+   * whole stagger — the caption, the description and the thumbnail rail all
+   * blinked out and back on each click, which is the opposite of browsing. The
+   * rail in particular has to stay put: it is the thing being clicked.
+   *
+   * Scoped with gsap.context so "[data-fm-stagger]" cannot reach outside this
+   * panel, and reverted rather than killed on cleanup — a killed fromTo leaves
+   * its targets wherever it stopped, and since it starts them at autoAlpha 0
+   * that failure mode is an invisible modal.
+   */
   useEffect(() => {
-    if (pos === null) return;
+    if (!isOpen) return;
     document.documentElement.style.overflow = "hidden";
-    const t = gsap.timeline();
-    t.fromTo(backdrop.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
-    t.fromTo(
-      panel.current,
-      { autoAlpha: 0, y: 60, scale: 0.96 },
-      { autoAlpha: 1, y: 0, scale: 1, duration: 0.65, ease: "power3.out" },
-      "-=0.2"
-    );
-    t.fromTo(media.current, { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out" }, "-=0.55");
-    t.fromTo(
-      "[data-fm-stagger]",
-      { autoAlpha: 0, y: 22 },
-      { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08, ease: "power3.out" },
-      "-=0.95"
+    const ctx = gsap.context(() => {
+      const t = gsap.timeline();
+      t.fromTo(backdrop.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+      t.fromTo(
+        panel.current,
+        { autoAlpha: 0, y: 60, scale: 0.96 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.65, ease: "power3.out" },
+        "-=0.2"
+      );
+      t.fromTo(media.current, { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out" }, "-=0.55");
+      t.fromTo(
+        "[data-fm-stagger]",
+        { autoAlpha: 0, y: 22 },
+        { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08, ease: "power3.out" },
+        "-=0.95"
+      );
+    }, panel);
+    return () => {
+      ctx.revert();
+    };
+  }, [isOpen]);
+
+  /* stepping only refreshes the frame itself — everything else holds still */
+  useEffect(() => {
+    if (!isOpen || pos < 0 || !media.current) return;
+    const tw = gsap.fromTo(
+      media.current,
+      { autoAlpha: 0.55, scale: 1.05 },
+      { autoAlpha: 1, scale: 1, duration: 0.5, ease: "power2.out", overwrite: "auto" }
     );
     return () => {
-      t.kill();
+      tw.kill();
     };
-  }, [pos]);
+  }, [pos, isOpen]);
 
   /* keyboard: escape closes, arrows walk the related set */
   useEffect(() => {
-    if (pos === null) return;
+    // guard on isOpen, not on pos: pos is -1 rather than null while closed, so
+    // a null check here would leave Escape bound to a closed dialog
+    if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
       else if (e.key === "ArrowRight") step(1);
@@ -133,7 +163,7 @@ export default function FacilityMedia() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pos, close, step]);
+  }, [isOpen, close, step]);
 
   if (!pl) return null;
   const item = pl.list[pl.pos];
