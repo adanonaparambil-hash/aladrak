@@ -210,6 +210,55 @@ export const shopFloor: ShopFloorMedia[] = [
   { type: "img", src: asset("/images/facilities/gallery-crusher.jpg"), label: "Nakhal crusher & quarry", facility: "Crusher & Quarries" },
 ];
 
+/**
+ * Extra photographs per facility, shown ONLY inside the facility viewer.
+ *
+ * Deliberately separate from `shopFloor`: that array is also the strip on the
+ * page, and folding every gallery photograph into it would make the strip
+ * unmanageably long. Clicking a tile or a facility card opens the modal, and
+ * the modal's playlist is the facility's strip media plus everything listed
+ * here. Keys match facilities[].name exactly.
+ */
+export const facilityGallery: Record<string, ShopFloorMedia[]> = {
+  "Rebar Cut & Bend": [
+    { type: "img", src: asset("/images/facilities/gallery/rebar-cut-and-bend-1.jpg"), label: "Rebar hall overview with shear line and stock", facility: "Rebar Cut & Bend" },
+    { type: "img", src: asset("/images/facilities/gallery/rebar-cut-and-bend-2.jpg"), label: "Shear line machinery close-up", facility: "Rebar Cut & Bend" },
+    { type: "img", src: asset("/images/facilities/gallery/rebar-cut-and-bend-3.jpg"), label: "Operator feeding rebar on the bending bench", facility: "Rebar Cut & Bend" },
+    { type: "img", src: asset("/images/facilities/gallery/rebar-cut-and-bend-4.jpg"), label: "Rebar yard and telehandler", facility: "Rebar Cut & Bend" },
+  ],
+  "Central Logistics": [
+    { type: "img", src: asset("/images/facilities/gallery/central-logistics-1.jpg"), label: "Aerial view of the Halban logistics yard", facility: "Central Logistics" },
+    { type: "img", src: asset("/images/facilities/gallery/central-logistics-2.jpg"), label: "Telehandler loading a flatbed for dispatch", facility: "Central Logistics" },
+    { type: "img", src: asset("/images/facilities/gallery/central-logistics-3.jpg"), label: "Racked cable store inside the warehouse", facility: "Central Logistics" },
+  ],
+  "Duct Fabrication": [
+    { type: "img", src: asset("/images/facilities/gallery/duct-fabrication-1.jpg"), label: "Duct coil line in production", facility: "Duct Fabrication" },
+    { type: "img", src: asset("/images/facilities/gallery/duct-fabrication-2.jpg"), label: "CNC cutting of duct sheet", facility: "Duct Fabrication" },
+    { type: "img", src: asset("/images/facilities/gallery/duct-fabrication-3.jpg"), label: "Galvanized duct forming", facility: "Duct Fabrication" },
+  ],
+  "Marble & Granite": [
+    { type: "img", src: asset("/images/facilities/gallery/marble-and-granite-1.jpg"), label: "Stone workshop floor with edge-polishing line and slabs staged on A-frames", facility: "Marble & Granite" },
+    { type: "img", src: asset("/images/facilities/gallery/marble-and-granite-2.jpg"), label: "Granite slab hoisted on overhead crane clamp beside slab storage racks", facility: "Marble & Granite" },
+  ],
+  "Aluminium & Glazing": [
+    { type: "img", src: asset("/images/facilities/gallery/aluminium-and-glazing-1.jpg"), label: "Aluminium fabrication floor with frames being assembled on benches", facility: "Aluminium & Glazing" },
+    { type: "img", src: asset("/images/facilities/gallery/aluminium-and-glazing-2.jpg"), label: "Workshop interior with aluminium profiles, cutting line and assembly benches", facility: "Aluminium & Glazing" },
+    { type: "img", src: asset("/images/facilities/gallery/aluminium-and-glazing-3.jpg"), label: "Aerial view of the AFW facility building and material yard", facility: "Aluminium & Glazing" },
+    { type: "img", src: asset("/images/facilities/gallery/aluminium-and-glazing-4.jpg"), label: "Aluminium workshop wide view", facility: "Aluminium & Glazing" },
+  ],
+  "Crusher & Quarries": [
+    { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-1.jpg"), label: "Crushing plant overview with loader and tipper at work", facility: "Crusher & Quarries" },
+    { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-2.jpg"), label: "Screening and conveyor lines with loader on the stockpiles", facility: "Crusher & Quarries" },
+    { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-3.jpg"), label: "Hydraulic breaker working the quarry face", facility: "Crusher & Quarries" },
+  ],
+  "Joinery & Carpentry": [
+    { type: "img", src: asset("/images/facilities/gallery/joinery-and-carpentry-1.jpg"), label: "Panel finishing line on the carpentry production floor", facility: "Joinery & Carpentry" },
+    { type: "img", src: asset("/images/facilities/gallery/joinery-and-carpentry-2.jpg"), label: "Multi-spindle CNC router with its control station", facility: "Joinery & Carpentry" },
+    { type: "img", src: asset("/images/facilities/gallery/joinery-and-carpentry-3.jpg"), label: "Operators running the hydraulic hot press", facility: "Joinery & Carpentry" },
+    { type: "img", src: asset("/images/facilities/gallery/joinery-and-carpentry-4.jpg"), label: "Joinery production floor overview", facility: "Joinery & Carpentry" },
+  ],
+};
+
 export const leadership = {
   founder: {
     name: "Dr. Thomas Alexander",

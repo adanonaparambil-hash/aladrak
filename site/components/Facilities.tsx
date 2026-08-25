@@ -69,7 +69,12 @@ export default function Facilities() {
             <article
               key={f.name}
               data-fcard
-              className="group relative rounded-2xl overflow-hidden bg-ink aspect-[4/3] transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)]"
+              role="button"
+              tabIndex={0}
+              aria-label={`View the ${f.name} gallery`}
+              onClick={() => openFacilityMedia(f.name)}
+              onKeyDown={(e) => e.key === "Enter" && openFacilityMedia(f.name)}
+              className="group relative rounded-2xl overflow-hidden bg-ink aspect-[4/3] cursor-pointer transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
