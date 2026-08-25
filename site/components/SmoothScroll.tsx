@@ -121,14 +121,16 @@ export default function SmoothScroll({
      * abruptly; 0.085 carries momentum through the pinned sections, which is
      * where the abruptness showed most.
      *
-     * wheelMultiplier below 1 shortens each notch of the wheel, which is what
-     * stops a single flick throwing the page a whole screen and makes long
-     * sections feel controlled rather than skittish.
+     * wheelMultiplier stays at 1. Dropping it to 0.85 was a mistake: it made
+     * every notch of the wheel travel less, which reads as control on a short
+     * section but as dragging on the long pinned ones — the map alone holds the
+     * page for nearly eight screens, and needing ~18% more wheel to cross it is
+     * exactly the "nothing is happening" feeling that was reported.
      */
     const lenis = new Lenis({
       lerp: 0.085,
       smoothWheel: true,
-      wheelMultiplier: 0.85,
+      wheelMultiplier: 1,
       touchMultiplier: 1.5,
     });
     instance = lenis;

@@ -219,8 +219,29 @@ export default function HistoryTimeline() {
     const ctx = gsap.context(() => {
       const total = -STEP * (MILESTONES.length - 1);
       const rot = { v: 0 };
+      /**
+       * The wheel's rotation is the single source of truth for which milestone
+       * is being read — whatever sits on the axis IS the active one.
+       *
+       * It used to be set from two places that could disagree: the scroll's own
+       * progress, and the snap timer reading rot.v. Those race. onUpdate fires
+       * on SCROLL, while rot is animated by scrub 0.9 and lags up to 0.9s
+       * behind; the snap timer fires at 550ms, so after any quick scroll it read
+       * a half-travelled rotation and overwrote the correct index with a stale
+       * one — and being the last writer, its wrong answer stuck. The row on the
+       * axis then was not "active", so its story text rendered at zero opacity
+       * and the section looked empty.
+       *
+       * Deriving it here, inside the one function every rotation change already
+       * calls, makes disagreement impossible.
+       */
       const apply = () => {
         circle.style.transform = `rotate(${rot.v}deg)`;
+        const idx = Math.min(
+          MILESTONES.length - 1,
+          Math.max(0, Math.round(-rot.v / STEP))
+        );
+        setActive((prev) => (prev === idx ? prev : idx));
       };
       let snapTween: gsap.core.Tween | null = null;
 
@@ -232,19 +253,19 @@ export default function HistoryTimeline() {
           scrub: 0.9,
           pin: true,
           anticipatePin: 1,
-          onUpdate: (st) => {
+          onUpdate: () => {
             // a fresh scroll takes over from any wheel snap in flight
             if (snapTween) {
               snapTween.kill();
               snapTween = null;
             }
-            const i = Math.min(
-              MILESTONES.length - 1,
-              Math.round(st.progress * (MILESTONES.length - 1))
-            );
-            setActive((prev) => (prev === i ? prev : i));
-            // after the scroll rests, ease the wheel onto the nearest year
-            // (rotation only — never the page, which would fight Lenis)
+            // `active` is derived in apply() from the rotation itself, so there
+            // is nothing to set here — this only schedules the settle.
+            //
+            // After the scroll rests, ease the wheel onto the nearest year
+            // (rotation only — never the page, which would fight Lenis). The
+            // delay must clear the scrub's own catch-up, or the snap starts from
+            // a rotation still in motion and fights it.
             window.clearTimeout(snapTimer);
             snapTimer = window.setTimeout(() => {
               const idx = Math.min(
@@ -260,8 +281,7 @@ export default function HistoryTimeline() {
                   onUpdate: apply,
                 });
               }
-              setActive(idx);
-            }, 550);
+            }, 1100);
           },
         },
       }).to(rot, {

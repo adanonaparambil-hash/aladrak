@@ -187,7 +187,16 @@ export default function OmanMap() {
         scrollTrigger: {
           trigger: root,
           start: "top top",
-          end: `+=${STOPS.length * 110}%`,
+          /**
+           * 80% of a screen per region, not 110%.
+           *
+           * At 110 the map held the page for 7.7 screens — the longest pin on
+           * the site by half again, for content that is a slow pan across an
+           * outline. Past a point a scrollytelling pin stops reading as
+           * storytelling and starts reading as a section that will not end,
+           * which is how it was reported: blank dark space after the map.
+           */
+          end: `+=${STOPS.length * 80}%`,
           scrub: 0.9,
           pin: true,
           anticipatePin: 1,
