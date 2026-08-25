@@ -280,6 +280,9 @@ export const facilityGallery: Record<string, ShopFloorMedia[]> = {
     { type: "img", src: asset("/images/facilities/gallery/duct-fabrication-7.jpg"), label: "Operator at the CNC sheet cutting machine", facility: "Duct Fabrication" },
     { type: "img", src: asset("/images/facilities/gallery/duct-fabrication-8.jpg"), label: "Two workers folding sheet metal on the brake", facility: "Duct Fabrication" },
   ],
+  "Metal Fabrication": [
+    { type: "img", src: asset("/images/facilities/gallery/metal-fabrication-1.jpg"), label: "Checking fabricated steel frames against drawings", facility: "Metal Fabrication" },
+  ],
   "Formwork & Scaffolding": [
     { type: "img", src: asset("/images/facilities/gallery/formwork-and-scaffolding-1.jpg"), label: "Formwork panels and crane sections stacked in yard", facility: "Formwork & Scaffolding" },
   ],

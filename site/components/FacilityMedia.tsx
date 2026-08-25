@@ -33,24 +33,39 @@ function playlistFor(target: number | string): Playlist | null {
     return list.filter((m) => (seen.has(m.src) ? false : (seen.add(m.src), true)));
   };
 
+  /**
+   * The card's own photograph, always part of its set.
+   *
+   * It used to be a fallback for when nothing else existed, which meant adding
+   * a single gallery photograph to a facility REPLACED its cover instead of
+   * adding to it — the set stayed at one item and the better picture was the
+   * one that got dropped. It is appended rather than led with, so a clicked
+   * item still opens first, and dedupe keeps it from appearing twice.
+   */
+  const coverOf = (name?: string): ShopFloorMedia[] => {
+    const f = name ? facilities.find((x) => x.name === name) : undefined;
+    return f ? [{ type: "img", src: f.img, label: f.name, facility: f.name }] : [];
+  };
+
   if (typeof target === "number") {
     const item = shopFloor[target];
     if (!item) return null;
     const f = item.facility;
     const rest = f
-      ? [...shopFloor.filter((m) => m !== item && m.facility === f), ...(facilityGallery[f] ?? [])]
+      ? [
+          ...shopFloor.filter((m) => m !== item && m.facility === f),
+          ...(facilityGallery[f] ?? []),
+          ...coverOf(f),
+        ]
       : [];
     return { list: dedupe([item, ...rest]), pos: 0 };
   }
 
-  const fac = facilities.find((x) => x.name === target);
   const list = dedupe([
     ...shopFloor.filter((m) => m.facility === target),
     ...(facilityGallery[target] ?? []),
+    ...coverOf(target),
   ]);
-  if (!list.length && fac) {
-    list.push({ type: "img", src: fac.img, label: fac.name, facility: fac.name });
-  }
   return list.length ? { list, pos: 0 } : null;
 }
 
