@@ -3,15 +3,56 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { leadership, lifeAtAdrak } from "@/lib/content";
+import { leadership, lifeAtAdrak, type Person } from "@/lib/content";
 import Reveal from "./Reveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Team Adrak — founder feature, adviser, board photo, and full roster. */
+/**
+ * A portrait, or a monogram where there is no photograph yet.
+ *
+ * Four of the twenty-three have no picture on file. A missing <img> would leave
+ * a broken tile and a ragged grid, and a generic silhouette would look like an
+ * error; initials in the display face read as deliberate and keep the row
+ * rhythm intact. Supplying the photograph later is a one-word change in
+ * content.ts — null becomes a path — with nothing to alter here.
+ */
+function Portrait({ person }: { person: Person }) {
+  if (person.img) {
+    return (
+      /* eslint-disable-next-line @next/next/no-img-element */
+      <img
+        src={person.img}
+        alt={person.name}
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+      />
+    );
+  }
+  const initials = person.name
+    .replace(/^(Dr\.|Adv\.|Mr\.|Ms\.)\s+/i, "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+  return (
+    <div
+      aria-label={person.name}
+      role="img"
+      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-forest to-ink border border-cream/10"
+    >
+      <span className="font-display text-[clamp(1.75rem,3.2vw,3rem)] text-gold/70 tracking-wide">
+        {initials}
+      </span>
+    </div>
+  );
+}
+
+/** Team Adrak — founder feature, executive directors, and the full roster. */
 export default function Team() {
   const root = useRef<HTMLElement>(null);
-  const { founder, adviser, directors, roster } = leadership;
+  const { founder, directors, roster } = leadership;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -82,47 +123,24 @@ export default function Team() {
           </div>
         </div>
 
-        {/* ===== Adviser + board photo ===== */}
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center mb-24 md:mb-32">
-          <Reveal className="lg:col-span-7 order-2 lg:order-1">
-            <div className="grid grid-cols-3 gap-5 md:gap-8">
-              {directors.map((d) => (
-                <div key={d.name} className="group">
-                  <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={d.img}
-                      alt={d.name}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <p className="font-display text-base md:text-lg leading-snug">{d.name}</p>
-                  <p className="label text-cream/50 mt-2">{d.role}</p>
+        {/* ===== Executive directors =====
+            The corporate-adviser feature that shared this row is gone: he is
+            not on the company's current list, and the team section should show
+            that list and nothing else. The directors now take the full width
+            rather than seven columns of twelve. */}
+        <Reveal className="mb-24 md:mb-32">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8 max-w-4xl mx-auto">
+            {directors.map((d) => (
+              <div key={d.name} className="group">
+                <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
+                  <Portrait person={d} />
                 </div>
-              ))}
-            </div>
-          </Reveal>
-          <Reveal delay={0.1} className="lg:col-span-5 order-1 lg:order-2">
-            <div className="flex items-center gap-6">
-              <div className="relative rounded-2xl overflow-hidden w-36 h-44 md:w-44 md:h-56 flex-none">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={adviser.img}
-                  alt={adviser.name}
-                  className="absolute inset-0 w-full h-full object-cover object-top"
-                />
+                <p className="font-display text-base md:text-lg leading-snug">{d.name}</p>
+                <p className="label text-cream/50 mt-2">{d.role}</p>
               </div>
-              <div>
-                <p className="font-display text-xl leading-snug">{adviser.name}</p>
-                <p className="label text-gold mt-2">{adviser.role}</p>
-              </div>
-            </div>
-            <blockquote className="font-serifit italic text-xl md:text-2xl leading-snug text-cream/85 mt-8">
-              “{adviser.quote}”
-            </blockquote>
-          </Reveal>
-        </div>
+            ))}
+          </div>
+        </Reveal>
 
         {/* ===== Key personnel roster ===== */}
         <Reveal>
@@ -139,13 +157,7 @@ export default function Team() {
               className="group transform-gpu transition-transform duration-500 hover:-translate-y-1.5"
             >
               <div className="relative rounded-2xl overflow-hidden aspect-[5/6]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={m.img}
-                  alt={m.name}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                />
+                <Portrait person={m} />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <p className="font-display text-[clamp(0.9375rem,0.9vw,1.375rem)] leading-snug mt-3.5">

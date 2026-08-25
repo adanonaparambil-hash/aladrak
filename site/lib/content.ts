@@ -306,10 +306,25 @@ export const facilityGallery: Record<string, ShopFloorMedia[]> = {
   ],
 };
 
+export type Person = {
+  name: string;
+  role: string;
+  /** null until a portrait is supplied — the grid shows a monogram instead */
+  img: string | null;
+};
+
+/**
+ * Team Adrak, as supplied by the company on 2026-08-25.
+ *
+ * This IS the org list: anyone not here has left the list, and the order is
+ * theirs, not ours. Four have no portrait yet and carry null — the grid draws a
+ * monogram for those rather than leaving a hole, so a photograph can be dropped
+ * in later by changing null to a path and nothing else.
+ */
 export const leadership = {
   founder: {
     name: "Dr. Thomas Alexander",
-    role: "Founder & Chief Executive Director",
+    role: "Chairman & Chief Executive Director",
     img: asset("/images/team/founder.jpg"),
     quote:
       "Our dream is to be the best company in the Sultanate — not in terms of profits or volumes, but in terms of ethics and values.",
@@ -320,40 +335,32 @@ export const leadership = {
       "Middle East Super 100 Award",
     ],
   },
-  adviser: {
-    name: "Sheikh Numan Harith Al Amri",
-    role: "Corporate Adviser",
-    img: asset("/images/team/sheikh.jpg"),
-    quote:
-      "Few local engineering construction companies can match our contribution to Oman's urban and infrastructure development.",
-  },
   directors: [
     { name: "Dr. Aadil Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/aadil.jpg") },
-    { name: "Annie Thomas Alexander", role: "Director — Audit", img: asset("/images/team/roster/annie.jpg") },
-    { name: "Riyas Mohamed", role: "Chief Executive Officer", img: asset("/images/team/roster/riyas.jpg") },
-  ],
-  // Current key personnel, exactly as published on aladrak.com/team.php
+    { name: "Annie Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/annie.jpg") },
+    { name: "Ayyappadas Chandrasekhar", role: "Chief Operating Officer", img: null },
+  ] as Person[],
   roster: [
     { name: "Biju K. Mammen", role: "Advisor — Plant & Machinery", img: asset("/images/team/roster/biju.jpg") },
-    { name: "Sunil Sasidharan", role: "General Manager — Projects", img: asset("/images/team/roster/sunil.jpg") },
-    { name: "Hari Prasad Shetty", role: "General Manager — Tendering & QS", img: asset("/images/team/roster/hariprasad.jpg") },
-    { name: "Ajith Kumar", role: "General Manager — Procurement", img: asset("/images/team/roster/ajith.jpg") },
+    { name: "Riyas Mohamed", role: "Chief Executive Officer", img: asset("/images/team/roster/riyas.jpg") },
+    { name: "Earnest V J Shabu", role: "Group Chief Strategy & Transformation Director", img: null },
+    { name: "Mahmood Al Ghafri", role: "Vice President — HR & Administration", img: asset("/images/team/roster/mahmood.jpg") },
+    { name: "Richard Sequeira", role: "Vice President — Group Facilities, Agriculture & Carbon", img: asset("/images/team/roster/richard.jpg") },
+    { name: "Tibi John", role: "Vice President — Group Funding & Financial Advisory", img: asset("/images/team/roster/tibi.jpg") },
+    { name: "Hariprasad Shetty", role: "General Manager — Tendering & QS", img: asset("/images/team/roster/hariprasad.jpg") },
+    { name: "Rajan Prabhakaran", role: "General Manager — Projects & Development", img: asset("/images/team/roster/rajan.jpg") },
     { name: "Anoop Das", role: "General Manager — Design & Build", img: asset("/images/team/roster/anoop.jpg") },
-    { name: "Mahmood Masoud Rashid Al Ghafri", role: "DGM — HR & Administration", img: asset("/images/team/roster/mahmood.jpg") },
-    { name: "Muzna Sulaiman Salim Al Busaidi", role: "DGM — Corporate Communications", img: asset("/images/team/roster/muzna.jpg") },
-    { name: "Nauf Abdullah Sabil Al Bulushi", role: "DGM — Projects", img: asset("/images/team/roster/nauf.jpg") },
-    { name: "Huriya Hassan Hussain Al Balushi", role: "DGM — HR & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
-    { name: "Gnanasekaran T", role: "DGM — Production & Sales", img: asset("/images/team/roster/gnanasekaran.jpg") },
-    { name: "Kausthubh Rai", role: "DGM — QA / QC", img: asset("/images/team/roster/kausthubh.jpg") },
-    { name: "Iman Khalifa Mohammed Al Shaafari", role: "DGM — Finance", img: asset("/images/team/roster/iman.jpg") },
-    { name: "Tibi John", role: "DGM — Finance", img: asset("/images/team/roster/tibi.jpg") },
-    { name: "Richard Sequira", role: "DGM — Facility Management", img: asset("/images/team/roster/richard.jpg") },
-    { name: "Rajan P", role: "DGM — Developers", img: asset("/images/team/roster/rajan.jpg") },
-    { name: "Visakh U B", role: "DGM — Projects", img: asset("/images/team/roster/visakh.jpg") },
-    { name: "Sayed Iftikhar Ali", role: "Manager — HSE", img: asset("/images/team/roster/iftikhar.jpg") },
-    { name: "Naveenkumar", role: "Manager — Logistics", img: asset("/images/team/roster/naveenkumar.jpg") },
-    { name: "Nawaf Khamis Al Zadjali", role: "Manager — HR", img: asset("/images/team/roster/nawaf.jpg") },
-  ],
+    { name: "Visakh U B", role: "General Manager — Project Management & Controls", img: asset("/images/team/roster/visakh.jpg") },
+    { name: "Gnanasekaran T", role: "General Manager — Production & Sales", img: asset("/images/team/roster/gnanasekaran.jpg") },
+    { name: "Kausthubh Rai", role: "General Manager — QA/QC & Training", img: asset("/images/team/roster/kausthubh.jpg") },
+    { name: "Iman Al Shaafari", role: "General Manager — Finance & Accounts", img: asset("/images/team/roster/iman.jpg") },
+    { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: null },
+    { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
+    { name: "Nauf Al Bulushi", role: "Deputy General Manager — Projects", img: asset("/images/team/roster/nauf.jpg") },
+    { name: "Vinod PV Pillai", role: "Assistant General Manager — IT", img: null },
+    { name: "Sayed Iftequar Ali", role: "Senior Manager — HSE", img: asset("/images/team/roster/iftikhar.jpg") },
+    { name: "Nawaf Al Zadjali", role: "Manager — HR", img: asset("/images/team/roster/nawaf.jpg") },
+  ] as Person[],
 };
 
 export const headOffice = {
