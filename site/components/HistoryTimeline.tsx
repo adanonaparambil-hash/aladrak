@@ -64,6 +64,36 @@ export default function HistoryTimeline() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  /**
+   * Warm every milestone photograph before the wheel can ask for it.
+   *
+   * The plate's <img>s are loading="lazy" and stacked at opacity 0, so the
+   * browser fetched them only as the section arrived — and a quick scrub
+   * through the years could land on a milestone whose photograph was still
+   * downloading, which showed as the plate flashing empty or half-painted
+   * mid-scroll. One warm pass fills the cache so every swap is instant. It
+   * waits for the page's own load event plus a beat, so it never competes with
+   * the hero film for bandwidth.
+   */
+  useEffect(() => {
+    let timer = 0;
+    const warm = () => {
+      for (const m of MILESTONES) {
+        const im = new Image();
+        im.src = m.img;
+      }
+    };
+    const after = () => {
+      timer = window.setTimeout(warm, 1500);
+    };
+    if (document.readyState === "complete") after();
+    else window.addEventListener("load", after, { once: true });
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("load", after);
+    };
+  }, []);
+
   /* ---- 3D particle tunnel behind the wheel (from the 40-years microsite) ---- */
   useEffect(() => {
     const canvas = tunnel.current;
@@ -346,7 +376,16 @@ export default function HistoryTimeline() {
                   >
                     {m.year}
                   </div>
-                  <div className="relative font-light text-[3.07vw] lg:text-[1.25vw] leading-[1.35] pr-[4vw]">
+                  {/* The story belongs to the axis alone. Off-axis rows used to
+                      show their whole paragraph rotated with the wheel at 20%
+                      and 5% opacity — a page of diagonal ghost text that read
+                      as a rendering glitch, not as depth. The tilted YEAR gives
+                      the wheel its depth; the paragraph appears only upright. */}
+                  <div
+                    className={`relative font-light text-[3.07vw] lg:text-[1.25vw] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
+                      i === active ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
                     <span
                       className={`absolute top-1/2 -translate-y-1/2 right-[103%] w-[2vw] h-[2vw] lg:w-[1vw] lg:h-[1vw] rounded-full bg-brand transition-opacity duration-500 ${
                         i === active ? "opacity-100" : "opacity-0"
