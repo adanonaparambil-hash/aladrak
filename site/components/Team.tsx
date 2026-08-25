@@ -85,9 +85,18 @@ export default function Team() {
         </Reveal>
 
         {/* ===== Founder feature ===== */}
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center mb-24 md:mb-32">
-          <Reveal className="lg:col-span-5">
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/5] max-w-md mx-auto lg:mx-0">
+        {/*
+          A flex row, not a 12-column grid.
+          The portrait is capped at max-w-md, but its grid track was five of
+          twelve columns — on a wide screen that is well over 700px, so the cap
+          left ~280px of dead space inside the column and the quote appeared to
+          float away to the right. Flex lets the picture take only the width it
+          actually uses and the text take the rest, so the gap between them is
+          the gap that is specified and nothing more.
+        */}
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-center mb-24 md:mb-32">
+          <Reveal className="w-full max-w-md lg:flex-none lg:w-[clamp(320px,26vw,440px)]">
+            <div className="relative rounded-2xl overflow-hidden aspect-[4/5] mx-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={founder.img}
@@ -101,7 +110,7 @@ export default function Team() {
               </div>
             </div>
           </Reveal>
-          <div className="lg:col-span-7">
+          <div className="flex-1 min-w-0">
             <Reveal delay={0.1}>
               <blockquote className="font-serifit italic text-3xl md:text-4xl leading-snug text-cream/95">
                 “{founder.quote}”

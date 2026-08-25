@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import PageHero from "@/components/PageHero";
 import { careers, lifeAtAdrak, site } from "@/lib/content";
 import { asset } from "@/lib/asset";
 
@@ -16,29 +17,16 @@ export default function CareersPage() {
     <main className="bg-ink min-h-screen">
       <Header />
 
-      {/* Hero band */}
-      <section className="relative pt-40 pb-20 md:pt-52 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={asset("/images/life/life-briefing.jpg")}
-            alt=""
-            className="w-full h-full object-cover opacity-25"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink" />
-        </div>
-        <div className="relative shell">
-          <Reveal>
-            <p className="label text-gold mb-6">Careers at Al Adrak</p>
-            <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
-              Build the next landmark with us
-            </h1>
-            <p className="font-serifit italic text-cream/80 text-xl md:text-2xl mt-8 max-w-xl">
-              {lifeAtAdrak.statement}
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        img={asset("/images/life/careers-hero.jpg")}
+        alt="The Al Adrak head office at dusk"
+        kicker="Careers at Al Adrak"
+        title="Build the next landmark with us"
+      >
+        <p className="font-serifit italic text-cream/80 text-xl md:text-2xl mt-8 max-w-xl">
+          {lifeAtAdrak.statement}
+        </p>
+      </PageHero>
 
       {/* Openings */}
       <section className="relative bg-cream text-ink rounded-t-[2.5rem] md:rounded-t-[4rem]">
