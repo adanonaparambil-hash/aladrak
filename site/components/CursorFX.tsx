@@ -47,6 +47,22 @@ const BLOOM_R_HOVER = 38;
 const RING_R = 22;
 const RING_R_FAR = 18;
 
+/** everything the circle can act on */
+const INTERACTIVE = "a, button, [role=button], input, textarea, select, summary, [data-hit]";
+/**
+ * How far beyond the hotspot the circle can grab, in px.
+ *
+ * The OS click point is a single pixel, but what the visitor sees is a ~40px
+ * circle — and they aim with what they see. Requiring the invisible centre
+ * pixel to sit on the button, while the drawn circle already overlaps it, reads
+ * as the site ignoring clicks. So any click landing within this radius of an
+ * interactive element is forwarded to it, and the hover ring is driven by the
+ * same radius, so whatever the ring lights up is exactly what a click will hit.
+ * 24 ≈ the bloom's own radius, so the promise and the behaviour are the same
+ * circle.
+ */
+const SNAP_R = 24;
+
 type Spark = {
   x: number;
   y: number;
@@ -106,11 +122,88 @@ export default function CursorFX() {
       tx = e.clientX;
       ty = e.clientY;
     };
-    const onOver = (e: MouseEvent) => {
-      const hit = (e.target as HTMLElement).closest(
-        "a, button, [role=button], input, textarea, select"
-      );
-      hoverTarget = hit ? 1 : 0;
+    /** every control on the page, refreshed on the same timer as the tilts */
+    let clickables: Element[] = [];
+    const collectClickables = () => {
+      clickables = Array.from(document.querySelectorAll(INTERACTIVE));
+    };
+    collectClickables();
+
+    /**
+     * What the circle is touching — not just what the hotspot pixel is on.
+     *
+     * Exact geometry, not sampling: the circle overlaps a control exactly when
+     * the point-to-rectangle distance is within SNAP_R, so every control's
+     * rectangle is measured and the nearest within reach wins. A first draft
+     * probed a ring of elementFromPoint samples instead, and its own coverage
+     * check showed why that was wrong: a control clipping the circle corner-on
+     * slid between the probes about one time in ten — a promise broken exactly
+     * often enough to feel like the site dropping clicks.
+     *
+     * The winner is then confirmed with one hit test at its nearest point, so a
+     * control that is covered by something else — a modal's backdrop above all
+     * — cannot pull clicks through the thing covering it.
+     */
+    const findInteractive = (x: number, y: number): Element | null => {
+      let best: Element | null = null;
+      let bestD = SNAP_R + 0.001;
+      for (const el of clickables) {
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) continue;
+        if (
+          x < r.left - SNAP_R ||
+          x > r.right + SNAP_R ||
+          y < r.top - SNAP_R ||
+          y > r.bottom + SNAP_R
+        )
+          continue;
+        const dx = Math.max(r.left - x, x - r.right, 0);
+        const dy = Math.max(r.top - y, y - r.bottom, 0);
+        const d = Math.hypot(dx, dy);
+        if (d < bestD) {
+          bestD = d;
+          best = el;
+        }
+      }
+      if (!best) {
+        // the cache refreshes every 2s, so a control inside a just-opened
+        // modal may not be in it yet — a direct hit still has to register
+        return document.elementFromPoint(x, y)?.closest?.(INTERACTIVE) ?? null;
+      }
+      if (best.matches(":disabled")) return null;
+      const r = best.getBoundingClientRect();
+      const ix = Math.min(Math.max(x, r.left + 1), r.right - 1);
+      const iy = Math.min(Math.max(y, r.top + 1), r.bottom - 1);
+      const at = document.elementFromPoint(ix, iy);
+      if (!at) return null;
+      return at === best || best.contains(at) || at.closest?.(INTERACTIVE) === best
+        ? best
+        : null;
+    };
+
+    /**
+     * Forward a click that landed inside the circle but off the element.
+     *
+     * Capture phase, so the miss is intercepted before any page handler (a
+     * modal backdrop especially) treats it as its own; stopPropagation then
+     * guarantees exactly one action fires. Synthetic clicks are ignored —
+     * the forwarded click() arrives back here with isTrusted false, which is
+     * what prevents a loop.
+     */
+    const onClick = (e: MouseEvent) => {
+      if (!e.isTrusted) return;
+      if ((e.target as HTMLElement).closest?.(INTERACTIVE)) return;
+      // clicks are rare and this must not act on stale geometry
+      collectClickables();
+      const near = findInteractive(e.clientX, e.clientY);
+      if (!near) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (near.matches("input, textarea, select") && "focus" in near) {
+        (near as HTMLElement).focus();
+      }
+      if (near instanceof HTMLElement) near.click();
+      else near.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
     };
 
     /* ---------- the spark pool ---------- */
@@ -164,7 +257,13 @@ export default function CursorFX() {
       // every scroll event, which is a frame's work thrown away sixty times a
       // second for a number that is two characters wide
       if (pctText.current) pctText.current.textContent = `${Math.round(p * 100)}%`;
-      if (wrap.current) wrap.current.style.opacity = window.scrollY > 400 ? "1" : "0";
+      if (wrap.current) {
+        const shown = window.scrollY > 400;
+        wrap.current.style.opacity = shown ? "1" : "0";
+        // while invisible it must not be clickable either — with snapping, an
+        // invisible-but-active button would even pull nearby clicks to itself
+        wrap.current.style.pointerEvents = shown ? "auto" : "none";
+      }
     };
     onScroll();
 
@@ -174,15 +273,28 @@ export default function CursorFX() {
       tilts = Array.from(document.querySelectorAll<HTMLElement>("[data-tilt]"));
     };
     collectTilts();
-    const tiltTimer = window.setInterval(collectTilts, 2000);
+    const tiltTimer = window.setInterval(() => {
+      collectTilts();
+      // controls come and go too — modals, strips, the news reader
+      collectClickables();
+    }, 2000);
 
     /* ---------- one frame ---------- */
     let raf = 0;
     let prev = performance.now() / 1000;
+    let frameN = 0;
     const frame = (nowMs: number) => {
       const t = nowMs / 1000;
       const dt = Math.min(0.05, t - prev);
       prev = t;
+
+      // hover by proximity, on the same radius the click snaps to — so the
+      // ring lights up on exactly what a click would hit. Every 3rd frame is
+      // 20Hz, within a frame or two of a mouseover and far cheaper than probing
+      // every frame.
+      if (frameN++ % 3 === 0) {
+        hoverTarget = findInteractive(tx, ty) ? 1 : 0;
+      }
 
       // the core eases toward the true pointer; the gap is what the sparks fill
       const lx = px;
@@ -278,8 +390,8 @@ export default function CursorFX() {
     raf = requestAnimationFrame(frame);
 
     window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mouseover", onOver, { passive: true });
     window.addEventListener("mousedown", onDown, { passive: true });
+    window.addEventListener("click", onClick, true);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", resize);
 
@@ -287,8 +399,8 @@ export default function CursorFX() {
       cancelAnimationFrame(raf);
       window.clearInterval(tiltTimer);
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onOver);
       window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("click", onClick, true);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
       for (const el of tilts) {
