@@ -83,3 +83,7 @@ Thumbs.db
 
 # generated deliverable — rebuild with: node scripts-hse-doc.js
 Al-Adrak-HSE-page.docx
+
+# Source archive of awards/era photos (311MB) — prepared copies live under
+# site/public/images/timeline. Anchored like the other archives above.
+/photos-*/
