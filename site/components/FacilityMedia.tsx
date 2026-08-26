@@ -83,6 +83,7 @@ export default function FacilityMedia() {
   const backdrop = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const media = useRef<HTMLDivElement>(null);
+  const rail = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onOpen = (e: Event) => {
@@ -161,6 +162,11 @@ export default function FacilityMedia() {
       { autoAlpha: 0.55, scale: 1.05 },
       { autoAlpha: 1, scale: 1, duration: 0.5, ease: "power2.out", overwrite: "auto" }
     );
+    // keep the active thumbnail in view: with ten or more in the rail,
+    // arrow-stepping would otherwise walk the selection off the visible strip
+    rail.current
+      ?.querySelector('[aria-current="true"]')
+      ?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
     return () => {
       tw.kill();
     };
@@ -194,14 +200,29 @@ export default function FacilityMedia() {
         aria-hidden
       />
 
+      {/*
+        A flex column with a HEIGHT-BOUNDED media pane, not a scrolling panel.
+
+        The previous frame let the media keep its 16:9 aspect inside a 90dvh
+        panel, so on common screens the picture alone was taller than the panel
+        and everything under it — the caption, the thumbnail rail, the counter —
+        sat below a fold no one could see, behind a scrollbar the styling hides.
+        A visitor got one photograph, one × and no clue nine more existed, which
+        is exactly what was reported. Now the media is capped so the rail and
+        counter are always inside the frame, and the picture gives up a little
+        height to buy that.
+      */}
       <div
         ref={panel}
         role="dialog"
         aria-modal="true"
         aria-label={item.label}
-        className="relative w-full max-w-[min(1500px,92vw)] max-h-[90dvh] overflow-y-auto no-scrollbar rounded-2xl border border-cream/12 bg-forest/95 shadow-[0_40px_120px_rgba(0,0,0,0.7)]"
+        className="relative w-full max-w-[min(1500px,92vw)] max-h-[90dvh] flex flex-col rounded-2xl border border-cream/12 bg-forest/95 shadow-[0_40px_120px_rgba(0,0,0,0.7)]"
       >
-        <div ref={media} className="relative aspect-video bg-ink overflow-hidden rounded-t-2xl">
+        <div
+          ref={media}
+          className="relative flex-none h-[clamp(240px,52dvh,700px)] bg-ink overflow-hidden rounded-t-2xl"
+        >
           {item.type === "video" ? (
             <video
               key={item.src}
@@ -222,77 +243,91 @@ export default function FacilityMedia() {
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
+
+          {/* the set's size, said on the picture itself */}
+          {many && (
+            <span className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-ink/70 backdrop-blur-md border border-cream/20 label label-xs text-cream/90 tabular-nums">
+              {pl.pos + 1} / {pl.list.length}
+            </span>
+          )}
+
+          {/* arrows ON the image — the universal sign that there are more */}
+          {many && (
+            <>
+              <button
+                onClick={() => step(-1)}
+                aria-label="Previous"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md border border-cream/25 text-cream/90 hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 flex items-center justify-center"
+              >
+                <svg width="9" height="14" viewBox="0 0 9 14" aria-hidden>
+                  <path d="M7.5 1 1.5 7l6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                onClick={() => step(1)}
+                aria-label="Next"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md border border-cream/25 text-cream/90 hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 flex items-center justify-center"
+              >
+                <svg width="9" height="14" viewBox="0 0 9 14" aria-hidden>
+                  <path d="M1.5 1 7.5 7l-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </>
+          )}
         </div>
 
-        <div className="p-6 md:p-9">
+        {/* the rest of the set, FIRST under the picture — this rail is the
+            answer to "is there more?", so nothing may sit above it */}
+        {many && (
+          <div
+            ref={rail}
+            data-fm-stagger
+            className="flex-none flex gap-2.5 px-6 md:px-9 pt-4 overflow-x-auto no-scrollbar"
+          >
+            {pl.list.map((m, i) => (
+              <button
+                key={m.src}
+                onClick={() => jump(i)}
+                aria-label={m.label}
+                aria-current={i === pl.pos}
+                className={`relative flex-none w-24 aspect-video rounded-lg overflow-hidden border transition-all duration-300 ${
+                  i === pl.pos
+                    ? "border-gold ring-1 ring-gold/50"
+                    : "border-cream/15 opacity-60 hover:opacity-100 hover:border-cream/40"
+                }`}
+              >
+                {m.type === "video" ? (
+                  <span className="absolute inset-0 bg-ink flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
+                      <path d="M5 3.5v9l8-4.5z" fill="var(--color-gold)" />
+                    </svg>
+                  </span>
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={m.src} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="p-6 md:px-9 md:py-6 overflow-y-auto no-scrollbar">
           {fac && (
             <p data-fm-stagger className="label text-gold mb-2.5">
               {fac.name}
             </p>
           )}
-          <h4 data-fm-stagger className="font-display text-2xl md:text-3xl text-cream mb-3">
+          <h4 data-fm-stagger className="font-display text-xl md:text-2xl text-cream mb-2.5">
             {item.label}
           </h4>
           {fac && (
             <p
               data-fm-stagger
-              className="text-cream/80 font-light leading-relaxed max-w-2xl text-[15px] md:text-base"
+              className="text-cream/80 font-light leading-relaxed max-w-2xl text-[14px] md:text-[15px]"
             >
               {fac.desc}
             </p>
           )}
-
-          {/* the rest of this facility, one glance away */}
-          {many && (
-            <div data-fm-stagger className="flex gap-2.5 mt-7 overflow-x-auto no-scrollbar pb-1">
-              {pl.list.map((m, i) => (
-                <button
-                  key={m.src}
-                  onClick={() => jump(i)}
-                  aria-label={m.label}
-                  aria-current={i === pl.pos}
-                  className={`relative flex-none w-24 aspect-video rounded-lg overflow-hidden border transition-colors duration-300 ${
-                    i === pl.pos
-                      ? "border-gold"
-                      : "border-cream/15 opacity-60 hover:opacity-100 hover:border-cream/40"
-                  }`}
-                >
-                  {m.type === "video" ? (
-                    <span className="absolute inset-0 bg-ink flex items-center justify-center">
-                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
-                        <path d="M5 3.5v9l8-4.5z" fill="var(--color-gold)" />
-                      </svg>
-                    </span>
-                  ) : (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={m.src} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div data-fm-stagger className="flex items-center gap-4 mt-7">
-            {many && (
-              <>
-                <button
-                  onClick={() => step(-1)}
-                  className="px-5 py-2.5 rounded-full border border-cream/20 label label-xs text-cream/70 hover:text-ink hover:bg-sand hover:border-sand transition-colors duration-300"
-                >
-                  &larr; Prev
-                </button>
-                <button
-                  onClick={() => step(1)}
-                  className="px-5 py-2.5 rounded-full border border-cream/20 label label-xs text-cream/70 hover:text-ink hover:bg-sand hover:border-sand transition-colors duration-300"
-                >
-                  Next &rarr;
-                </button>
-              </>
-            )}
-            <span className="label label-xs text-cream/70 ml-auto tabular-nums">
-              {pl.pos + 1} / {pl.list.length}
-            </span>
-          </div>
         </div>
 
         <button
