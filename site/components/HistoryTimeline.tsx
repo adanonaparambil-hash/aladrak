@@ -22,13 +22,22 @@ const STEP = 15; // degrees per year
 
 const MILESTONES = [
   { year: "1986", img: asset("/images/team/founder.jpg"), text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
-  { year: "1990", img: asset("/images/projects/villa-seeb.jpg"), text: "Early growth: from minor contracts and maintenance to broader civil and building works across the Sultanate." },
-  { year: "1995", img: asset("/images/division-mechanical.jpg"), text: "Diversification into mechanical, electrical and infrastructural engineering—laying the foundation for full EPC capabilities." },
+  /* The early-era plates are the company's own period photographs, supplied
+     as rephotographed film prints (rotated and cropped in preparation). A
+     modern villa or a drone shot standing in for the nineties read as filler;
+     a faded print of blockwork going up IS the era. The 1995 frame even
+     carries its film datestamp — 11.12.95 — burned in by the camera. */
+  { year: "1990", img: asset("/images/timeline/era-1990-site.jpg"), text: "Early growth: from minor contracts and maintenance to broader civil and building works across the Sultanate." },
+  { year: "1995", img: asset("/images/timeline/era-1995-alkamil.jpg"), text: "Diversification into mechanical, electrical and infrastructural engineering—laying the foundation for full EPC capabilities." },
   { year: "2000", img: asset("/images/projects/rop.jpg"), text: "Recognized as an established Omani contractor with a growing portfolio of government and institutional projects." },
   { year: "2003", img: asset("/images/awards/cert-iso-9001.jpg"), text: "Commitment to quality and HSE: ISO 9001, and later ISO 14001 and OHSAS 18001, become part of the Adrak way of life." },
   { year: "2006", img: asset("/images/projects/mohe.jpg"), text: "Major landmark projects take shape—strengthening our reputation in commercial, government and infrastructure sectors." },
-  { year: "2008", img: asset("/images/facilities/gallery-drone.jpg"), text: "Navigating the global financial crisis while deepening EPC and project management capabilities for the long term." },
-  { year: "2010", img: asset("/images/projects/waljat.jpg"), text: "Delivery of flagship projects including institutional and commercial buildings that define Oman’s built environment." },
+  /* 2008 previously used a modern drone shot — anachronistic for a
+     crisis-era story. Both plates below are from the corporate archive's
+     era shoots; the 2010 frame is date-stamped 12/02/2010 by the camera and
+     shows the workforce in Al Adrak yellow on the scaffolding. */
+  { year: "2008", img: asset("/images/timeline/era-2008-landmark.jpg"), text: "Navigating the global financial crisis while deepening EPC and project management capabilities for the long term." },
+  { year: "2010", img: asset("/images/timeline/era-2010-courthouse.jpg"), text: "Delivery of flagship projects including institutional and commercial buildings that define Oman’s built environment." },
   { year: "2013", img: asset("/images/projects/kom4.jpg"), text: "Regional ambition: laying the groundwork for expansion across the Middle East and the Indian Subcontinent." },
   { year: "2015", img: asset("/images/blog/dr-thomas-alexander-receiving-the-achievement-aw.jpg"), text: "Dr. Thomas Alexander receives Omani citizenship in recognition of his contributions to nation-building and the construction industry." },
   { year: "2017", img: asset("/images/blog/adrak-developers-marks-first-key-handove.jpg"), text: "Group diversification: Adrak Developers, hospitality and real estate ventures extend the Al Adrak footprint." },
