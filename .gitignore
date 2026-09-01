@@ -87,3 +87,9 @@ Al-Adrak-HSE-page.docx
 # Source archive of awards/era photos (311MB) — prepared copies live under
 # site/public/images/timeline. Anchored like the other archives above.
 /photos-*/
+
+# Staging folder for scripts/prep-group.mjs. Holds the raw logo renders and the
+# two resort photographs pulled from mountainmist.in / summersand.in; the header
+# of that script records where each file comes from. Prepared copies live under
+# site/public/images/group and /hotels, same as the other archives above.
+/site/scripts/.src-group/

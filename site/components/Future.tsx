@@ -1,5 +1,6 @@
-import { future, offices, sustainability, groupCompanies } from "@/lib/content";
+import { future, offices, sustainability } from "@/lib/content";
 import Reveal from "./Reveal";
+import GroupCompanies from "./GroupCompanies";
 import { asset } from "@/lib/asset";
 
 export default function Future() {
@@ -60,52 +61,7 @@ export default function Future() {
         {/* Group companies — logo wall */}
         <Reveal delay={0.15} className="mt-16">
           <p className="label text-cream/50 mb-8">The Adrak Group</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {groupCompanies.map((g) => {
-              const tile = (
-                <div className="group h-full rounded-2xl bg-cream border border-white/20 overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                  {g.img ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={g.img}
-                      alt={`${g.name} logo`}
-                      loading="lazy"
-                      className="w-full aspect-[2/1] object-contain bg-white p-4"
-                    />
-                  ) : (
-                    <div className="w-full aspect-[2/1] bg-white flex items-center justify-center p-4">
-                      <span className="font-display text-xl text-forest text-center leading-snug">
-                        {g.name}
-                      </span>
-                    </div>
-                  )}
-                  <div className="px-4 py-3 bg-cream border-t border-ink/10 flex items-center justify-between gap-2">
-                    <span className="label label-xs text-ink/70 leading-snug sm:truncate">
-                      {g.name}
-                    </span>
-                    {g.url && (
-                      <span className="label label-xs text-brand group-hover:text-gold transition-colors flex-none">
-                        Visit ↗
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-              return g.url ? (
-                <a
-                  key={g.name}
-                  href={g.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit ${g.name}`}
-                >
-                  {tile}
-                </a>
-              ) : (
-                <div key={g.name}>{tile}</div>
-              );
-            })}
-          </div>
+          <GroupCompanies />
         </Reveal>
 
         {/* Offices — each detail with its own icon, as on the Contact page */}

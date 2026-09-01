@@ -415,9 +415,54 @@ export const sustainability = [
 ];
 
 // Group companies — logos from the archive; URLs from the company's own "Website Links" file
-export const groupCompanies = [
+/** One bookable property behind the Adrak Hotels tile. */
+export type HotelProperty = {
+  name: string;
+  kind: string;
+  place: string;
+  url: string;
+  img: string;
+};
+
+/**
+ * Adrak Hotels runs two resorts in Kerala under separate domains, so its tile
+ * cannot simply link somewhere — it has to ask which one first.
+ *
+ * Photographs are each property's own, from its site. Their logos are not used
+ * here: Mountain Mist ships only a leaf mark with no wordmark and Summer Sand's
+ * is white-on-transparent, so the pair would neither match each other nor
+ * survive a light background. The leaf mark carries the tile instead, and the
+ * cards are typeset over the photographs.
+ */
+export const adrakHotelProperties: HotelProperty[] = [
+  {
+    name: "Adrak Mountain Mist",
+    kind: "Forest Resort",
+    place: "Wayanad, Kerala",
+    url: "https://mountainmist.in/",
+    img: asset("/images/hotels/mountain-mist.jpg"),
+  },
+  {
+    name: "Adrak Summer Sand",
+    kind: "Hill Resort",
+    place: "Vagamon, Kerala",
+    url: "https://summersand.in/",
+    img: asset("/images/hotels/summer-sand.jpg"),
+  },
+];
+
+export type GroupCompany = {
+  name: string;
+  img?: string;
+  url?: string;
+  /** when present the tile opens a chooser rather than navigating anywhere */
+  choose?: HotelProperty[];
+};
+
+export const groupCompanies: GroupCompany[] = [
   { name: "AdLife Hospital", img: asset("/images/group/adlife.jpg"), url: "https://www.adlifeoman.com" },
   { name: "Adrak Hotels & Resorts", img: asset("/images/group/hotels.jpg"), url: "https://adrakhotelsandresorts.com" },
+  { name: "Adrak Hotels", img: asset("/images/group/hotels-india.jpg"), choose: adrakHotelProperties },
   { name: "Hai Al Naseem", img: asset("/images/group/hai-al-naseem.jpg"), url: "https://www.haialnaseem.com" },
   { name: "Al Maskaan Village", img: asset("/images/group/maskaan.jpg"), url: "https://almaskaanvillage.com" },
   { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
@@ -428,7 +473,11 @@ export const groupCompanies = [
   { name: "Adrak India", img: asset("/images/group/india.jpg") },
   { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
   { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },
-  { name: "Trufud Farm", url: "https://trufudoman.com" },
+  /* aimsoman.com has no working HTTPS — its certificate belongs to an
+     unrelated domain — so this has to stay an http:// link until the host is
+     fixed. Browsers will mark the destination "not secure". */
+  { name: "AIMS Pharmacy", img: asset("/images/group/aims.jpg"), url: "http://aimsoman.com/" },
+  { name: "Trufud Farm", img: asset("/images/group/trufud.jpg"), url: "https://trufudoman.com" },
   { name: "Trinity College", url: "https://thetrinitycollege.in" },
 ];
 
