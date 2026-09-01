@@ -258,8 +258,27 @@ export default function HistoryTimeline() {
         scrollTrigger: {
           trigger: root,
           start: "top top",
-          end: `+=${(MILESTONES.length - 1) * 30}%`,
-          scrub: 0.9,
+          /**
+           * 30% of a screen per milestone, plus a 40% plateau holding 2026.
+           *
+           * The plateau is the second half of a reported bug: rotation used to
+           * complete at the exact pixel the pin released, so the final year
+           * appeared and was immediately yanked away. Now the wheel lands on
+           * the present and the section demonstrably FINISHES before it lets
+           * the page move on.
+           */
+          end: `+=${(MILESTONES.length - 1) * 30 + 40}%`,
+          /**
+           * 0.25, not 0.9 — the first half of that bug. Lenis already smooths
+           * the scroll itself; a 0.9s catch-up on top of it meant a quick
+           * scroll exited the section while the wheel still displayed a year
+           * from five milestones back, and the pin then released mid-rotation.
+           * To the visitor that read as the history cutting straight from 2000
+           * to the next section. At 0.25 the wheel stays within about one
+           * milestone of the true position even at speed, and converges the
+           * moment the scroll rests.
+           */
+          scrub: 0.25,
           pin: true,
           anticipatePin: 1,
           onUpdate: () => {
@@ -293,11 +312,17 @@ export default function HistoryTimeline() {
             }, 1100);
           },
         },
-      }).to(rot, {
-        v: total,
-        ease: "none",
-        onUpdate: apply,
-      });
+      })
+        // durations are relative in a scrubbed timeline: 540 units of rotation
+        // then 40 of stillness, matching the 540% + 40% scroll span above, so
+        // the plateau holds exactly the last 40% of the pin on the present day
+        .to(rot, {
+          v: total,
+          ease: "none",
+          duration: 540,
+          onUpdate: apply,
+        })
+        .to({}, { duration: 40 });
 
       // entrance — the wheel scales in as the section arrives
       gsap.fromTo(
