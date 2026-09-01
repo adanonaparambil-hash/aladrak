@@ -42,13 +42,25 @@ const MILESTONES = [
   { year: "2015", img: asset("/images/blog/dr-thomas-alexander-receiving-the-achievement-aw.jpg"), text: "Dr. Thomas Alexander receives Omani citizenship in recognition of his contributions to nation-building and the construction industry." },
   { year: "2017", img: asset("/images/blog/adrak-developers-marks-first-key-handove.jpg"), text: "Group diversification: Adrak Developers, hospitality and real estate ventures extend the Al Adrak footprint." },
   { year: "2018", img: asset("/images/blog/al-adrak-s-dubai-journey-eh3-groundbreaking-cere.jpg"), text: "Al Adrak Contracting Co LLC established in Dubai—UAE presence strengthens our regional delivery." },
-  { year: "2019", img: asset("/images/awards/award-forbes.jpg"), text: "Forbes recognition: among Oman’s top unlisted companies and Top 100 in the GCC. American British Business Award, European Business Award." },
-  { year: "2020", img: asset("/images/projects/mazoon-dairy.jpg"), text: "Landmark projects: Mazoon Dairy at Buraimi, Marriott Aloft Ghala, Cheltenham School Seeb, and continued delivery through challenging times." },
-  { year: "2022", img: asset("/images/head-office.jpg"), text: "Al Adrak Contracting Co LLC in KSA and Adrak India expand the group—Oman, UAE, KSA and India now under one vision." },
-  { year: "2023", img: asset("/images/blog/business-leader-of-the-year-2023-dr-aadil-thoma.jpg"), text: "Dr. Thomas Alexander named Iconic Business Leader of the Year. Workforce of 6,000+; order book exceeding $1 billion." },
-  { year: "2024", img: asset("/images/projects/adlife.jpg"), text: "500,000 sqm construction capacity. Adrak Hotels, Adlife Hospital, Trinity College and support facilities underscore integrated capabilities." },
-  { year: "2025", img: asset("/images/projects/central-bank.jpg"), text: "Central Bank of Oman, Muscat Insurance HQ, Hai Al Naseem Barka and more—a legacy of landmarks across the Sultanate." },
-  { year: "2026", img: asset("/images/projects/dubai-ellington.jpg"), text: `We celebrate ${years()} years of Al Adrak—award-winning, internationally recognized, and committed to the next chapter of building Oman’s future.` },
+  /* ---- the modern chapter -------------------------------------------------
+     Every plate from 2019 on is baked to the wheel's own 5:4 by
+     scripts/prep-timeline.mjs. The sources are news photographs of wildly
+     different shapes — a portrait award handover, a 3:1 aerial, a wordmark on
+     black — and letting CSS object-cover decide the crop lost the handshake in
+     one and left nothing but empty desert in another. Re-run that script if a
+     source is replaced.
+     ---------------------------------------------------------------------- */
+  { year: "2019", img: asset("/images/timeline/m-2019-forbes.jpg"), text: "Forbes Middle East ranks Al Adrak among Oman’s Top 100 unlisted companies and the GCC Top 100—alongside the American British Business Award and the European Business Award." },
+  { year: "2020", img: asset("/images/timeline/m-2020-mazoon.jpg"), text: "Mazoon Dairy: a 16 sq.km greenfield development completed in a record 18 months, and Oman’s National Winner for Industrial Project of the Year at the MEED Projects Awards." },
+  /* The badge in this plate reads “2020” — that is the edition name. The 6th
+     edition was conferred on 21.02.2021 because the ceremony was held over and
+     run virtually through the pandemic, so the milestone sits in 2021. */
+  { year: "2021", img: asset("/images/timeline/m-2021-golden.jpg"), text: "Dr. Thomas Alexander is honoured with the Golden Achievement Award, Dubai—the 6th edition, conferred in February 2021." },
+  { year: "2022", img: asset("/images/timeline/m-2022-adrak-developers.jpg"), text: "Recognition Award for Adrak Developers—presented by H.H. Sayyid Marwan bin Turki Al Said at the Muscat Real Estate Development Forum, for enhancing and supporting the sustainable growth of Oman Vision 2040." },
+  { year: "2023", img: asset("/images/timeline/m-2023-dossier.jpg"), text: "Dossier Construction Awards 2023—two wins in one night: Dr. Thomas Alexander named Iconic Business Leader of the Year, and Hai Al Naseem takes Best Real Estate Project, Residential." },
+  { year: "2024", img: asset("/images/timeline/m-2024-sultan-haitham-city.jpg"), text: "Sultan Haitham City: Adrak Developers signs with the Ministry of Housing & Urban Planning for Neighbourhood 12 D—339 residences across 56,166 sqm, an investment of OMR 38.7 million." },
+  { year: "2025", img: asset("/images/timeline/m-2025-thumrait.jpg"), text: "A usufruct agreement is signed for a Moringa tree cultivation project in the Wilayat of Thumrait, Dhofar Governorate. Spanning 10.5 million square metres and representing an investment exceeding OMR 5.3 million, it aims to enhance food security and develop value chains and production related to manufacturing and export." },
+  { year: "2026", img: asset("/images/timeline/m-2026-gems.jpg"), text: `GEMS School Management and Adrak Developers partner to establish a landmark international school at Hai Al Naseem, Barka—opening September 2027 for 1,600 pupils. ${years()} years on, we are still building Oman’s future.` },
 ];
 
 const RINGS = [

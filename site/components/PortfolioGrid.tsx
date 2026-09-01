@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { moreProjects, projectNames } from "@/lib/content";
 import Reveal from "./Reveal";
 import { openProject } from "./ProjectModal";
+import CurrentPortfolio from "./CurrentPortfolio";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -105,6 +106,11 @@ export default function PortfolioGrid() {
             </article>
           ))}
         </div>
+
+        {/* The live register — sixteen jobs currently on site. Sits between
+            the delivered work above and the name wall below, so the section
+            reads past -> present -> the long tail. */}
+        <CurrentPortfolio />
 
         {/* Name wall */}
         <Reveal className="mt-20 md:mt-28">

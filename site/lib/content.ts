@@ -157,7 +157,7 @@ export const moreProjects = [
   { sector: "Government", name: "Wet Laboratory", place: "Muscat", img: asset("/images/projects/wet-lab.jpg"), desc: "A specialised laboratory facility delivered for the Government of Oman to international standards." },
   { sector: "Defense & Police", name: "Royal Oman Police Facility", place: "Muscat", img: asset("/images/projects/rop.jpg"), desc: "A secure operational campus delivered for the Royal Oman Police." },
   { sector: "Residential", name: "Villa Complex", place: "Al Qurm, Muscat", img: asset("/images/projects/villa-seeb.jpg"), desc: "A high-end villa community in one of Muscat's most prestigious districts." },
-  { sector: "Infrastructure", name: "KOM Ring Road & Utilities", place: "Knowledge Oasis Muscat", img: asset("/images/projects/kom-ring-road.jpg"), desc: "A 3.7 km dual carriageway plus 4.1 km single carriageway with 27 km of utility services, solar lighting and automated traffic control." },
+  { sector: "Infrastructure", name: "KOM Ring Road & Utilities", place: "Knowledge Oasis Muscat", img: asset("/images/projects/kom-ring-road.jpg"), desc: "2.8 km of dual carriageway and 3 km of single carriageway with signals, roundabouts, culverts, cycle tracks and full utility infrastructure." },
   { sector: "Industrial", name: "Central Processing Plant — Mazoon Dairy", place: "Al Sunaynah", img: asset("/images/projects/mdp-cpp.jpg"), desc: "Process utilities, storage and 1,000 KVA substations serving Oman's national dairy city." },
   { sector: "Commercial", name: "Office, Warehouse & Accommodation", place: "Halban, Muscat", img: asset("/images/head-office.jpg"), desc: "Al Adrak's own integrated campus — head office, central warehouse, factories and staff accommodation." },
   { sector: "International", name: "Ellington House 3 & 4", place: "Dubai, UAE", img: asset("/images/projects/dubai-ellington.jpg"), desc: "Luxury residences under development in Dubai — Al Adrak's flagship UAE venture with Ellington Properties." },
@@ -166,11 +166,10 @@ export const moreProjects = [
 // Delivered landmarks without a photo card — shown as a name wall
 export const projectNames = [
   "Sohar University", "Special Task Force Campus", "Seeb Stadium", "AdLife Hospital",
-  "Mirbat Hospital", "Court Complex, Ibri", "Muscat Pavilion", "Knowledge Oasis Oman 3",
-  "Iraq Embassy", "Renaissance Complex, Duqm", "Residential Tower, Bausher",
-  "CCWS Sohar Port Pipeline — 2.2 m × 25 km",
+  "Mirbat Hospital", "Court Complex, Ibri", "Knowledge Oasis Oman 3",
+  "Iraq Embassy", "Renaissance Complex, Duqm", "CCWS Sohar Port Pipeline — 2.2 m × 25 km",
   "Olympic Indoor Pool, Nizwa", "Ministry of Sports Facilities", "Buraimi Border Roundabout",
-  "Bandar Al Khairan Resort", "Military Technological College", "Police Station Complex, Duqm",
+  "Military Technological College", "Police Station Complex, Duqm",
   "ROP Regional Headquarters, Sur", "Environment & Climate Affairs Building",
   "Private Villa, Seeb", "Aqua Culture Centre",
 ];
