@@ -154,15 +154,6 @@ export default function ProjectModal() {
               ))}
             </ul>
           )}
-
-          <a
-            data-modal-stagger
-            href="#contact"
-            onClick={close}
-            className="inline-flex mt-9 px-9 py-4 bg-gold text-ink rounded-full label font-bold hover:shadow-[0_0_30px_rgba(201,155,69,0.4)] transition-shadow duration-500"
-          >
-            Discuss a Similar Project
-          </a>
         </div>
 
         {/* Close */}
