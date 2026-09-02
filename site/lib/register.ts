@@ -9,8 +9,9 @@ import { asset } from "./asset";
  * copy comes verbatim from the company's own project register rather than from
  * marketing.
  *
- * Every entry carries an image. Seven are real photographs or renders; the
- * other nine have had no shoot yet, and pairing polished copy with a
+ * Every entry carries an image. Eight are real photographs or renders — the
+ * Muscat Pavilion one lifted off a single-page award notice, so it is set as a
+ * band rather than cropped — and the other eight have had no shoot yet, and pairing polished copy with a
  * photograph of a different building would be worse than showing none — those
  * point at typographic plates of the project number, baked by
  * scripts/prep-register.mjs. Replace a plate path with a real photograph here
@@ -23,6 +24,15 @@ export type RegisterProject = {
   sector: string;
   desc: string;
   img: string;
+  /** shown in the project modal, below the description */
+  specs?: string[];
+  /**
+   * True when `img` is a wide band or panorama rather than a 4:3 photograph.
+   * The portfolio grid makes every seventh card a tall 3/4.5 crop, which keeps
+   * only the middle half of such art — enough to cut both wings off a building.
+   * Wide cards keep their 4:3 slot.
+   */
+  wide?: boolean;
 };
 
 export const currentPortfolio: RegisterProject[] = [
@@ -39,7 +49,8 @@ export const currentPortfolio: RegisterProject[] = [
     name: "Muscat Pavilion",
     place: "Muscat Hills",
     sector: "Commercial",
-    img: asset("/images/register/plate-mpm.jpg"),
+    img: asset("/images/register/mpm.jpg"),
+    wide: true,
     desc: "Muscat Pavilion is a contemporary multifunctional development located within the prestigious Muscat Hills community. The project is designed to provide a versatile and modern environment that supports a range of social, leisure, community and event-based activities. Its location within one of Muscat’s established mixed-use destinations gives the development a distinctive urban and lifestyle character. The project contributes to enhancing the community experience within the wider Muscat Hills development.",
   },
   {
@@ -48,6 +59,14 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Madinat Al Irfan, Bausher",
     sector: "Government",
     img: asset("/images/register/ppm.jpg"),
+    // carried over from the flagship gallery card this entry replaced
+    specs: [
+      "Office complex for the Public Prosecution Directorates",
+      "L+G+5, approximately 38,829 m² built-up area",
+      "Monumental pointed-arch portal with reflecting pool",
+      "Soaring stacked-ring central atrium",
+      "Stone-clad façade with pergola & mashrabiya detailing",
+    ],
     desc: "A landmark government development at Madinat Al Irfan, Bausher, developed as the head office of the Public Prosecution Authority. The L+G+5 facility provides approximately 38,829 m² of built-up area and combines complete civil, architectural and MEP systems within a modern institutional setting. A prominent stone-clad façade and stepped architectural form give the building a strong and distinguished identity. The development reflects a balance of functionality, efficiency and contemporary governmental architecture.",
   },
   {
@@ -104,6 +123,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Sultan Haitham City",
     sector: "Residential",
     img: asset("/images/register/yrs.jpg"),
+    wide: true,
     desc: "A major residential development forming part of Phase I of Sultan Haitham City, Oman’s flagship future urban destination. Yenaier Residences is envisioned as an integrated residential community characterized by contemporary architecture, landscaped public spaces and a well-connected urban environment. The masterplan presents a series of distinctive multi-storey residential buildings integrated with roads, green areas and community spaces. The development contributes to the vision of creating modern, sustainable and people-focused neighbourhoods within Sultan Haitham City.",
   },
   {

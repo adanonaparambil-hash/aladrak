@@ -51,7 +51,7 @@ for (const [code, src] of PHOTOS) {
    3/4.5 crop — object-cover keeps only the middle half of a 4:3 plate's
    width, so the code is sized to survive that: at 92px/6 tracking the widest
    code spans ~44% of the plate and stays whole in both crops. */
-const PLATES = ["P.388 MPM", "P.400 CSD", "P.402 IGA", "P.407 CRV", "P.408 KVF", "P.409 AMD", "P.411 VTA", "P.413 EWN", "P.414 WRO"];
+const PLATES = ["P.400 CSD", "P.402 IGA", "P.407 CRV", "P.408 KVF", "P.409 AMD", "P.411 VTA", "P.413 EWN", "P.414 WRO"];
 
 for (const code of PLATES) {
   const short = code.split(" ")[1].toLowerCase();
@@ -75,4 +75,46 @@ for (const code of PLATES) {
 </svg>`;
   await sharp(Buffer.from(svg)).jpeg({ quality: 88, mozjpeg: true }).toFile(`public/images/register/plate-${short}.jpg`);
   console.log(`plate  ${code} -> register/plate-${short}.jpg`);
+}
+
+/**
+ * Muscat Pavilion — a real render, but a 2.4:1 strip off a scanned award
+ * notice, so it is set as a band on the plate's own ground rather than
+ * cover-cropped to 4:3 (which would keep only the middle 55% of the width and
+ * cut both wings off the building). The supplier watermark over the sky is
+ * cropped away upstream, in scripts/.src-register/muscat-pavilion.png.
+ *
+ * The card overlays its title and description across the lower third, so the
+ * band sits high and the gradient below it stays clear.
+ */
+{
+  const SRC = "scripts/.src-register/muscat-pavilion.png";
+  const bandW = W - 96;
+  const band = await sharp(SRC)
+    .resize({ width: bandW, kernel: "lanczos3" })
+    // a 2.5x upscale off a scan; unsharp is what keeps the glazing mullions
+    // reading as lines rather than mush
+    .sharpen({ sigma: 1.1, m1: 0.5, m2: 2.4 })
+    .modulate({ brightness: 1.04 })
+    .toBuffer();
+  const bm = await sharp(band).metadata();
+  const ground = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="weave" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
+      <rect width="26" height="26" fill="${FOREST}"/>
+      <rect width="1" height="26" fill="${GOLD}" opacity="0.13"/>
+    </pattern>
+    <radialGradient id="glow" cx="0.5" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="#1c3d2a"/>
+      <stop offset="1" stop-color="${FOREST}"/>
+    </radialGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#glow)"/>
+  <rect width="${W}" height="${H}" fill="url(#weave)"/>
+</svg>`;
+  await sharp(Buffer.from(ground))
+    .composite([{ input: band, left: 48, top: 118 }])
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile("public/images/register/mpm.jpg");
+  console.log(`band   ${bm.width}x${bm.height} render -> register/mpm.jpg`);
 }

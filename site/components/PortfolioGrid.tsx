@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** Extended portfolio — cream curtain sliding over the dark gallery,
  *  masonry-style grid with staggered GSAP reveals + name wall. */
-type WallCard = Project & { code?: string };
+type WallCard = Project & { code?: string, wide?: boolean };
 
 /**
  * The delivered selection and the live register render as ONE grid: the
@@ -31,7 +31,9 @@ const WALL: WallCard[] = [
     place: r.place ? `${r.code} · ${r.place}` : r.code,
     img: r.img,
     desc: r.desc,
+    specs: r.specs,
     code: r.code,
+    wide: r.wide,
   })),
 ];
 
@@ -90,7 +92,11 @@ export default function PortfolioGrid() {
         </Reveal>
 
         {/* Masonry-ish grid */}
-        {/* Every 7th card spans two rows, so a block is 1 tall + 6 regular = 8
+        {/* Every 7th card spans two rows — unless it is marked `wide`, whose
+            art is a band or panorama that a 3/4.5 crop would cut in half. Such
+            a card keeps its 4:3 slot and the masonry simply skips that beat;
+            an intact building beats an unbroken rhythm.
+            Every 7th card spans two rows, so a block is 1 tall + 6 regular = 8
             cells. That tiles exactly into 4 columns (2 rows x 4) but leaves
             holes in 3, which is why the wide layout looked gappy. */}
         <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 [perspective:1200px]">
@@ -104,7 +110,9 @@ export default function PortfolioGrid() {
               onKeyDown={(e) => e.key === "Enter" && openProject(p)}
               aria-label={`View ${p.name} details`}
               className={`group relative rounded-2xl overflow-hidden bg-forest cursor-pointer transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)] ${
-                i % 7 === 0 ? "row-span-2 aspect-[3/4.5]" : "aspect-[4/3]"
+                i % 7 === 0 && !p.wide
+                  ? "row-span-2 aspect-[3/4.5]"
+                  : "aspect-[4/3]"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

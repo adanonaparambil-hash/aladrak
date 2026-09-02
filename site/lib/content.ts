@@ -107,7 +107,9 @@ export const expertise = [
     img: asset("/images/division-infra.jpg"),
     imgPos: "center",
     points: [
-      "Largest pipeline in the country — 2.2 m dia over 24 km",
+      // 25 km, not 24: the name wall calls the same line "2.2 m × 25 km", and
+      // the company claims only one largest-pipeline-in-the-country.
+      "Largest pipeline in the country — 2.2 m dia over 25 km",
       "Asphalt roads — 2 million sqm annual capacity",
       "HV & LV power cabling up to 450 km annually",
       "300 km of HDPE fire & water networks annually",
@@ -126,7 +128,6 @@ export type Project = {
 };
 
 export const projects: Project[] = [
-  { sector: "Government", name: "Public Prosecution Complex", place: "Airport Heights, Muscat", img: asset("/images/projects/public-prosecution.jpg"), desc: "A monumental civic landmark — pointed-arch portals, reflecting pools and a soaring central atrium.", specs: ["Office complex for the Public Prosecution Directorates", "Monumental pointed-arch portal with reflecting pool", "Soaring stacked-ring central atrium", "Pergola & mashrabiya façade detailing"] },
   { sector: "Commercial", name: "Ahli Bank Corporate HQ", place: "Wattayah, Muscat", img: asset("/images/projects/ahli-bank.jpg"), desc: "Structural glazing, designed aluminium mashrabiya and a glass atrium — delivered live around an operating headquarters.", specs: ["Built around the live operating HQ with specialist shoring", "Structural glazing, spider glazing & designed glass atrium", "Radiant floor cooling over 800 m² with DOAS trench ducting", "2 × 350 TR air-cooled screw chillers", "Specialized epoxy floor system for the MLCP car park"] },
   { sector: "IT & Data Centres", name: "Central Bank of Oman", place: "Muscat", img: asset("/images/projects/central-bank.jpg"), desc: "One-metre-thick vault walls, 15 MW dual-redundant power and 2,000-ton cooling for the nation's most secure facility.", specs: ["1 m thick concrete currency-vault walls, 400-tonne dead load", "5.5 m floor-to-floor with 1 m HD raised flooring", "15 MW dual-redundant power supply", "4 × 1,100 KVA UPS — 15-minute full-facility backup", "AWACS early detection + FM-200 fire suppression"] },
   { sector: "Residential", name: "SUROUH — Hai Al Naseem", place: "Barka", img: asset("/images/projects/hai-al-naseem.jpg"), desc: "Oman's pilot PPP housing development — 1,051 residences balancing nature, tradition and modern living.", specs: ["1,051 apartments, villas, twin villas & townhouses", "460,000 sqm Rapid Wall + 160,000 sqm hollow-core slab", "27 substations, solar-powered street lighting", "100,000 sqm pavements & 80,000 sqm landscaping", "OMR 100 million — Ministry of Housing PPP pilot"] },
@@ -148,7 +149,6 @@ export const moreProjects = [
   { sector: "Government", name: "Haya Water Headquarters", place: "Al Ansab", img: asset("/images/projects/haya.jpg"), desc: "Modern, cutting-edge government office space — a futuristic open-office concept with 400-ton cooling and a 2 MW power plant." },
   { sector: "Commercial", name: "OETC Head Office", place: "Al Mawalih", img: asset("/images/projects/oetc.jpg"), desc: "Head office of Oman Electricity Transmission Company — 6,000 sqm with curved glass structures and state-of-the-art IT and security." },
   { sector: "Residential", name: "Al Maskaan Village", place: "Oman", img: asset("/images/projects/al-maskaan.jpg"), desc: "A complete residential village community — homes, amenities and infrastructure delivered as one integrated development." },
-  { sector: "Education", name: "Al Tamkeen International School", place: "Muscat", img: asset("/images/projects/tis.jpg"), desc: "A modern international campus with a striking sky-lit atrium and world-class learning environments." },
   { sector: "Education", name: "Waljat College", place: "Muscat", img: asset("/images/projects/waljat.jpg"), desc: "Two teaching blocks of 8,000 sqm with smart-board lecture rooms — recognised by the client for delivery in just five months." },
   { sector: "Education", name: "Mazoon College", place: "Muscat", img: asset("/images/projects/mazoon-college.jpg"), desc: "A private university college with accommodation — 20,000 sqm, an 850-ton chiller plant and full building management systems." },
   { sector: "Industrial", name: "Barzaman Bottling Factory", place: "Al Khawd", img: asset("/images/projects/barzaman.jpg"), desc: "A complete water bottling factory delivered turnkey for the Barzaman Group at Al Khawd." },
@@ -156,8 +156,7 @@ export const moreProjects = [
   { sector: "Hospitality", name: "La Mer", place: "Muscat", img: asset("/images/projects/lamer.jpg"), desc: "A luxurious restaurant seating 200, with a five-star kitchen built to serve 500 guests." },
   { sector: "Government", name: "Wet Laboratory", place: "Muscat", img: asset("/images/projects/wet-lab.jpg"), desc: "A specialised laboratory facility delivered for the Government of Oman to international standards." },
   { sector: "Defense & Police", name: "Royal Oman Police Facility", place: "Muscat", img: asset("/images/projects/rop.jpg"), desc: "A secure operational campus delivered for the Royal Oman Police." },
-  { sector: "Residential", name: "Villa Complex", place: "Al Qurm, Muscat", img: asset("/images/projects/villa-seeb.jpg"), desc: "A high-end villa community in one of Muscat's most prestigious districts." },
-  { sector: "Infrastructure", name: "KOM Ring Road & Utilities", place: "Knowledge Oasis Muscat", img: asset("/images/projects/kom-ring-road.jpg"), desc: "2.8 km of dual carriageway and 3 km of single carriageway with signals, roundabouts, culverts, cycle tracks and full utility infrastructure." },
+  { sector: "Residential", name: "Private Villa", place: "Al Khoudh, Seeb", img: asset("/images/projects/villa-seeb.jpg"), desc: "A three-storey VVIP residence — high-end finishes throughout, with sauna, home theatre and pool." },
   { sector: "Industrial", name: "Central Processing Plant — Mazoon Dairy", place: "Al Sunaynah", img: asset("/images/projects/mdp-cpp.jpg"), desc: "Process utilities, storage and 1,000 KVA substations serving Oman's national dairy city." },
   { sector: "Commercial", name: "Office, Warehouse & Accommodation", place: "Halban, Muscat", img: asset("/images/head-office.jpg"), desc: "Al Adrak's own integrated campus — head office, central warehouse, factories and staff accommodation." },
   { sector: "International", name: "Ellington House 3 & 4", place: "Dubai, UAE", img: asset("/images/projects/dubai-ellington.jpg"), desc: "Luxury residences under development in Dubai — Al Adrak's flagship UAE venture with Ellington Properties." },
@@ -171,7 +170,7 @@ export const projectNames = [
   "Olympic Indoor Pool, Nizwa", "Ministry of Sports Facilities", "Buraimi Border Roundabout",
   "Military Technological College", "Police Station Complex, Duqm",
   "ROP Regional Headquarters, Sur", "Environment & Climate Affairs Building",
-  "Private Villa, Seeb", "Aqua Culture Centre",
+  "Villas at Al Qurm", "Aqua Culture Centre",
 ];
 
 export const facilities = [

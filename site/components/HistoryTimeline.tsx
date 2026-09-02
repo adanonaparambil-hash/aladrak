@@ -74,6 +74,9 @@ export default function HistoryTimeline() {
   const wheelRef = useRef<HTMLDivElement>(null);
   const tunnel = useRef<HTMLCanvasElement>(null);
   const [active, setActive] = useState(0);
+  /** one entry per milestone — apply() drives the paragraph's opacity off the
+      wheel's actual angle, which React state (quantized to an index) cannot */
+  const storyEls = useRef<(HTMLDivElement | null)[]>([]);
   /** the wheel is a wide-screen device; phones and reduced motion get the list */
   const [wheel, setWheel] = useState(false);
 
@@ -263,6 +266,27 @@ export default function HistoryTimeline() {
           Math.max(0, Math.round(-rot.v / STEP))
         );
         setActive((prev) => (prev === idx ? prev : idx));
+        /**
+         * The paragraph is readable only when its row is horizontal. `active`
+         * flips at the half-step boundary — up to 7.5° early — and the CSS
+         * fade then showed a paragraph visibly rotated with the wheel while it
+         * finished travelling, which is what "the history is not showing
+         * properly while scrolling" looked like on screen. Opacity now follows
+         * the seat angle itself: nothing until 5° out, fully legible from 1.5°,
+         * per-frame with no CSS transition so it cannot lag the rotation.
+         */
+        for (let i = 0; i < storyEls.current.length; i++) {
+          const el = storyEls.current[i];
+          if (!el) continue;
+          if (i !== idx) {
+            el.style.opacity = "";
+            el.style.transitionDuration = "";
+            continue;
+          }
+          const residual = Math.abs(rot.v + i * STEP);
+          el.style.transitionDuration = "0ms";
+          el.style.opacity = String(Math.max(0, Math.min(1, (5 - residual) / 3.5)));
+        }
       };
       let snapTween: gsap.core.Tween | null = null;
 
@@ -325,13 +349,14 @@ export default function HistoryTimeline() {
           },
         },
       })
-        // durations are relative in a scrubbed timeline: 540 units of rotation
-        // then 40 of stillness, matching the 540% + 40% scroll span above, so
-        // the plateau holds exactly the last 40% of the pin on the present day
+        // durations are relative in a scrubbed timeline, but they are kept in
+        // exact lock-step with the `end` span above BY DERIVATION: when 2021
+        // was added these were still the frozen numbers for nineteen years,
+        // and every hand-written pair like this drifts the same way.
         .to(rot, {
           v: total,
           ease: "none",
-          duration: 540,
+          duration: (MILESTONES.length - 1) * 30,
           onUpdate: apply,
         })
         .to({}, { duration: 40 });
@@ -448,6 +473,9 @@ export default function HistoryTimeline() {
                       as a rendering glitch, not as depth. The tilted YEAR gives
                       the wheel its depth; the paragraph appears only upright. */}
                   <div
+                    ref={(el) => {
+                      storyEls.current[i] = el;
+                    }}
                     className={`relative font-light text-[3.07vw] lg:text-[1.25vw] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
                       i === active ? "opacity-100" : "opacity-0"
                     }`}
@@ -472,7 +500,7 @@ export default function HistoryTimeline() {
         The list — phones and reduced motion.
         The wheel is a wide-screen device: at 390px its geometry put all but one
         or two years off-frame and left a full viewport of empty ground, with no
-        story text visible at all. This gives the same 19 milestones as a plain
+        story text visible at all. This gives the same milestones as a plain
         vertical read.
       */}
       {!wheel && (

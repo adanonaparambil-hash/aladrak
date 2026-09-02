@@ -49,15 +49,33 @@ export default function ProjectModal() {
     };
   }, [proj]);
 
+  const closing = useRef(false);
   const close = useCallback(() => {
-    const t = gsap.timeline({
-      onComplete: () => {
-        setProj(null);
-        document.documentElement.style.overflow = "";
-      },
-    });
+    if (closing.current) return;
+    closing.current = true;
+    /**
+     * The overlay unmounts on the close animation finishing — but GSAP advances
+     * on requestAnimationFrame, and a browser that has throttled rAF to a stop
+     * (a backgrounded tab, most commonly) never fires onComplete. The overlay
+     * would then sit there with the document still scroll-locked and the page
+     * underneath frozen until the tab regained focus. The guard closes it on a
+     * timer whichever way the animation goes; whichever path arrives first
+     * cancels the other.
+     *
+     * Every project card on the site opens this modal, so it mattered more here
+     * than in the hotel chooser where the same guard was added first.
+     */
+    let guard = 0;
+    const done = () => {
+      window.clearTimeout(guard);
+      closing.current = false;
+      setProj(null);
+      document.documentElement.style.overflow = "";
+    };
+    const t = gsap.timeline({ onComplete: done });
     t.to(panel.current, { autoAlpha: 0, y: 60, scale: 0.96, duration: 0.35, ease: "power2.in" });
     t.to(backdrop.current, { autoAlpha: 0, duration: 0.3 }, "-=0.15");
+    guard = window.setTimeout(done, 800);
   }, []);
 
   useEffect(() => {
