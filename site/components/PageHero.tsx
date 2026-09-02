@@ -19,21 +19,24 @@ import Reveal from "./Reveal";
  */
 /**
  * How hard the image is held back. "light" is for pages whose photograph is the
- * point and is bright enough to survive being seen — the HSE training centre,
- * where the equipment wall on the left IS the evidence the page offers.
- *
- * Anything lighter than these would drop the lead paragraph below a 3:1
- * contrast ratio against cream, which the text-shadow can rescue for a headline
- * but not for a paragraph.
+ * point and is bright enough to survive being seen. "faint" is the floor, and
+ * it is not free to use anywhere: it holds a 4.5:1 AA ratio for the lead
+ * paragraph only over a background whose text-zone luma is ~150 or brighter —
+ * measured, not guessed, when the HSE warm-up hero was cut (mean 151 across
+ * the heading zone; 34% ink over that leaves cream at ~4.9:1 before the
+ * text-shadow adds its local contrast). A darker photograph needs "light" or
+ * stronger, or the paragraph sinks below AA.
  */
 const SCRIM = {
   default: "bg-gradient-to-r from-ink/68 via-ink/38 to-ink/[0.03]",
   light: "bg-gradient-to-r from-ink/48 via-ink/24 to-transparent",
+  faint: "bg-gradient-to-r from-ink/34 via-ink/16 to-transparent",
 } as const;
 
 const VEIL = {
   default: "bg-gradient-to-b from-ink/40 via-transparent to-ink",
   light: "bg-gradient-to-b from-ink/28 via-transparent to-ink",
+  faint: "bg-gradient-to-b from-ink/16 via-transparent to-ink",
 } as const;
 
 export default function PageHero({

@@ -42,7 +42,7 @@ for (const [svg, out] of [
 
 /* wellness strip */
 const PICKS = [
-  ["Warm Up (1).jpeg", "wellness-mountain.jpg"],
+  ["Warm Up (4).jpeg", "wellness-mountain.jpg"],
   ["Warm Up (19).jpeg", "wellness-dawn.jpg"],
   ["Warm Up (2).jpg", "wellness-palms.jpg"],
   ["Warm Up (12).jpeg", "wellness-interior.jpg"],
@@ -71,4 +71,25 @@ for (const [src, out] of [
 ]) {
   copyFileSync(src, `public/docs/hse/${out}`);
   console.log(`doc    ${out}`);
+}
+
+/* The page hero. The PPE-wall mannequin read dim and static as an opener; the
+   morning warm-up against the Hajar mountains is the page's own story — the
+   whole workforce, on a real site, in daylight. The source is a 1280px phone
+   photo, so it is upscaled 1.5x (lanczos + unsharp) and lifted slightly in
+   brightness and colour; the band crop keeps the mountain line and every row
+   of the crew while dropping empty sky and foreground gravel. */
+{
+  const buf = await sharp(`${WELL}/Warm Up (1).jpeg`)
+    .rotate()
+    .resize({ width: 1920, kernel: "lanczos3" })
+    .toBuffer();
+  const m = await sharp(buf).metadata();
+  await sharp(buf)
+    .extract({ left: 0, top: Math.round(m.height * 0.30), width: 1920, height: 840 })
+    .modulate({ brightness: 1.12, saturation: 1.08 })
+    .sharpen({ sigma: 1.0, m1: 0.5, m2: 2.0 })
+    .jpeg({ quality: 84, mozjpeg: true })
+    .toFile("public/images/hse/hse-hero-warmup.jpg");
+  console.log(`hero   ${m.width}x${m.height} band -> hse/hse-hero-warmup.jpg`);
 }

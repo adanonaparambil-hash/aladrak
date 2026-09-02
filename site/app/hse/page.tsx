@@ -26,9 +26,9 @@ export default function HsePage() {
       <Header />
 
       <PageHero
-        img={asset("/images/hse/hse-ppe-wall.jpg")}
-        alt="The personal protective equipment wall at Al Adrak's training centre"
-        scrim="light"
+        img={asset("/images/hse/hse-hero-warmup.jpg")}
+        alt="The Al Adrak workforce at the seven-minute morning warm-up on site"
+        scrim="faint"
         kicker={hse.kicker}
         title={hse.title}
       >
