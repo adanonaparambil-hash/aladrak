@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { currentPortfolio, type RegisterProject } from "@/lib/register";
-import Reveal from "./Reveal";
+import { openProject } from "./ProjectModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,18 +12,17 @@ gsap.registerPlugin(ScrollTrigger);
 const FOLD = 6;
 
 /**
- * The live project register.
+ * The live project register — sixteen jobs currently on site, carried by their
+ * internal project numbers.
  *
- * Sixteen jobs currently in delivery, each carried by its internal project
- * number. Only six have a photograph anywhere in the archive, so the head of a
- * card is either that photograph or a typographic plate built from the project
- * code — the same 16:9 either way, so a grid of mixed treatments still reads as
- * one set rather than as a page with holes in it.
- *
- * Sixteen full descriptions is a lot of column inches to drop on someone who
- * only wanted to see the portfolio, so the list opens at six and expands on
- * request. The hidden cards are in the DOM either way, which keeps them
- * findable by in-page search and by crawlers.
+ * Not a section of its own: it renders directly under the wider-portfolio
+ * masonry grid, in the same card language, under the same "Every sector. Every
+ * governorate." heading — a hairline and a small label are the only seam.
+ * Seven cards carry a real photograph or render; the rest use a typographic
+ * plate of the project number (baked in scripts/prep-register.mjs) until a
+ * picture arrives. Clicking any card opens the shared project modal, which is
+ * where the full register description lives — the card itself shows only the
+ * first lines, like its delivered neighbours above.
  */
 export default function CurrentPortfolio() {
   const root = useRef<HTMLDivElement>(null);
@@ -31,18 +30,9 @@ export default function CurrentPortfolio() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      /**
-       * Only the cards that are on screen at mount get the reveal.
-       *
-       * A `hidden` element has no layout box, so ScrollTrigger resolves its
-       * "top 95%" start against a rect of all zeros — i.e. the top of the
-       * document, already scrolled past. Whether the trigger then fires
-       * immediately (leaving the card at autoAlpha 1, fine) or is computed and
-       * killed while still at autoAlpha 0 (leaving it invisible forever once
-       * expanded, not fine) depends on ordering I cannot observe from here.
-       * Animating only the visible six removes the question: the tail simply
-       * appears when asked for.
-       */
+      /* Only the cards on screen at mount get the reveal: a `hidden` element
+         has no layout box, so its trigger position is garbage. The tail simply
+         appears when asked for. */
       gsap.utils.toArray<HTMLElement>("[data-rcard]:not([hidden])").forEach((el, i) => {
         gsap.fromTo(
           el,
@@ -73,98 +63,63 @@ export default function CurrentPortfolio() {
     return () => window.clearTimeout(t);
   }, [open]);
 
-  const Head = ({ p }: { p: RegisterProject }) => {
-    if (p.img) {
-      return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={p.img}
-          alt={p.name}
-          loading="lazy"
-          className="w-full aspect-[16/9] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-        />
-      );
-    }
-    // No photograph exists for this one yet. Rather than borrow a picture of a
-    // different building, set the project number itself as the artwork.
-    return (
-      <div
-        aria-hidden
-        className="relative w-full aspect-[16/9] bg-forest overflow-hidden grid place-items-center"
-      >
-        <div
-          className="absolute inset-0 opacity-[0.18]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, var(--color-gold) 0 1px, transparent 1px 14px)",
-          }}
-        />
-        <div className="absolute -inset-x-8 -bottom-14 h-32 bg-brand/25 blur-3xl" />
-        <span className="relative font-display text-gold/90 text-[clamp(1.75rem,3.4vw,2.75rem)] tracking-[0.08em]">
-          {p.code}
-        </span>
-        <span className="absolute bottom-3 right-4 label label-xs text-cream/45">
-          In delivery
-        </span>
-      </div>
-    );
-  };
-
-  const Card = ({ p, hidden }: { p: RegisterProject; hidden: boolean }) => (
-    <article
-      data-rcard
-      /* aria-hidden would strip these from the accessibility tree entirely;
-         `hidden` keeps them out of the layout but still in the document, and
-         the expand button brings them back with no re-fetch. */
-      hidden={hidden}
-      className="group flex flex-col rounded-2xl overflow-hidden bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] transition-shadow duration-500 hover:shadow-[0_10px_38px_rgba(10,15,12,0.13)]"
-    >
-      <Head p={p} />
-      <div className="flex flex-col gap-2 p-5 md:p-6">
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="label label-xs text-brand border border-brand/30 rounded-full px-3 py-1">
-            {p.sector}
-          </span>
-          {p.img && (
-            <span className="label label-xs text-ink/40">{p.code}</span>
-          )}
-        </div>
-        <h3 className="font-display text-[clamp(1.0625rem,1.25vw,1.4375rem)] leading-tight text-ink mt-1">
-          {p.name}
-        </h3>
-        {p.place && <p className="label text-gold">{p.place}</p>}
-        <p className="text-[clamp(0.875rem,0.88vw,1.0625rem)] text-ink/70 font-light leading-relaxed mt-1">
-          {p.desc}
-        </p>
-      </div>
-    </article>
-  );
+  const show = (p: RegisterProject) =>
+    openProject({
+      sector: p.sector,
+      name: p.name,
+      // the modal's gold place line carries the register number too
+      place: p.place ? `${p.code} · ${p.place}` : p.code,
+      img: p.img,
+      desc: p.desc,
+    });
 
   const rest = currentPortfolio.length - FOLD;
 
   return (
-    <div ref={root} className="mt-24 md:mt-32">
-      <Reveal>
-        <div className="grid md:grid-cols-12 md:items-end gap-8 mb-12 md:mb-16">
-          <div className="md:col-span-7">
-            <p className="label text-brand mb-4">In Delivery</p>
-            <h2 className="font-display h-section">
-              The current
-              <br />
-              register.
-            </h2>
-          </div>
-          <p className="md:col-span-4 md:col-start-9 text-ink/75 text-[clamp(1rem,0.95vw,1.25rem)] font-light leading-relaxed">
-            {currentPortfolio.length} live projects across Muscat, Sultan Haitham
-            City, Khazaen and the coast — infrastructure, institutions,
-            hospitality and homes, all under construction now.
-          </p>
-        </div>
-      </Reveal>
+    <div ref={root} className="mt-16 md:mt-20">
+      {/* the seam: a hairline and a whisper, not a heading */}
+      <div className="flex items-center gap-5 mb-8 md:mb-10">
+        <span className="label label-xs text-brand flex-none">In delivery — {currentPortfolio.length} live projects</span>
+        <span className="h-px flex-1 bg-ink/15" aria-hidden />
+      </div>
 
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
         {currentPortfolio.map((p, i) => (
-          <Card key={p.code} p={p} hidden={!open && i >= FOLD} />
+          <article
+            key={p.code}
+            data-rcard
+            hidden={!open && i >= FOLD}
+            onClick={() => show(p)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && show(p)}
+            aria-label={`View ${p.name} details`}
+            className="group relative rounded-2xl overflow-hidden bg-forest cursor-pointer aspect-[4/3] transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.img}
+              alt={p.name}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/25 to-transparent" />
+            <span className="absolute top-4 left-4 bg-white/10 backdrop-blur-md border border-white/25 text-cream px-4 py-1.5 rounded-full label label-xs">
+              {p.sector}
+            </span>
+            <span className="absolute top-5 right-4 label label-xs text-cream/60">
+              {p.code}
+            </span>
+            <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+              <h3 className="font-display text-lg md:text-[22px] leading-tight text-cream">
+                {p.name}
+              </h3>
+              {p.place && <p className="label text-gold mt-2">{p.place}</p>}
+              <p className="hidden sm:[display:-webkit-box] text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-3 [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden">
+                {p.desc}
+              </p>
+            </div>
+          </article>
         ))}
       </div>
 
@@ -176,7 +131,7 @@ export default function CurrentPortfolio() {
             aria-expanded={open}
             className="label px-8 py-4 rounded-full border border-ink/25 text-ink/80 hover:border-gold hover:text-brand transition-colors duration-300"
           >
-            {open ? "Show fewer" : `Show all ${currentPortfolio.length} projects`}
+            {open ? "Show fewer" : `Show all ${currentPortfolio.length} live projects`}
           </button>
         </div>
       )}

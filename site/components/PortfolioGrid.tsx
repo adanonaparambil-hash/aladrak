@@ -60,7 +60,8 @@ export default function PortfolioGrid() {
             </div>
             <p className="md:col-span-4 md:col-start-9 text-ink/75 text-[clamp(1rem,0.95vw,1.25rem)] font-light leading-relaxed">
               From ministries to factories, campuses to villages — a selection
-              from more than 450 delivered projects.
+              from more than 450 delivered projects, and the sixteen in
+              delivery across Oman today.
             </p>
           </div>
         </Reveal>
@@ -107,9 +108,10 @@ export default function PortfolioGrid() {
           ))}
         </div>
 
-        {/* The live register — sixteen jobs currently on site. Sits between
-            the delivered work above and the name wall below, so the section
-            reads past -> present -> the long tail. */}
+        {/* The live register — sixteen jobs currently on site, in the same
+            card language as the grid above and under the same heading; a
+            hairline and a small label are the only seam. The section reads
+            past -> present -> the long tail. */}
         <CurrentPortfolio />
 
         {/* Name wall */}

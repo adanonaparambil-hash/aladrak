@@ -93,3 +93,7 @@ Al-Adrak-HSE-page.docx
 # of that script records where each file comes from. Prepared copies live under
 # site/public/images/group and /hotels, same as the other archives above.
 /site/scripts/.src-group/
+
+# Staging folder for scripts/prep-hse.mjs — LibreOffice SVG renders of the IAS
+# certificate PDFs from /Images/HSE (itself covered by /Images/ above).
+/site/scripts/.src-hse/

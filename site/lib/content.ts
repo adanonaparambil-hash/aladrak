@@ -592,7 +592,7 @@ export const offices: Office[] = [
 export const hse = {
   kicker: "Health, Safety & Environment",
   title: "Everyone goes home the way they arrived",
-  lead: "Safety at Al Adrak is not a department that inspects the work after the fact — it is the condition the work is done under. Across every site in the Sultanate, the same standard applies to a 6,000-strong workforce: nobody starts without induction, nobody works at height without training, and nobody is asked to do a job they have not been equipped for.",
+  lead: "Safety is an absolute core value at Al Adrak — integrated into every phase of the construction lifecycle, from mobilization to handover. We safeguard our workforce, trade contractors, project partners and surrounding communities on one uncompromising principle: all site incidents are preventable.",
   /** verbatim from the corporate profile's Training & Development section */
   trainingQuote:
     "Al Adrak recognizes that in a rapidly changing world, being in tune with the latest technology and skills is the only way to success. We have ensured that our employees have access to the best training facilities to equip them to deliver their best. In-house training facilities cater to the staff with the best teachers and learning environment.",
@@ -617,10 +617,108 @@ export const hse = {
     { src: asset("/images/hse/hse-scaffold.jpg"), label: "The scaffold rig used for working-at-height training" },
     { src: asset("/images/hse/hse-ppe-brief.jpg"), label: "Protective equipment briefing" },
   ],
+  /* The certificate scans and registration details are from the IAS/FAHSS
+     originals in the corporate HSE folder — recertified 25-07-2025, all three
+     valid to 16-06-2028 and verifiable at iafcertsearch.org. */
   certs: [
-    { code: "ISO 45001", desc: "Occupational health and safety management" },
-    { code: "ISO 14001", desc: "Environmental management" },
-    { code: "ISO 9001", desc: "Quality management" },
+    { code: "ISO 45001:2018", desc: "Occupational health & safety management", reg: "IAS 03 2200341", img: asset("/images/hse/cert-ias-45001.jpg"), pdf: asset("/docs/hse/certificate-iso-45001.pdf") },
+    { code: "ISO 14001:2015", desc: "Environmental management", reg: "IAS 02 2200341", img: asset("/images/hse/cert-ias-14001.jpg"), pdf: asset("/docs/hse/certificate-iso-14001.pdf") },
+    { code: "ISO 9001:2015", desc: "Quality management", reg: "IAS 01 2200341", img: asset("/images/hse/cert-ias-9001.jpg"), pdf: asset("/docs/hse/certificate-iso-9001.pdf") },
+  ],
+  certsNote: "Certified since 2018 · FAHSS, an IAS-accredited certification body · current certificates valid to 16 June 2028",
+
+  culture: {
+    intro: "Our safety framework engages every tier of the organization — senior project leadership, site incharges and trade supervisors, and the frontline workforce — under an Incident and Injury-Free (IIF) commitment that leadership drives in person.",
+    items: [
+      { title: "Executive engagement", desc: "Senior management participate directly in site safety walks, high-risk work reviews and safety leadership workshops — the IIF commitment is led from the top, not delegated." },
+      { title: "Corporate HSE Executive Committee", desc: "Chaired by top management: monthly reviews of company-wide leading and lagging KPIs, high-potential incidents and systemic lessons learned, alongside monthly executive site inspections." },
+      { title: "Project HSE steering committees", desc: "Project managers lead monthly site committees of discipline engineers, subcontractor leads and trade foremen — reviewing hazard trends, pre-task planning quality and joint safety walks." },
+      { title: "Safety champion network", desc: "Dedicated HSE professionals and trained worker safety champions embedded in active work zones across all shifts, coaching, monitoring and recognising safe work in real time." },
+    ],
+  },
+
+  operations: {
+    intro: "Safety controls are embedded directly into site execution strategy, method statements (RAMS) and daily workflows — hazard identification tools, a strengthened high-risk Permit to Work system, and specialized programs for the work that can hurt people.",
+    highRisk: ["Work at height", "Heavy & critical lifting", "Deep excavation & trenching", "Confined space entry", "Electrical safety", "Hot works", "Temporary works stability"],
+    items: [
+      { title: "Permit to Work (PTW)", desc: "Strict physical permit verification for all hot work, electrical isolation (LOTO), deep digging and overhead crane lifts — before work commences, not after." },
+      { title: "IIF at the work face", desc: "Pre-task toolbox talks and Daily Activity Hazard Assessments (DAHA), conducted by foremen at the immediate work face before any task begins." },
+    ],
+  },
+
+  lifeSavingRules: {
+    intro: "Non-negotiable boundaries for everyone on site — Al Adrak staff and trade contractors alike. These nine rules address the activities carrying the highest potential for severe harm in building and infrastructure construction, and 2026's target is 100% compliance across every operational site.",
+    poster: asset("/docs/hse/9-life-saving-rules.pdf"),
+    rules: [
+      "Do not walk under a suspended load",
+      "No alcohol or drugs while working or driving",
+      "While driving, do not use your phone and do not exceed speed limits",
+      "Do not smoke outside designated smoking areas",
+      "Work with a valid work permit",
+      "Protect yourself against a fall when working at height",
+      "Obtain authorization before overriding or disabling safety-critical equipment",
+      "Wear your seat belt",
+      "Conduct gas tests when required",
+    ],
+  },
+
+  trainingExtras: [
+    { title: "Multilingual delivery", desc: "Inductions and critical-risk modules run in the languages the workforce actually speaks — Hindi, Urdu, Bengali, Malayalam and English." },
+    { title: "Learning & HSE tracking portal", desc: "Supervisors and project managers track mandatory certifications, refreshers and site clearance status on a centralized portal." },
+    { title: "Practical field modules", desc: "Working safely at heights, scaffolding inspection and usage, rigging and slinging, defensive driving for heavy plant operators, mock drills and emergency response." },
+  ],
+
+  subcontractors: {
+    intro: "Specialized trade partners perform significant volumes of site execution, so every subcontractor is integrated completely into the Al Adrak HSE management system — same rules, same training, same boundaries.",
+    items: [
+      { title: "Pre-qualification & onboarding", desc: "Strict pre-qualification on historical HSE performance, safety management capability and equipment maintenance records." },
+      { title: "Heat stress management", desc: "Thermal Work Limit monitoring and structured summer protocols — work-rest regimes, shaded break areas and hydration stations — enforced across all trades." },
+      { title: "Mandatory verification", desc: "No subcontractor craftsman sets foot on site without the Al Adrak HSE induction and a Life Saving Rules evaluation." },
+    ],
+  },
+
+  health: {
+    intro: "Strict medical governance ensures everyone is physically fit for their designated trade — aligned with national labour law and OSHA/ILO occupational health standards.",
+    items: [
+      { title: "Fitness-for-duty screening", desc: "Pre-employment and periodic trade-specific medicals — vision tests for crane operators, vertigo and cardiac checks for work at height, audiometric testing." },
+      { title: "On-site medical hubs", desc: "Site clinics and first-aid stations staffed by licensed medical personnel — emergency triage, minor treatment and routine wellness checks." },
+      { title: "Proactive health campaigns", desc: "Continuous monitoring of fatigue, chronic health risks, hydration and ergonomic wellbeing across camps and project sites." },
+    ],
+  },
+
+  wellness: {
+    kicker: "Wellness Tracking",
+    title: "Seven minutes that start every shift",
+    body: "We maintain our cranes and excavators on strict schedules; the human body deserves no less. Proposed by the HSE department and backed by the CED, Wellness Tracking dedicates the first seven minutes of every morning — inside the daily PEP talk — to stretching and physical preparation. Warm muscles resist strains, moving together builds one crew out of many trades, and a held stretch is a quiet daily check-in that catches a tight back before it becomes a career-altering injury.",
+    photos: [
+      { src: asset("/images/hse/wellness-mountain.jpg"), label: "The morning warm-up, before the first task of the day" },
+      { src: asset("/images/hse/wellness-dawn.jpg"), label: "A dawn muster — every trade, every shift" },
+      { src: asset("/images/hse/wellness-palms.jpg"), label: "The same seven minutes on every site" },
+      { src: asset("/images/hse/wellness-interior.jpg"), label: "Fit-out crews warm up too" },
+    ],
+  },
+
+  objectives: {
+    year: "2026",
+    intro: "Set by top management, signed by the Chief Executive Director, and reviewed quarterly — the 2026 objectives commit every site to measurable targets.",
+    kpis: [
+      { value: "0", label: "Work fatalities — the only acceptable number" },
+      { value: "0", label: "Lost-time injuries" },
+      { value: "<1", label: "Lost-time injury frequency, year to date" },
+      { value: "<0.5", label: "Total recordable case frequency" },
+      { value: "100%", label: "Compliance with the HSE training matrix" },
+      { value: "12+", label: "Leadership safety walks each year" },
+    ],
+    pdf: asset("/docs/hse/hse-objectives-targets-kpi-2026.pdf"),
+  },
+
+  policies: [
+    { name: "HSE Policy", file: asset("/docs/hse/al-adrak-hse-policy.pdf") },
+    { name: "Drug & Alcohol Policy", file: asset("/docs/hse/drug-and-alcohol-policy.pdf") },
+    { name: "Road Safety Policy", file: asset("/docs/hse/road-safety-policy.pdf") },
+    { name: "Smoke-Free Policy", file: asset("/docs/hse/smoke-free-policy.pdf") },
+    { name: "9 Life-Saving Rules poster", file: asset("/docs/hse/9-life-saving-rules.pdf") },
+    { name: "2026 Objectives, Targets & KPI", file: asset("/docs/hse/hse-objectives-targets-kpi-2026.pdf") },
   ],
 };
 
