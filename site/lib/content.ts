@@ -477,7 +477,7 @@ export const groupCompanies: GroupCompany[] = [
      fixed. Browsers will mark the destination "not secure". */
   { name: "AIMS Pharmacy", img: asset("/images/group/aims.jpg"), url: "http://aimsoman.com/" },
   { name: "Trufud Farm", img: asset("/images/group/trufud.jpg"), url: "https://trufudoman.com" },
-  { name: "Trinity College", url: "https://thetrinitycollege.in" },
+  { name: "Trinity College of Engineering", img: asset("/images/group/trinity.jpg"), url: "https://thetrinitycollege.in" },
 ];
 
 export const clients = [

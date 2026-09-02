@@ -13,6 +13,7 @@
  *                    SVG rather than LibreOffice's PNG export, which ignores
  *                    the PixelWidth filter option and hands back 500x500.
  *   Mountain Mist  — mountainmist.in/assets/images/adrak-logo.png
+ *   Trinity        — thetrinitycollege.in 2x header logo
  *   Summer Sand    — the property photographs from each resort's own site.
  *
  * Run from site/:  node scripts/prep-group.mjs
@@ -74,6 +75,11 @@ await tile(`${SRC}/aims.svg`, "aims.jpg");
 await tile(`${SRC}/trufud.png`, "trufud.jpg");
 // the leaf mark is the Adrak Hotels identity on both property sites
 await tile(`${SRC}/mountain-mist-logo.png`, "hotels-india.jpg");
+// Trinity College of Engineering — from thetrinitycollege.in. Their 2x header
+// asset (328x80) is the largest they publish, so it upscales ~1.3x into the
+// tile; softer than the vector logos beside it, but it is their own artwork
+// and the archive LOGOS folder has nothing for Trinity at all.
+await tile(`${SRC}/trinity.png`, "trinity.jpg");
 
 await shot(`${SRC}/mountain-mist.jpg`, "mountain-mist.jpg");
 await shot(`${SRC}/summer-sand.jpg`, "summer-sand.jpg");
