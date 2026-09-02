@@ -12,7 +12,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** Extended portfolio — cream curtain sliding over the dark gallery,
  *  masonry-style grid with staggered GSAP reveals + name wall. */
-type WallCard = Project & { code?: string, wide?: boolean };
+type WallCard = Project & {
+  code?: string
+  wide?: boolean
+  /** the register's full description, opened in the modal; the card shows the blurb */
+  detail?: string
+};
 
 /**
  * The delivered selection and the live register render as ONE grid: the
@@ -30,12 +35,16 @@ const WALL: WallCard[] = [
     name: r.name,
     place: r.place ? `${r.code} · ${r.place}` : r.code,
     img: r.img,
-    desc: r.desc,
+    desc: r.blurb,
+    detail: r.desc,
     specs: r.specs,
     code: r.code,
     wide: r.wide,
   })),
 ];
+
+/** the card shows the blurb; the modal shows the full register description */
+const open = (p: WallCard): Project => (p.detail ? { ...p, desc: p.detail } : p);
 
 export default function PortfolioGrid() {
   const root = useRef<HTMLElement>(null);
@@ -104,10 +113,10 @@ export default function PortfolioGrid() {
             <article
               key={p.name}
               data-gcard
-              onClick={() => openProject(p)}
+              onClick={() => openProject(open(p))}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && openProject(p)}
+              onKeyDown={(e) => e.key === "Enter" && openProject(open(p))}
               aria-label={`View ${p.name} details`}
               className={`group relative rounded-2xl overflow-hidden bg-forest cursor-pointer transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)] ${
                 i % 7 === 0 && !p.wide
@@ -136,7 +145,14 @@ export default function PortfolioGrid() {
                   {p.name}
                 </h3>
                 <p className="label text-gold mt-2">{p.code ? p.place.replace(`${p.code} · `, "") : p.place}</p>
-                <p className="hidden sm:block text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-3">
+                {/* Clamped, not merely short. The blurbs are one line each,
+                    but this block is absolutely positioned against the bottom
+                    of a fixed-aspect tile: without a cap, a long string grows
+                    UPWARD over the photograph and out through the top of the
+                    card — which is exactly what the register's four-sentence
+                    descriptions did here. Three lines is the most the shortest
+                    tile can hold. */}
+                <p className="hidden sm:[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-3">
                   {p.desc}
                 </p>
               </div>

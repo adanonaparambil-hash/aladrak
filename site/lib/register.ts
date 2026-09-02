@@ -22,6 +22,16 @@ export type RegisterProject = {
   name: string;
   place?: string;
   sector: string;
+  /**
+   * One line, for the card in the portfolio grid.
+   *
+   * The register's own descriptions run to four sentences — right for the
+   * modal, but the grid card is an absolutely-positioned block anchored to the
+   * bottom of a fixed-aspect tile, so a paragraph that long grew upward and out
+   * of the card, over its own photograph and the cards above it. The card gets
+   * this line; `desc` is what opens in the modal.
+   */
+  blurb: string;
   desc: string;
   img: string;
   /** shown in the project modal, below the description */
@@ -42,6 +52,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Knowledge Oasis Muscat",
     sector: "Infrastructure",
     img: asset("/images/register/rrk.jpg"),
+    blurb: "2.8 km of dual carriageway and 3 km of single, with signals, culverts and cycle tracks.",
     desc: "A major infrastructure development within Knowledge Oasis Muscat, designed to enhance connectivity, accessibility and the overall urban environment of the technology park. The project incorporates 2.8 km of dual carriageway and 3 km of single carriageway, supported by traffic signals, roundabouts, culverts, pedestrian pathways and dedicated cycle tracks. Extensive landscaping, architectural monuments, interlock paving and utility infrastructure further enhance the development. The project reflects a high standard of infrastructure delivery aligned with MOTC and Municipality requirements.",
   },
   {
@@ -51,6 +62,7 @@ export const currentPortfolio: RegisterProject[] = [
     sector: "Commercial",
     img: asset("/images/register/mpm.jpg"),
     wide: true,
+    blurb: "A multifunctional community, leisure and events venue in the Muscat Hills district.",
     desc: "Muscat Pavilion is a contemporary multifunctional development located within the prestigious Muscat Hills community. The project is designed to provide a versatile and modern environment that supports a range of social, leisure, community and event-based activities. Its location within one of Muscat’s established mixed-use destinations gives the development a distinctive urban and lifestyle character. The project contributes to enhancing the community experience within the wider Muscat Hills development.",
   },
   {
@@ -67,6 +79,7 @@ export const currentPortfolio: RegisterProject[] = [
       "Soaring stacked-ring central atrium",
       "Stone-clad façade with pergola & mashrabiya detailing",
     ],
+    blurb: "The Public Prosecution Authority's head office — L+G+5 over 38,829 m², stone-clad and stepped.",
     desc: "A landmark government development at Madinat Al Irfan, Bausher, developed as the head office of the Public Prosecution Authority. The L+G+5 facility provides approximately 38,829 m² of built-up area and combines complete civil, architectural and MEP systems within a modern institutional setting. A prominent stone-clad façade and stepped architectural form give the building a strong and distinguished identity. The development reflects a balance of functionality, efficiency and contemporary governmental architecture.",
   },
   {
@@ -75,6 +88,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Khazaen Economic City",
     sector: "Residential",
     img: asset("/images/register/cla.jpg"),
+    blurb: "18,654 m² of labour accommodation, shops, a mosque and landscaped grounds at Khazaen.",
     desc: "An integrated community and accommodation development within Khazaen Economic City, one of Oman’s major economic and logistics zones. The project spans approximately 18,654 m² of built-up area and includes labour accommodation, commercial facilities, a mosque, an Imam’s residence and substantial landscaped areas. Complete civil and associated MEP works form part of the development. The project has been designed to support the social, operational and welfare requirements of the wider economic city.",
   },
   {
@@ -83,6 +97,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Al Khoud, Muscat",
     sector: "Education",
     img: asset("/images/register/tis.jpg"),
+    blurb: "A 32,490 m² international campus, 2B+G+2+P, purpose-built for modern teaching.",
     desc: "A premium international educational development located at Al Khoud in Muscat Governorate. The school comprises approximately 32,490 m² of built-up area with a 2B+G+2+P configuration, integrating complete civil and MEP systems within a purpose-built educational environment. The development is designed to support modern learning, administration and student activities in a high-quality campus setting. The project represents a significant addition to Oman’s growing portfolio of international-standard educational facilities.",
   },
   {
@@ -91,6 +106,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Bandar Al Khairan",
     sector: "Hospitality",
     img: asset("/images/register/dbk.jpg"),
+    blurb: "A 121-key coastal resort — 51 rooms, 46 chalets and 24 villas, to be operated by Anantara.",
     desc: "A luxury coastal hospitality destination set within the dramatic landscape of Bandar Al Khairan. The 121-key resort extends across approximately 23,803 m² and comprises 51 guest rooms, 46 chalets and 24 villas overlooking the Gulf of Oman. Designed to harmonize with the surrounding mountains and coastline, the development combines premium accommodation with a distinctive resort setting. The property is planned to be operated by Anantara, reinforcing its positioning as a high-end tourism and lifestyle destination.",
   },
   {
@@ -99,6 +115,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Azaiba, Muscat",
     sector: "Commercial",
     img: asset("/images/register/plate-csd.jpg"),
+    blurb: "A modern commercial and services building in Azaiba — glazed façades, landscaped grounds.",
     desc: "A contemporary commercial and services development strategically located in Azaiba, one of Muscat’s well-established urban districts. The project is characterized by modern architecture, extensive glazed façades, landscaped external areas and contemporary internal spaces. Designed to provide a high-quality business and service environment, the development combines functionality with a strong architectural identity. Its location and design position it as a modern addition to Muscat’s commercial landscape.",
   },
   {
@@ -107,6 +124,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Muscat International Airport",
     sector: "Infrastructure",
     img: asset("/images/register/plate-iga.jpg"),
+    blurb: "Phase II of the airport's logistics zone, adding connectivity and freight capacity.",
     desc: "A strategic infrastructure development supporting the logistics ecosystem of Muscat International Airport. The project forms part of the ongoing development of the airport’s logistics zone and is intended to improve connectivity, operational efficiency and infrastructure capacity. The development contributes to strengthening the surrounding logistics network and supports the continued expansion of aviation-related and commercial activities in the area. It represents an important component of Oman’s broader transport and logistics growth strategy.",
   },
   {
@@ -115,6 +133,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Muscat Bay",
     sector: "Residential",
     img: asset("/images/register/zrb.jpg"),
+    blurb: "Contemporary residential buildings in landscaped grounds above Muscat Bay.",
     desc: "A premium residential development located within the scenic Muscat Bay area. Zen Residence comprises a collection of contemporary residential buildings surrounded by landscaped communal areas, pedestrian spaces and leisure amenities. The development is designed to create a refined and comfortable living environment integrated with its natural surroundings. Its architectural character, landscaped setting and proximity to Muscat’s coastal destinations give the project a distinctive lifestyle appeal.",
   },
   {
@@ -124,6 +143,7 @@ export const currentPortfolio: RegisterProject[] = [
     sector: "Residential",
     img: asset("/images/register/yrs.jpg"),
     wide: true,
+    blurb: "An integrated residential community in Phase I of Sultan Haitham City.",
     desc: "A major residential development forming part of Phase I of Sultan Haitham City, Oman’s flagship future urban destination. Yenaier Residences is envisioned as an integrated residential community characterized by contemporary architecture, landscaped public spaces and a well-connected urban environment. The masterplan presents a series of distinctive multi-storey residential buildings integrated with roads, green areas and community spaces. The development contributes to the vision of creating modern, sustainable and people-focused neighbourhoods within Sultan Haitham City.",
   },
   {
@@ -132,6 +152,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Bausher, Muscat",
     sector: "Residential",
     img: asset("/images/register/plate-crv.jpg"),
+    blurb: "A contemporary private residence on Plot 673 in Bausher, Muscat.",
     desc: "A contemporary private residential development located in the established district of Bausher, Muscat. The project is designed to provide a modern and comfortable residential environment with emphasis on functionality, quality and architectural appeal. Its location within one of Muscat’s key residential areas provides convenient access to surrounding commercial, educational and community facilities. The development reflects a modern approach to urban residential living.",
   },
   {
@@ -140,6 +161,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Khazaen Economic City",
     sector: "Commercial",
     img: asset("/images/register/plate-kvf.jpg"),
+    blurb: "Phase 2 of Khazaen's Fruit & Vegetable Central Market — wholesale trading and storage.",
     desc: "A key commercial and logistics development within Khazaen Economic City, supporting Oman’s food trading and distribution sector. The project forms part of the expansion of the Fruit & Vegetable Central Market and contributes to the modernization of wholesale trading, storage and distribution activities. Strategically located within Khazaen, the development benefits from direct connectivity to Oman’s growing logistics network. The project supports greater efficiency, centralization and long-term capacity within the country’s food supply chain.",
   },
   {
@@ -148,6 +170,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "AIDA, Muscat",
     sector: "Residential",
     img: asset("/images/register/plate-amd.jpg"),
+    blurb: "One G+7 and three G+9 apartment buildings in AIDA's coastal community.",
     desc: "A premium residential apartment development located within AIDA, one of Muscat’s most prominent integrated tourism and lifestyle destinations. The project comprises one G+7 and three G+9 residential buildings, designed with contemporary architecture, generous glazing, balconies and panoramic views. The residences form part of AIDA’s wider vision of creating a luxury coastal community combining residential, hospitality, leisure and lifestyle components. The development is positioned to deliver an elevated standard of urban and resort-style living.",
   },
   {
@@ -156,6 +179,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "AIDA, Muscat",
     sector: "Residential",
     img: asset("/images/register/plate-vta.jpg"),
+    blurb: "91 villas and 60 townhouses in AIDA Oceana, including Trump and Fendi residences.",
     desc: "A major luxury residential development within Phase 1 of the AIDA Master Development, comprising 91 villas and 60 townhouses. The project forms part of the AIDA Oceana community and includes premium villa concepts associated with the Trump and Fendi residential offerings. Contemporary architecture, landscaped surroundings, private outdoor spaces and refined interiors define the character of the development. The project is a key component of AIDA’s vision to establish a high-end coastal residential and lifestyle destination in Muscat.",
   },
   {
@@ -163,6 +187,7 @@ export const currentPortfolio: RegisterProject[] = [
     name: "Enabling Works — Neighborhoods & East Boulevard Extension",
     sector: "Infrastructure",
     img: asset("/images/register/plate-ewn.jpg"),
+    blurb: "Enabling works for new neighbourhoods and the East Boulevard extension.",
     desc: "A strategic enabling and infrastructure package supporting the development of new neighbourhoods and the extension of the East Boulevard corridor. The project provides the groundwork and essential infrastructure platform required for subsequent residential and community developments. It plays an important role in preparing the wider master development for future construction and urban expansion. The package contributes to improving connectivity, accessibility and development readiness across the project area.",
   },
   {
@@ -171,6 +196,7 @@ export const currentPortfolio: RegisterProject[] = [
     place: "Neighborhoods 06C & 06D, Sultan Haitham City",
     sector: "Residential",
     img: asset("/images/register/plate-wro.jpg"),
+    blurb: "Residential neighbourhoods 06C and 06D in Sultan Haitham City, Al Seeb.",
     desc: "A residential development located within Neighborhoods 06C and 06D of Sultan Haitham City, Al Seeb. The project forms part of Oman’s flagship new-city development and contributes to the creation of integrated, modern and community-focused residential neighbourhoods. Wiam Residences is positioned within a wider urban environment that emphasizes connectivity, landscaped public spaces and quality of life. The development supports Sultan Haitham City’s vision of establishing a sustainable and contemporary model for future urban living.",
   },
 ];

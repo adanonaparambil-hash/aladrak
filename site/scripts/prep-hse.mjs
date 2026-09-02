@@ -76,24 +76,22 @@ for (const [src, out] of [
 /**
  * The page hero.
  *
- * Third attempt, and this one chosen by measurement rather than instinct. A
- * hero has to satisfy two things at once in the zone the headline occupies
- * (left ~45%, vertical 30-95%): bright enough that the faint scrim still
- * clears 4.5:1 for the lead paragraph, and CALM enough that cream type is
- * not fighting detail. 123 bright landscape frames from the corporate and
- * training archives were scored on mean luma and standard deviation across
- * that zone; this frame won on calmness at 156 luma / sd 54, which is
- * 4.96:1 through the scrim. The 0.6 vertical offset drops the ceiling and
- * lands the headline on the pale wall and safety boards, not on a face.
+ * Fourth cut. The three before it each failed a different way: the PPE-wall
+ * mannequin was dim and static, the mountain warm-up was a 1280px phone
+ * frame upscaled, and the training-classroom shot — chosen by measurement
+ * over 123 candidates — was calm and legible but read as a meeting rather
+ * than as safety.
  *
- * The two predecessors failed for opposite reasons: the PPE-wall mannequin
- * was dim and static, and the mountain warm-up was bright but a 1280px
- * phone frame upscaled 1.5x. This is a 5760x3840 professional shoot, so the
- * band is a straight downscale with nothing invented.
+ * This is PPE in actual use: full hard hat, goggles, mask and gloves at a
+ * radial arm saw, from a 5596x3731 professional shoot. It carries the page's
+ * subject in one frame, its left third is a pale machine and wall rather
+ * than a face, and its top strip is workshop rather than blown-out sky —
+ * which matters because the fixed header's nav is cream and transparent at
+ * rest, so it needs something to sit against.
  */
 {
-  const SRC = "../Training Center-20260825T115129Z-1-001/Training Center/X37C6731.jpg";
-  const HW = 1920, HH = 840;
+  const SRC = "../Images/Adrak Corporate Images Folder-20260818T042650Z-1-002/Adrak Corporate Images Folder/Production Facilities brochure Photos/Carpentry/ALADRAK_PLANT-183.jpg";
+  const HW = 1920, HH = 780;
   const m = await sharp(SRC).metadata();
   const sc = Math.max(HW / m.width, HH / m.height);
   const sw = Math.round(m.width * sc), sh = Math.round(m.height * sc);
@@ -101,10 +99,10 @@ for (const [src, out] of [
     .resize(sw, sh, { kernel: "lanczos3" })
     .extract({
       left: Math.round((sw - HW) / 2),
-      top: Math.max(0, Math.min(sh - HH, Math.round((sh - HH) * 0.6))),
+      top: Math.max(0, Math.min(sh - HH, Math.round((sh - HH) * 0.45))),
       width: HW, height: HH,
     })
     .jpeg({ quality: 86, mozjpeg: true })
-    .toFile("public/images/hse/hse-hero-training.jpg");
-  console.log(`hero   ${m.width}x${m.height} -> hse/hse-hero-training.jpg`);
+    .toFile("public/images/hse/hse-hero-ppe.jpg");
+  console.log(`hero   ${m.width}x${m.height} -> hse/hse-hero-ppe.jpg`);
 }
