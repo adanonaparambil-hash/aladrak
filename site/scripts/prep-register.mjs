@@ -45,7 +45,12 @@ for (const [code, src] of PHOTOS) {
 /* The plate: project number as the artwork. The card overlays its name and
    description across the lower half, so the code sits in the upper portion,
    over a faint hairline weave and a soft glow — enough texture that sixteen
-   cards in a grid don't read as nine identical green rectangles. */
+   cards in a grid don't read as nine identical green rectangles.
+
+   The register now shares the masonry grid, whose every-7th card is a tall
+   3/4.5 crop — object-cover keeps only the middle half of a 4:3 plate's
+   width, so the code is sized to survive that: at 92px/6 tracking the widest
+   code spans ~44% of the plate and stays whole in both crops. */
 const PLATES = ["P.388 MPM", "P.400 CSD", "P.402 IGA", "P.407 CRV", "P.408 KVF", "P.409 AMD", "P.411 VTA", "P.413 EWN", "P.414 WRO"];
 
 for (const code of PLATES) {
@@ -64,9 +69,9 @@ for (const code of PLATES) {
   <rect width="${W}" height="${H}" fill="url(#glow)"/>
   <rect width="${W}" height="${H}" fill="url(#weave)"/>
   <text x="50%" y="34%" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
-        font-size="120" letter-spacing="10" fill="${GOLD}" opacity="0.95">${code}</text>
+        font-size="92" letter-spacing="6" fill="${GOLD}" opacity="0.95">${code}</text>
   <text x="50%" y="45%" text-anchor="middle" font-family="Arial, sans-serif"
-        font-size="26" letter-spacing="14" fill="${CREAM}" opacity="0.45">IN DELIVERY</text>
+        font-size="24" letter-spacing="10" fill="${CREAM}" opacity="0.45">IN DELIVERY</text>
 </svg>`;
   await sharp(Buffer.from(svg)).jpeg({ quality: 88, mozjpeg: true }).toFile(`public/images/register/plate-${short}.jpg`);
   console.log(`plate  ${code} -> register/plate-${short}.jpg`);
