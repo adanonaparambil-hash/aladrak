@@ -97,3 +97,7 @@ Al-Adrak-HSE-page.docx
 # Staging folder for scripts/prep-hse.mjs — LibreOffice SVG renders of the IAS
 # certificate PDFs from /Images/HSE (itself covered by /Images/ above).
 /site/scripts/.src-hse/
+
+# Untouched master of the corporate film. scripts/prep-story.mjs re-cuts it into
+# public/videos/story.mp4; keeping both in git would double a 31MB asset.
+/site/scripts/.src-story/

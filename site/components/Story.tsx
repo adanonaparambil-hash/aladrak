@@ -21,7 +21,11 @@ export default function Story() {
   return (
     <section className="relative z-20 bg-pine text-cream overflow-hidden">
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[70vw] h-[30vh] bg-brand/15 blur-[140px] rounded-full" />
-      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+      {/* max-w-6xl put the film at ~1100px on a wide screen, which read as a
+          thumbnail against sections that run the full shell. 88rem gives it
+          ~1360px — about the source's own 1280 and a whisker over, so it fills
+          the room without visibly softening. */}
+      <div className="relative mx-auto max-w-[88rem] px-6 py-24 md:py-32">
         <Reveal className="text-center mb-12 md:mb-16">
           <p className="label text-gold mb-4">Our Story</p>
           <h2 className="font-display text-4xl md:text-6xl">
