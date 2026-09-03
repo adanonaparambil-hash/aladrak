@@ -176,8 +176,14 @@ export default function ContactForms() {
     setState("sent");
   };
 
+  /**
+   * A filled field, not a bare underline. On this near-black section a single
+   * bottom rule was almost invisible until focused — the form read as floating
+   * labels over nothing. A faint fill gives every input an edge at rest, and
+   * the gold ring on focus stays the strongest signal on the panel.
+   */
   const inputBase =
-    "w-full bg-transparent text-cream placeholder-transparent border-b py-3 outline-none transition-colors duration-300 focus:border-gold";
+    "w-full rounded-xl bg-ink/45 text-cream px-4 py-3 outline-none border transition-colors duration-300 hover:border-white/30 focus:border-gold focus:bg-ink/60";
 
   return (
     <div>
@@ -211,15 +217,19 @@ export default function ContactForms() {
         id={`${idBase}-${active.key}`}
         aria-labelledby={`${idBase}-tab-${active.key}`}
       >
-        <p className="text-cream/70 font-light leading-relaxed mb-8 max-w-2xl">
+        <p className="text-cream/70 font-light leading-relaxed mb-7 max-w-2xl">
           {active.blurb}
         </p>
 
-        <form onSubmit={submit} noValidate className="grid sm:grid-cols-2 gap-x-8 gap-y-7 max-w-4xl">
+        <form
+          onSubmit={submit}
+          noValidate
+          className="grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-white/[0.04] border border-white/12 backdrop-blur-sm p-6 md:p-9"
+        >
           {active.fields.map((f) => {
             const id = fieldId(f.name);
             const bad = errors[f.name];
-            const border = bad ? "border-red-400/70" : "border-white/25";
+            const border = bad ? "border-red-400/70" : "border-white/15";
             const common = {
               id,
               name: f.name,

@@ -1,4 +1,4 @@
-import { future, offices, sustainability } from "@/lib/content";
+import { future, offices, site, sustainability } from "@/lib/content";
 import Reveal from "./Reveal";
 import GroupCompanies from "./GroupCompanies";
 import ContactForms from "./ContactForms";
@@ -75,9 +75,55 @@ export default function Future() {
               Start a conversation
             </h2>
           </Reveal>
-          <Reveal delay={0.08}>
-            <ContactForms />
-          </Reveal>
+          {/* The form panel takes seven columns; the five beside it carry what
+              someone weighing up whether to write actually wants to know —
+              what happens after they press submit, and how to just call
+              instead. Before this the row was half form and half empty black. */}
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <Reveal delay={0.08} className="lg:col-span-7">
+              <ContactForms />
+            </Reveal>
+
+            <Reveal delay={0.16} className="lg:col-span-5 lg:pt-[4.5rem]">
+              <div className="rounded-3xl border border-white/12 bg-white/[0.03] backdrop-blur-sm p-7 md:p-8">
+                <p className="label text-gold mb-6">What happens next</p>
+                <ol className="space-y-6">
+                  {[
+                    ["01", "We acknowledge it", "Every enquiry and registration reaches a named person — not a shared tray — within one working day."],
+                    ["02", "The right desk reviews it", "Estimation for tenders and project enquiries; procurement for supplier registrations, against our pre-qualification criteria."],
+                    ["03", "We come back with next steps", "A scope conversation, a site visit, a request for documents, or an honest no — but an answer either way."],
+                  ].map(([no, title, body]) => (
+                    <li key={no} className="flex gap-4">
+                      <span className="label label-xs text-gold/80 flex-none pt-1">{no}</span>
+                      <div>
+                        <p className="font-display text-lg text-cream leading-snug">{title}</p>
+                        <p className="text-cream/65 font-light text-[14px] leading-relaxed mt-1.5">{body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="mt-8 pt-7 border-t border-white/12">
+                  <p className="label label-xs text-cream/50 mb-4">Rather just talk?</p>
+                  <a
+                    href={`tel:${site.phone.replace(/[^0-9+]/g, "")}`}
+                    className="font-display text-2xl md:text-[28px] text-cream hover:text-gold transition-colors duration-300 block leading-none"
+                  >
+                    {site.phone}
+                  </a>
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="text-cream/75 font-light hover:text-gold transition-colors duration-300 inline-block mt-3"
+                  >
+                    {site.email}
+                  </a>
+                  <p className="label label-xs text-cream/40 mt-5 leading-relaxed">
+                    Head office · Halban, Barka · Sun–Thu
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
         </div>
 
         {/* Offices — each detail with its own icon, as on the Contact page */}
