@@ -73,8 +73,9 @@ await tile(`${SRC}/aims.svg`, "aims.jpg");
 // green rectangle and the wordmark lands white-on-green — the negative of the
 // supplied logo. The PNG export gets the colours right.
 await tile(`${SRC}/trufud.png`, "trufud.jpg");
-// the leaf mark is the Adrak Hotels identity on both property sites
-await tile(`${SRC}/mountain-mist-logo.png`, "hotels-india.jpg");
+// (the Mountain Mist leaf tile is gone — Adrak Hotels & Resorts is now a single
+// tile on the wall, using its own logo, and opens a chooser for all three
+// properties rather than having a second tile beside it)
 // Trinity College of Engineering — from thetrinitycollege.in. Their 2x header
 // asset (328x80) is the largest they publish, so it upscales ~1.3x into the
 // tile; softer than the vector logos beside it, but it is their own artwork
@@ -83,3 +84,7 @@ await tile(`${SRC}/trinity.png`, "trinity.jpg");
 
 await shot(`${SRC}/mountain-mist.jpg`, "mountain-mist.jpg");
 await shot(`${SRC}/summer-sand.jpg`, "summer-sand.jpg");
+// Aloft Muscat — the site already carries a photograph of the finished
+// building with its signage, which matches the other two cards (each shows
+// the property, not its logo)
+await shot("public/images/projects/aloft.jpg", "aloft-muscat.jpg");

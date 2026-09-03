@@ -424,8 +424,9 @@ export type HotelProperty = {
 };
 
 /**
- * Adrak Hotels runs two resorts in Kerala under separate domains, so its tile
- * cannot simply link somewhere — it has to ask which one first.
+ * Adrak Hotels & Resorts operates three properties on three separate domains —
+ * two Kerala resorts of its own and an internationally-branded hotel in Muscat
+ * — so its tile cannot simply link somewhere. It has to ask which one first.
  *
  * Photographs are each property's own, from its site. Their logos are not used
  * here: Mountain Mist ships only a leaf mark with no wordmark and Summer Sand's
@@ -448,6 +449,18 @@ export const adrakHotelProperties: HotelProperty[] = [
     url: "https://summersand.in/",
     img: asset("/images/hotels/summer-sand.jpg"),
   },
+  {
+    name: "Aloft Muscat",
+    kind: "Hotel by Marriott",
+    place: "Ghala, Muscat",
+    /* The supplied link was a Google Ads landing URL carrying a gclid and a
+       campaign/creative id set — a single ad click's tracking, not an address.
+       Baked into a site it would credit every visitor to one expired paid
+       click and rot the day the campaign ends, so this is the property's
+       canonical Marriott page instead. */
+    url: "https://www.marriott.com/en-us/hotels/mctal-aloft-muscat/overview/",
+    img: asset("/images/hotels/aloft-muscat.jpg"),
+  },
 ];
 
 export type GroupCompany = {
@@ -460,8 +473,11 @@ export type GroupCompany = {
 
 export const groupCompanies: GroupCompany[] = [
   { name: "AdLife Hospital", img: asset("/images/group/adlife.jpg"), url: "https://www.adlifeoman.com" },
-  { name: "Adrak Hotels & Resorts", img: asset("/images/group/hotels.jpg"), url: "https://adrakhotelsandresorts.com" },
-  { name: "Adrak Hotels", img: asset("/images/group/hotels-india.jpg"), choose: adrakHotelProperties },
+  /* One hotel tile, not two. It used to link straight to
+     adrakhotelsandresorts.com while a second "Adrak Hotels" tile beside it
+     opened the chooser — the same business twice, one of them a dead end.
+     This tile now opens the chooser for all three properties. */
+  { name: "Adrak Hotels & Resorts", img: asset("/images/group/hotels.jpg"), choose: adrakHotelProperties },
   { name: "Hai Al Naseem", img: asset("/images/group/hai-al-naseem.jpg"), url: "https://www.haialnaseem.com" },
   { name: "Al Maskaan Village", img: asset("/images/group/maskaan.jpg"), url: "https://almaskaanvillage.com" },
   { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
