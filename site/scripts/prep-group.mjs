@@ -14,6 +14,7 @@
  *                    the PixelWidth filter option and hands back 500x500.
  *   Mountain Mist  — mountainmist.in/assets/images/adrak-logo.png
  *   Trinity        — thetrinitycollege.in 2x header logo
+ *   Aloft Muscat   — the corporate LOGOS folder's vector logo
  *   Summer Sand    — the property photographs from each resort's own site.
  *
  * Run from site/:  node scripts/prep-group.mjs
@@ -73,18 +74,18 @@ await tile(`${SRC}/aims.svg`, "aims.jpg");
 // green rectangle and the wordmark lands white-on-green — the negative of the
 // supplied logo. The PNG export gets the colours right.
 await tile(`${SRC}/trufud.png`, "trufud.jpg");
-// (the Mountain Mist leaf tile is gone — Adrak Hotels & Resorts is now a single
-// tile on the wall, using its own logo, and opens a chooser for all three
-// properties rather than having a second tile beside it)
+// (the Mountain Mist leaf tile is gone — Adrak Hotels & Resorts is one tile
+// using its own logo, opening a chooser for its two Kerala resorts)
 // Trinity College of Engineering — from thetrinitycollege.in. Their 2x header
 // asset (328x80) is the largest they publish, so it upscales ~1.3x into the
 // tile; softer than the vector logos beside it, but it is their own artwork
 // and the archive LOGOS folder has nothing for Trinity at all.
 await tile(`${SRC}/trinity.png`, "trinity.jpg");
+// Aloft Muscat — the group's own vector logo from the corporate LOGOS folder,
+// which already carries "MUSCAT" beneath the wordmark. Via SVG at density 300:
+// LibreOffice's PNG export of the same file comes back 461x322, which would
+// upscale into the tile.
+await tile(`${SRC}/aloft.svg`, "aloft-muscat.jpg", { density: 300 });
 
 await shot(`${SRC}/mountain-mist.jpg`, "mountain-mist.jpg");
 await shot(`${SRC}/summer-sand.jpg`, "summer-sand.jpg");
-// Aloft Muscat — the site already carries a photograph of the finished
-// building with its signage, which matches the other two cards (each shows
-// the property, not its logo)
-await shot("public/images/projects/aloft.jpg", "aloft-muscat.jpg");

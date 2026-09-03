@@ -424,9 +424,11 @@ export type HotelProperty = {
 };
 
 /**
- * Adrak Hotels & Resorts operates three properties on three separate domains —
- * two Kerala resorts of its own and an internationally-branded hotel in Muscat
- * — so its tile cannot simply link somewhere. It has to ask which one first.
+ * Adrak Hotels & Resorts runs two resorts of its own in Kerala on separate
+ * domains, so its tile cannot simply link somewhere — it has to ask which one
+ * first. Aloft Muscat is NOT here: it is a Marriott-branded hotel and has its
+ * own tile on the wall, because putting it behind this chooser both hid it and
+ * filed it under a brand that is not its own.
  *
  * Photographs are each property's own, from its site. Their logos are not used
  * here: Mountain Mist ships only a leaf mark with no wordmark and Summer Sand's
@@ -448,18 +450,6 @@ export const adrakHotelProperties: HotelProperty[] = [
     place: "Vagamon, Kerala",
     url: "https://summersand.in/",
     img: asset("/images/hotels/summer-sand.jpg"),
-  },
-  {
-    name: "Aloft Muscat",
-    kind: "Hotel by Marriott",
-    place: "Ghala, Muscat",
-    /* The supplied link was a Google Ads landing URL carrying a gclid and a
-       campaign/creative id set — a single ad click's tracking, not an address.
-       Baked into a site it would credit every visitor to one expired paid
-       click and rot the day the campaign ends, so this is the property's
-       canonical Marriott page instead. */
-    url: "https://www.marriott.com/en-us/hotels/mctal-aloft-muscat/overview/",
-    img: asset("/images/hotels/aloft-muscat.jpg"),
   },
 ];
 
@@ -492,6 +482,11 @@ export const groupCompanies: GroupCompany[] = [
      unrelated domain — so this has to stay an http:// link until the host is
      fixed. Browsers will mark the destination "not secure". */
   { name: "AIMS Pharmacy", img: asset("/images/group/aims.jpg"), url: "http://aimsoman.com/" },
+  /* Aloft Muscat — the group's maiden hospitality investment, operated under
+     Marriott's Aloft brand. Its own tile rather than a card inside the Adrak
+     Hotels chooser: the brand is Marriott's, and a visitor looking for it
+     would never think to open a menu named after someone else. */
+  { name: "Aloft Muscat", img: asset("/images/group/aloft-muscat.jpg"), url: "https://www.marriott.com/en-us/hotels/mctal-aloft-muscat/overview/" },
   { name: "Trufud Farm", img: asset("/images/group/trufud.jpg"), url: "https://trufudoman.com" },
   { name: "Trinity College of Engineering", img: asset("/images/group/trinity.jpg"), url: "https://thetrinitycollege.in" },
 ];

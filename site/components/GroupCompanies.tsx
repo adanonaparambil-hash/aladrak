@@ -12,9 +12,9 @@ import {
  * The Adrak Group logo wall.
  *
  * Lifted out of Future.tsx — which is a server component — because one tile is
- * no longer a link. Adrak Hotels & Resorts operates three properties on three
- * separate domains, so it opens a chooser and asks which before sending anyone
- * anywhere.
+ * no longer a link. Adrak Hotels & Resorts runs two resorts on separate
+ * domains, so it opens a chooser and asks which before sending anyone
+ * anywhere. Aloft Muscat has its own tile — see the note in content.ts.
  */
 export default function GroupCompanies() {
   const [chooser, setChooser] = useState<GroupCompany | null>(null);
@@ -61,7 +61,7 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
         </span>
         {g.choose ? (
           <span className="label label-xs text-brand group-hover:text-gold transition-colors flex-none">
-            {g.choose.length} properties ↗
+            {g.choose.length} resorts ↗
           </span>
         ) : (
           g.url && (
@@ -190,17 +190,17 @@ function HotelChooser({
         role="dialog"
         aria-modal="true"
         aria-label={`${title} — choose a property`}
-        className="relative w-full max-w-5xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-6 md:p-9"
+        className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-6 md:p-9"
       >
         <p className="label text-gold">{title}</p>
         <h3 className="font-display text-2xl md:text-[32px] leading-tight text-cream mt-2">
-          Which of our properties?
+          Which of our resorts?
         </h3>
         <p className="text-cream/65 font-light text-sm md:text-base mt-2">
-          {properties.length} properties in Oman and Kerala, each with its own site.
+          {properties.length} resorts in Kerala, each with its own site.
         </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mt-7">
+        <div className="grid sm:grid-cols-2 gap-4 md:gap-5 mt-7">
           {properties.map((p, i) => (
             <a
               key={p.url}
