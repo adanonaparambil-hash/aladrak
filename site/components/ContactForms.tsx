@@ -98,7 +98,17 @@ function validate(fields: Field[], values: Record<string, string>) {
   return errors;
 }
 
-export default function ContactForms() {
+/**
+ * `aside` renders in the five columns beside the form.
+ *
+ * It is a slot rather than a sibling in the parent because the tabs and the
+ * per-tab blurb live in here, above the form — so a parent that placed the
+ * aside next to this whole component had to guess their combined height to
+ * line the two panels up, and guessed 4.5rem against an actual ~9rem. Taking
+ * the aside in means both panels are children of the same grid row and their
+ * top edges agree by construction.
+ */
+export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("client");
   const active = TABS.find((t) => t.key === tab)!;
   const idBase = useId();
@@ -221,10 +231,11 @@ export default function ContactForms() {
           {active.blurb}
         </p>
 
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         <form
           onSubmit={submit}
           noValidate
-          className="grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-white/[0.04] border border-white/12 backdrop-blur-sm p-6 md:p-9"
+          className="lg:col-span-7 grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-white/[0.04] border border-white/12 backdrop-blur-sm p-6 md:p-9"
         >
           {active.fields.map((f) => {
             const id = fieldId(f.name);
@@ -333,6 +344,9 @@ export default function ContactForms() {
             </p>
           </div>
         </form>
+
+        {aside && <div className="lg:col-span-5">{aside}</div>}
+        </div>
       </div>
     </div>
   );
