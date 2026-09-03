@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import CursorFX from "@/components/CursorFX";
 import IntroLoader from "@/components/IntroLoader";
 import { years } from "@/lib/anniversary";
+import SiteAssistant from "@/components/SiteAssistant";
 
 const marcellus = Marcellus({
   weight: "400",
@@ -45,6 +46,7 @@ export default function RootLayout({
         <SmoothScroll>{children}</SmoothScroll>
         <CursorFX />
         <IntroLoader />
+        <SiteAssistant />
       </body>
     </html>
   );

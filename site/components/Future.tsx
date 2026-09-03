@@ -68,7 +68,9 @@ export default function Future() {
         {/* Work with us — the two forms. Placed with the office details rather
             than in a page of their own: someone who has scrolled this far is
             already looking for a way to make contact. */}
-        <div className="mt-20 md:mt-24 pt-14 border-t border-white/10">
+        {/* scroll-margin so the fixed header does not sit over the heading
+            when the nav's Contact link lands here */}
+        <div id="work-with-us" className="scroll-mt-28 md:scroll-mt-32 mt-20 md:mt-24 pt-14 border-t border-white/10">
           <Reveal>
             <p className="label text-gold mb-5">Work with us</p>
             <h2 className="font-display text-3xl md:text-5xl leading-tight mb-10">

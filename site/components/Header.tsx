@@ -52,7 +52,10 @@ export default function Header() {
         { href: asset("/hse"), label: "HSE", note: "Health, safety & environment" },
       ],
     },
-    { href: section("contact"), label: "Contact" },
+    /* the forms, not the top of the contact section — that opens on a
+       paragraph about regional expansion, two screens above anything a
+       visitor clicking "Contact" is looking for */
+    { href: section("work-with-us"), label: "Contact" },
   ];
 
   const [scrolled, setScrolled] = useState(false);
