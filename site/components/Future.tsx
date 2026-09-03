@@ -1,6 +1,7 @@
 import { future, offices, sustainability } from "@/lib/content";
 import Reveal from "./Reveal";
 import GroupCompanies from "./GroupCompanies";
+import ContactForms from "./ContactForms";
 import { asset } from "@/lib/asset";
 
 export default function Future() {
@@ -63,6 +64,21 @@ export default function Future() {
           <p className="label text-cream/50 mb-8">The Adrak Group</p>
           <GroupCompanies />
         </Reveal>
+
+        {/* Work with us — the two forms. Placed with the office details rather
+            than in a page of their own: someone who has scrolled this far is
+            already looking for a way to make contact. */}
+        <div className="mt-20 md:mt-24 pt-14 border-t border-white/10">
+          <Reveal>
+            <p className="label text-gold mb-5">Work with us</p>
+            <h2 className="font-display text-3xl md:text-5xl leading-tight mb-10">
+              Start a conversation
+            </h2>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <ContactForms />
+          </Reveal>
+        </div>
 
         {/* Offices — each detail with its own icon, as on the Contact page */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-20 md:mt-24 pt-14 border-t border-white/10">

@@ -559,6 +559,39 @@ export type Office = {
  * what a given office does not have (KSA has no published phone; only Oman
  * publishes a fax).
  */
+/**
+ * Select options for the two contact forms.
+ *
+ * Kept here rather than inside the component so the categories can be edited
+ * without touching the form's logic — they are the part most likely to change
+ * as the supply chain does.
+ *
+ * The supplied vendor form offered only "Construction Materials" and "Others";
+ * a contractor running its own MEP, joinery, rebar and plant divisions buys
+ * across far more than that, and a vendor forced to pick "Others" tells the
+ * procurement team nothing. Trim this list back if the wider set is not wanted.
+ */
+export const vendorProducts = [
+  "Construction Materials",
+  "MEP & Electrical",
+  "Mechanical & HVAC",
+  "Plant, Equipment & Vehicle Hire",
+  "Steel, Rebar & Fabrication",
+  "Joinery, Interiors & Finishes",
+  "Manpower Supply",
+  "Professional & Technical Services",
+  "Others",
+];
+
+export const enquiryTypes = [
+  "New project enquiry",
+  "Tender or RFQ invitation",
+  "Partnership or joint venture",
+  "Supplier or subcontractor",
+  "Media or press",
+  "Something else",
+];
+
 export const offices: Office[] = [
   {
     name: "Sultanate of Oman Office",
