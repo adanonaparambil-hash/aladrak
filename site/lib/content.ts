@@ -417,19 +417,29 @@ export const sustainability = [
 ];
 
 // Group companies — logos from the archive; URLs from the company's own "Website Links" file
-/** One bookable property behind the Adrak Hotels tile. */
+/** One property behind the Adrak Hotels tile. */
 export type HotelProperty = {
   name: string;
   kind: string;
   place: string;
-  url: string;
   img: string;
+  /** the property's own site — absent while it has none, and the card then shows the address instead */
+  url?: string;
+  /** postal address; the thing shown in place of a site */
+  address?: string;
+  /** further photographs, offered as a small gallery on the card */
+  gallery?: string[];
+  /** a short muted loop, offered as the gallery's last slide rather than autoplayed */
+  film?: { src: string; poster: string };
 };
 
 /**
- * Adrak Hotels & Resorts runs two resorts of its own in Kerala on separate
- * domains, so its tile cannot simply link somewhere — it has to ask which one
- * first. Aloft Muscat is NOT here: it is a Marriott-branded hotel and has its
+ * Adrak Hotels & Resorts runs three resorts of its own in Kerala. Two are on
+ * separate domains, so the tile cannot simply link somewhere — it has to ask
+ * which one first. The third, Adrak Leisure Island at Paravoor, has no website
+ * yet (added 12 Sep 2026): its card carries the address, four photographs and
+ * an eight-second clip from the boat instead of a link, and sits below the two
+ * that do link. Aloft Muscat is NOT here: it is a Marriott-branded hotel and has its
  * own tile on the wall, because putting it behind this chooser both hid it and
  * filed it under a brand that is not its own.
  *
@@ -453,6 +463,19 @@ export const adrakHotelProperties: HotelProperty[] = [
     place: "Vagamon, Kerala",
     url: "https://summersand.in/",
     img: asset("/images/hotels/summer-sand.jpg"),
+  },
+  {
+    name: "Adrak Leisure Island",
+    kind: "Backwater Resort",
+    place: "Paravoor, Kollam",
+    address: "Adrak Ventures, Paravoor, Kollam, Kerala",
+    img: asset("/images/hotels/leisure-island.jpg"),
+    gallery: [
+      asset("/images/hotels/leisure-island-2.jpg"),
+      asset("/images/hotels/leisure-island-3.jpg"),
+      asset("/images/hotels/leisure-island-4.jpg"),
+    ],
+    film: { src: asset("/videos/hotels/leisure-island.mp4"), poster: asset("/images/hotels/leisure-island-film.jpg") },
   },
 ];
 

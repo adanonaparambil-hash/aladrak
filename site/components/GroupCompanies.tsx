@@ -103,6 +103,120 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
 }
 
 /**
+ * A property with no website. Where the linked cards are one photograph and a
+ * "Visit site", this one is the visit: a main pane, a strip of thumbnails that
+ * swap it — four stills and, last, an eight-second muted loop from the boat —
+ * and the address, with a Maps link as the only thing that leaves the page.
+ * The film is a slide rather than an autoplay because it is 576p phone footage
+ * and would sit soft under the stills; chosen, it reads as what it is.
+ */
+function UnlinkedProperty({ p }: { p: HotelProperty }) {
+  const slides = [
+    { kind: "still" as const, src: p.img, alt: p.name },
+    ...(p.gallery ?? []).map((src, i) => ({ kind: "still" as const, src, alt: `${p.name} — photograph ${i + 2}` })),
+    ...(p.film ? [{ kind: "film" as const, src: p.film.src, poster: p.film.poster, alt: `${p.name} — from the boat` }] : []),
+  ];
+  const [at, setAt] = useState(0);
+  const cur = slides[at];
+  const maps = p.address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name}, ${p.address}`)}`
+    : undefined;
+
+  return (
+    <div
+      data-hotel-card
+      className="mt-4 md:mt-5 rounded-2xl overflow-hidden border border-white/15 bg-ink/30"
+    >
+      <div className="grid sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        {/* media: the pane, then the strip */}
+        <div className="bg-ink/50">
+          <div className="relative aspect-[3/2] overflow-hidden">
+            {cur.kind === "film" ? (
+              <video
+                key={cur.src}
+                src={cur.src}
+                poster={cur.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-label={cur.alt}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={cur.src}
+                src={cur.src}
+                alt={cur.alt}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
+          </div>
+          <div className="flex gap-1.5 p-1.5" role="tablist" aria-label={`${p.name} — photographs`}>
+            {slides.map((sl, i) => (
+              <button
+                key={sl.src}
+                type="button"
+                role="tab"
+                aria-selected={i === at}
+                aria-label={sl.alt}
+                onClick={() => setAt(i)}
+                className={`relative flex-1 aspect-[3/2] overflow-hidden rounded-md border transition-opacity duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+                  i === at ? "border-gold opacity-100" : "border-transparent opacity-60 hover:opacity-100"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={sl.kind === "film" ? sl.poster : sl.src}
+                  alt=""
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {sl.kind === "film" && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <span className="w-6 h-6 rounded-full bg-ink/60 backdrop-blur-sm border border-white/40 flex items-center justify-center text-cream">
+                      <svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true">
+                        <path d="M0.5 0.5 L7.5 4.5 L0.5 8.5 Z" fill="currentColor" />
+                      </svg>
+                    </span>
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* words: what and where; the address stands where a link would */}
+        <div className="p-5 md:p-6 flex flex-col">
+          <p className="label label-xs text-gold">{p.kind}</p>
+          <h4 className="font-display text-xl md:text-[26px] leading-tight text-cream mt-1.5">{p.name}</h4>
+          <p className="text-cream/75 font-light text-sm mt-1">{p.place}</p>
+          {p.address && (
+            <p className="text-cream/60 font-light text-sm leading-relaxed mt-4 pl-3 border-l border-gold/50">
+              {p.address}
+            </p>
+          )}
+          <p className="text-cream/45 font-light text-xs leading-relaxed mt-3">
+            No website yet — the photographs and the short film are the tour for now.
+          </p>
+          {maps && (
+            <a
+              href={maps}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 self-start label label-xs text-cream/90 mt-auto pt-5 hover:text-gold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-sm"
+            >
+              <span className="border-b border-gold/60 pb-1">Open in Maps ↗</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * A small chooser. Deliberately not the full ProjectModal: there is nothing to
  * read here, only a choice to make, so the panel is barely larger than the
  * photographs it holds.
@@ -177,6 +291,9 @@ function HotelChooser({
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
+  const linked = properties.filter((p) => p.url);
+  const unlinked = properties.filter((p) => !p.url);
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
       <div
@@ -197,13 +314,17 @@ function HotelChooser({
           Which of our resorts?
         </h3>
         <p className="text-cream/65 font-light text-sm md:text-base mt-2">
-          {properties.length} resorts in Kerala, each with its own site.
+          {properties.length} resorts in Kerala
+          {unlinked.length
+            ? ` — ${linked.length} with their own sites, and the newest below.`
+            : ", each with its own site."}
         </p>
 
+        {/* the two with sites: a pair of link cards, as before */}
         <div className="grid sm:grid-cols-2 gap-4 md:gap-5 mt-7">
-          {properties.map((p, i) => (
+          {linked.map((p, i) => (
             <a
-              key={p.url}
+              key={p.name}
               ref={i === 0 ? first : undefined}
               data-hotel-card
               href={p.url}
@@ -233,6 +354,12 @@ function HotelChooser({
             </a>
           ))}
         </div>
+
+        {/* the one without a site: full width, photographs and an address in
+            place of a link — the layout says "look", not "go" */}
+        {unlinked.map((p) => (
+          <UnlinkedProperty key={p.name} p={p} />
+        ))}
 
         <button
           onClick={close}
