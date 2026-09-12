@@ -136,9 +136,18 @@ export default function Team() {
             The corporate-adviser feature that shared this row is gone: he is
             not on the company's current list, and the team section should show
             that list and nothing else. The directors now take the full width
-            rather than seven columns of twelve. */}
+            rather than seven columns of twelve.
+
+            Four across, on the shell's full width rather than capped at
+            max-w-4xl. Three columns left the fourth director stranded alone on
+            a second row, and widening to four inside the old cap would have
+            shrunk the cards below the roster tiles beneath them — the org chart
+            upside down. On the full width a director tile is ~1.25x a roster
+            tile from xl up, where the roster goes five-across; between lg and
+            xl both grids are four-across and the tiles match, which is parity
+            rather than inversion and reads fine under the Key Personnel rule. */}
         <Reveal className="mb-24 md:mb-32">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
             {directors.map((d) => (
               <div key={d.name} className="group">
                 <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
