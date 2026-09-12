@@ -19,7 +19,7 @@ export default function NewsPage() {
 
       <PageHero
         img={asset("/images/hero-poster.jpg")}
-        alt="An Al Adrak landmark at dusk"
+        alt="Al Adrak's Halban campus from the air — warehouses, yard and the city beyond"
         kicker="Newsroom"
         title={<>Milestones &amp; moments</>}
       >

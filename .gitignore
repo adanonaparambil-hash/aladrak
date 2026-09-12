@@ -101,3 +101,7 @@ Al-Adrak-HSE-page.docx
 # Untouched master of the corporate film. scripts/prep-story.mjs re-cuts it into
 # public/videos/story.mp4; keeping both in git would double a 31MB asset.
 /site/scripts/.src-story/
+
+# scratch clips from the media prep scripts — each rmSyncs its own on success,
+# but an interrupted render must not be committable
+/site/scripts/.tmp-*/
