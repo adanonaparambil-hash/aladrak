@@ -119,13 +119,26 @@ export default function HsePage() {
       {/* ===== leadership & culture ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <Reveal>
-            <Kicker>Leadership &amp; culture</Kicker>
-            <H2 className="max-w-3xl">Safety is led in person, not delegated</H2>
-            <p className="text-ink/70 font-light leading-relaxed mt-6 max-w-3xl text-[15px] md:text-base">
-              {hse.culture.intro}
-            </p>
-          </Reveal>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <Reveal className="lg:col-span-7">
+              <Kicker>Leadership &amp; culture</Kicker>
+              <H2>Safety is led in person, not delegated</H2>
+              <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
+                {hse.culture.intro}
+              </p>
+            </Reveal>
+            <Reveal delay={0.1} className="lg:col-span-5">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hse.culture.img}
+                  alt={hse.culture.imgAlt}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
           <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-14">
             {hse.culture.items.map((it, i) => (
               <Reveal key={it.title} delay={(i % 2) * 0.07}>
@@ -187,13 +200,30 @@ export default function HsePage() {
       {/* ===== operational controls ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <Reveal>
-            <Kicker>On site</Kicker>
-            <H2 className="max-w-3xl">Controls built into the work, not around it</H2>
-            <p className="text-ink/70 font-light leading-relaxed mt-6 max-w-3xl text-[15px] md:text-base">
-              {hse.operations.intro}
-            </p>
-          </Reveal>
+          {/* Heading left, photograph right. The heading alone left the
+              right half of the row empty, which read as a gap rather than as
+              breathing space; the max-w-3xl measures are gone because the
+              column now sets the line length. */}
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <Reveal className="lg:col-span-7">
+              <Kicker>On site</Kicker>
+              <H2>Controls built into the work, not around it</H2>
+              <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
+                {hse.operations.intro}
+              </p>
+            </Reveal>
+            <Reveal delay={0.1} className="lg:col-span-5">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hse.operations.img}
+                  alt={hse.operations.imgAlt}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
           <Reveal className="mt-10">
             <div className="flex flex-wrap gap-3">
               {hse.operations.highRisk.map((h) => (
@@ -267,10 +297,23 @@ export default function HsePage() {
       {/* ===== in practice ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <Reveal>
-            <Kicker>In practice</Kicker>
-            <H2 className="max-w-2xl">Six things that happen on every project</H2>
-          </Reveal>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <Reveal className="lg:col-span-7">
+              <Kicker>In practice</Kicker>
+              <H2>Six things that happen on every project</H2>
+            </Reveal>
+            <Reveal delay={0.1} className="lg:col-span-5">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hse.practice.img}
+                  alt={hse.practice.imgAlt}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-12 mt-16">
             {hse.pillars.map((p, i) => (
               <Reveal key={p.no} delay={i * 0.05}>

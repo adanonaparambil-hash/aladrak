@@ -647,6 +647,10 @@ export const hse = {
     body: "Rather than send people out for certification, Al Adrak built the classroom on its own campus. Inductions, toolbox talks, supervisor sessions and practical assessments all run here, in the languages the workforce actually speaks — so training happens before the shift, not after an incident.",
     img: asset("/images/hse/hse-induction.jpg"),
   },
+  practice: {
+    img: asset("/images/hse/hse-toolbox.jpg"),
+    imgAlt: "A weekly toolbox talk at the workface",
+  },
   pillars: [
     { no: "01", title: "Induction before the first shift", desc: "Every worker and every subcontractor is inducted before they set foot on a site — the hazards of that specific project, the rules that apply, and who to stop work with." },
     { no: "02", title: "Weekly toolbox talks", desc: "A briefing at the workface every week, on the work actually in hand — the hazards of the current stage, what changed since the last talk, and what to watch for in the days ahead." },
@@ -673,7 +677,16 @@ export const hse = {
   ],
   certsNote: "Certified since 2018 · FAHSS, an IAS-accredited certification body · current certificates valid to 16 June 2028",
 
+  /* The three section images below are re-used from the training-centre
+     gallery further down this page: every HSE photograph the company has
+     supplied is already on the page, so a header image is necessarily a
+     second appearance. Each is matched to its own heading — the scaffold rig
+     is a physical control, the toolbox talk is one of the six things, the
+     briefing is safety being led in person — and swapping in new photography
+     is a one-line change per section. */
   culture: {
+    img: asset("/images/hse/hse-ppe-brief.jpg"),
+    imgAlt: "A supervisor briefing the crew in person before the shift",
     intro: "Our safety framework engages every tier of the organization — senior project leadership, site incharges and trade supervisors, and the frontline workforce — under an Incident and Injury-Free (IIF) commitment that leadership drives in person.",
     items: [
       { title: "Executive engagement", desc: "Senior management participate directly in site safety walks, high-risk work reviews and safety leadership workshops — the IIF commitment is led from the top, not delegated." },
@@ -684,6 +697,8 @@ export const hse = {
   },
 
   operations: {
+    img: asset("/images/hse/hse-scaffold.jpg"),
+    imgAlt: "The scaffold rig — a physical control practised on the ground",
     intro: "Safety controls are embedded directly into site execution strategy, method statements (RAMS) and daily workflows — hazard identification tools, a strengthened high-risk Permit to Work system, and specialized programs for the work that can hurt people.",
     highRisk: ["Work at height", "Heavy & critical lifting", "Deep excavation & trenching", "Confined space entry", "Electrical safety", "Hot works", "Temporary works stability"],
     items: [
