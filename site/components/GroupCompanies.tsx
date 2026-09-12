@@ -166,11 +166,14 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
                   i === at ? "border-gold opacity-100" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
+                {/* Not lazy: the strip only exists once the modal is open, so
+                    every thumbnail is in view the moment it is rendered, and
+                    lazy loading only staggered them in one by one on a cold
+                    cache — five blank slots filling in over a second. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={sl.kind === "film" ? sl.poster : sl.src}
                   alt=""
-                  loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 {sl.kind === "film" && (
