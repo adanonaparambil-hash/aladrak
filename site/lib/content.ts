@@ -336,6 +336,7 @@ export const leadership = {
   directors: [
     { name: "Dr. Aadil Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/aadil.jpg") },
     { name: "Annie Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/annie.jpg") },
+    { name: "Varsha Roy", role: "Executive Director", img: null },
     { name: "Ayyappadas Chandrasekhar", role: "Chief Operating Officer", img: null },
   ] as Person[],
   roster: [
@@ -355,9 +356,11 @@ export const leadership = {
     { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: null },
     { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
     { name: "Nauf Al Bulushi", role: "Deputy General Manager — Projects", img: asset("/images/team/roster/nauf.jpg") },
+    { name: "Amani Said Humaid Masoud Al Ofi", role: "Deputy General Manager — Finance & Accounts, Real Estate", img: null },
     { name: "Vinod PV Pillai", role: "Assistant General Manager — IT", img: null },
     { name: "Sayed Iftequar Ali", role: "Senior Manager — HSE", img: asset("/images/team/roster/iftikhar.jpg") },
     { name: "Nawaf Al Zadjali", role: "Manager — HR", img: asset("/images/team/roster/nawaf.jpg") },
+    { name: "Amani Ahmed Juma Al Zadjali", role: "Adrak Developers — CRM Lead", img: null },
   ] as Person[],
 };
 
