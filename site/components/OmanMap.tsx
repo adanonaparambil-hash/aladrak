@@ -199,7 +199,8 @@ export default function OmanMap() {
           end: `+=${STOPS.length * 80}%`,
           scrub: 0.9,
           pin: true,
-          anticipatePin: 1,
+          // no anticipatePin: Lenis applies the pin in the same frame it scrolls,
+          // so anticipating only snaps the frame early (see HistoryTimeline.tsx)
           onUpdate: (st) => {
             const t = st.progress * tl.duration();
             let i = 0;

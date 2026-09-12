@@ -316,7 +316,13 @@ export default function HistoryTimeline() {
            */
           scrub: 0.25,
           pin: true,
-          anticipatePin: 1,
+          // No anticipatePin. It exists to hide the frame of lag between a native
+          // scroll and the pin being applied — but Lenis calls ScrollTrigger.update
+          // synchronously in the frame it writes the scroll, so there is no lag,
+          // and the anticipation only pinned EARLY: the section landed at top:0
+          // while it was still 45px down (measured), a snap that grows with
+          // flick speed. See SmoothScroll.tsx for the refresh-order fix that
+          // stopped Expertise pinning over this section.
           onUpdate: () => {
             // a fresh scroll takes over from any wheel snap in flight
             if (snapTween) {

@@ -93,7 +93,8 @@ export default function Expertise() {
             start: "top top",
             end: `+=${n * 100}%`,
             pin: true,
-            anticipatePin: 1,
+            // no anticipatePin: Lenis applies the pin in the same frame it scrolls,
+            // so anticipating only snaps the frame early (see HistoryTimeline.tsx)
             scrub: 0.6,
           },
         });

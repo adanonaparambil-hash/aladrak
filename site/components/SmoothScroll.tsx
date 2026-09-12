@@ -39,6 +39,42 @@ export default function SmoothScroll({
    * This runs regardless of the reduced-motion branch below: fewer sections pin
    * in that mode, but the ones that do still need honest measurements.
    */
+  /**
+   * Refresh the pinned triggers in PAGE order, every time — not in the order
+   * their components happened to create them.
+   *
+   * GSAP refreshes `_triggers` in array order, and the array is creation
+   * order unless something sorts it. That order is wrong here: Expertise,
+   * Projects and the map create their pins synchronously in the first commit,
+   * but HistoryTimeline's pin is gated on a `wheel` state that flips true after
+   * mount, so it is created in a SECOND commit and lands last in the array —
+   * behind sections that sit below it on the page. A refresh first reverts
+   * every pin (which removes its spacer from the DOM), then re-measures each
+   * trigger in array order, re-inserting spacers as it goes. So Expertise
+   * measured its start while History's 700vh spacer did not exist yet, and
+   * concluded it starts one viewport into History instead of eight. The
+   * visitor then reached that point — the wheel on 2000 — and Expertise's
+   * fixed, z-10 frame pinned straight over the History wheel: "it suddenly
+   * moves to the next section". Reproduced: at History.start + ~1vh both
+   * sections were position: fixed at once.
+   *
+   * settle() below does sort, but it runs on fonts.ready and load, and on a
+   * warm cache both can fire before the History trigger exists — after which
+   * nothing sorted again: GSAP's own queued refresh on pin creation, resize
+   * refreshes and the loader's refresh all take the array as it is (GSAP only
+   * sorts by itself if some trigger declares refreshPriority). `refreshInit`
+   * fires inside every refresh BEFORE the sort/revert step, with the spacers
+   * still in place, so sorting there makes every refresh position-ordered no
+   * matter when a trigger was created — this one, or a future late one.
+   */
+  useEffect(() => {
+    const byPosition = () => {
+      ScrollTrigger.sort();
+    };
+    ScrollTrigger.addEventListener("refreshInit", byPosition);
+    return () => ScrollTrigger.removeEventListener("refreshInit", byPosition);
+  }, []);
+
   useEffect(() => {
     let done = false;
     /**
