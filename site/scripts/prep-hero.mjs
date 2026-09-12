@@ -8,6 +8,15 @@
  * factory frontal, the yard from the air. The Public Prosecution shots move
  * into the projects act in the middle, where a delivered landmark belongs.
  *
+ * Second pass, same day: the client wants the head office itself to open the
+ * film, clearly, before anything else. There is no footage of it anywhere in
+ * the archive — every facility film shoots the logistics campus — so the two
+ * strongest photographs (a 5.7K frontal, an 8K drone still) are cut in ahead
+ * of the campus footage as eased push-ins. A still passes as a camera move
+ * when the source is 3–4x oversampled and the move is small and eased: the
+ * crop then advances in whole source pixels and never shimmers, and nothing
+ * on screen is static long enough to read as a photograph.
+ *
  * Two defects in the old tail are gone with it. The engineers' line-up at
  * 60.4s reads as a staff photo dropped into a film; the Al Adrak-liveried
  * truck being loaded takes its slot — the one place in the library where the
@@ -50,6 +59,8 @@ const SRC = {
   PPM: `${V}/PPM_6095 (1).MOV`, // 1080p50 HEVC, clean 5–165s
   MASKAAN: `${V}/CLA-AL MASKAAN VILLAGE- Video 2024-11-26 at 10.25.44_aaec9c7a.mp4`, // 720p30
 };
+/** head-office photographs — the archive's own, gitignored with the rest of /Images */
+const HQ = "../Images/Adrak Corporate Images Folder-20260818T042650Z-1-002/Adrak Corporate Images Folder/office pics";
 const OUT = `${V}/hero-output`;
 const TMP = "scripts/.tmp-hero";
 const PUB_WEB = "public/videos/hero-web.mp4";
@@ -64,11 +75,17 @@ const CENTRE = 656;
  * 1479px top window for caption-bar sources; `mx` the mobile crop.
  */
 const SHOTS = [
-  // ===== I. THE COMPANY — its own ground, before anyone else's =====
-  { src: "CWH", at: 95.3, dur: 3.6, fix: "br", mx: CENTRE, shot: "High drone reveal: the whole Halban campus, city beyond", why: "OPENING — Al Adrak's own ground; slow, symmetric, breathes" },
+  // ===== I. THE COMPANY — the head office first, then its own ground =====
+  // Stills: `band` places the 16:9 window vertically in a taller frame (0 = top,
+  // 1 = bottom); `zoom` is the push-in over the shot; (cx, cy) is the point of
+  // the band that stays fixed on screen while it grows — the thing pushed toward.
+  { src: "HQ", still: `${HQ}/14 Head office.jpg`, at: "photo", dur: 3.6, zoom: 1.09, band: 0.64, cx: 0.5, cy: 0.66, mx: CENTRE, shot: "Head office, frontal: the facade, the entrance pergola, the Al Adrak mark on the corner", why: "OPENING — the clearest statement of who this is" },
+  { src: "HQ", still: `${HQ}/Head Office- Drone shoot.jpg`, at: "photo", dur: 2.8, zoom: 1.07, band: 0.5, cx: 0.6, cy: 0.5, mx: 866, shot: "Head office from the air: the building on its lawn, the car park, the tower beyond", why: "Where it stands; a drone's slow approach" },
   { src: "CWH", at: 10.7, dur: 1.7, fix: "br", mx: 720, shot: "The gate — the Al Adrak sign over the barrier", why: "Identity beat; real signage, not a graphic" },
   { src: "NRMF", at: 15.6, dur: 2.6, fix: "top", tx: 120, mx: 480, shot: "Duct factory frontal, telehandler carrying steel, NRMF on the wall", why: "A company building at eye level; work already moving" },
-  { src: "CWH", at: 12.6, dur: 2.8, fix: "br", mx: CENTRE, shot: "Low aerial over the yard — stock, colour, sheds", why: "Scale of the operation; motion into the people act" },
+  { src: "CWH", at: 95.3, dur: 3.6, fix: "br", mx: CENTRE, shot: "High drone reveal: the whole Halban campus, city beyond", why: "Scale of the operation — the campus entire; motion into the people act" },
+  // (the low aerial over the yard that followed is gone: with the head office
+  //  in front, three aerials inside fourteen seconds was one too many)
   // ===== II. PEOPLE =====
   { src: "CWS", at: 56.0, dur: 2.4, fix: "br", mx: CENTRE, shot: "Bench-saw trio, low angle, shallow depth", why: "PEOPLE enter — wide-to-face contrast cut" },
   // 24.9, not 26.0: the two-workers close-up runs 24.75–26.9 and then cuts to
@@ -154,22 +171,33 @@ mkdirSync(OUT, { recursive: true });
 let t = 0;
 const rows = [];
 SHOTS.forEach((s, i) => {
-  const fix = s.fix === "top" ? FIX.top(s.tx) : s.fix ? FIX[s.fix] : null;
-  const chain = ["fps=25", fix, GRADE, "scale=1920:1080:flags=lanczos", "setsar=1", "format=yuv420p"].filter(Boolean).join(",");
+  const w = `${TMP}/w${pad(i)}.mp4`, m = `${TMP}/m${pad(i)}.mp4`;
   // setsar=1 after the vertical scale: 608→1080 is not an integer ratio, and
   // without it ffmpeg records the rounding as a 1216:1215 sample aspect —
   // invisible, but every downstream probe then reports a non-square pixel.
-  const graph = `[0:v]${chain},split[w][m];[m]crop=608:1080:${s.mx}:0,scale=1080:1920:flags=lanczos,setsar=1[mo]`;
-  const w = `${TMP}/w${pad(i)}.mp4`, m = `${TMP}/m${pad(i)}.mp4`;
-  run([
-    "-ss", String(s.at), "-t", String(s.dur), "-i", SRC[s.src],
-    "-filter_complex", graph,
-    "-map", "[w]", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-an", w,
-    "-map", "[mo]", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-an", m,
-  ]);
+  const MOBILE = `[m]crop=608:1080:${s.mx}:0,scale=1080:1920:flags=lanczos,setsar=1[mo]`;
+  const ENC = ["-c:v", "libx264", "-preset", "fast", "-crf", "14", "-an"];
+  if (s.still) {
+    // A photograph as a shot. The 16:9 band is cropped FIRST — zoompan scales
+    // whatever region it is given to the output size, so a 3:2 region would
+    // arrive stretched. Then the push-in: zoom runs 1 → s.zoom on a half-cosine
+    // so it starts and ends at rest, and x/y hold the band's (cx, cy) fixed on
+    // screen as the window shrinks around it. One input frame, d=N output
+    // frames; -frames:v pins both outputs to exactly that.
+    const N = Math.round(s.dur * 25);
+    const band = `crop=iw:min(ih\\,iw*9/16):0:(ih-min(ih\\,iw*9/16))*${s.band}`;
+    const push = `zoompan=z='1+${(s.zoom - 1).toFixed(4)}*(1-cos(PI*on/${N - 1}))/2':x='(iw-iw/zoom)*${s.cx}':y='(ih-ih/zoom)*${s.cy}':d=${N}:s=1920x1080:fps=25`;
+    const graph = `[0:v]${band},${push},${GRADE},setsar=1,format=yuv420p,split[w][m];${MOBILE}`;
+    run(["-i", s.still, "-filter_complex", graph, "-map", "[w]", "-frames:v", String(N), ...ENC, w, "-map", "[mo]", "-frames:v", String(N), ...ENC, m]);
+  } else {
+    const fix = s.fix === "top" ? FIX.top(s.tx) : s.fix ? FIX[s.fix] : null;
+    const chain = ["fps=25", fix, GRADE, "scale=1920:1080:flags=lanczos", "setsar=1", "format=yuv420p"].filter(Boolean).join(",");
+    const graph = `[0:v]${chain},split[w][m];${MOBILE}`;
+    run(["-ss", String(s.at), "-t", String(s.dur), "-i", SRC[s.src], "-filter_complex", graph, "-map", "[w]", ...ENC, w, "-map", "[mo]", ...ENC, m]);
+  }
   rows.push({ i, t0: t, ...s });
   t += s.dur;
-  process.stdout.write(`  ${pad(i + 1)}/${SHOTS.length}  ${s.src.padEnd(7)} ${String(s.at).padStart(6)}s  +${s.dur}s  ${s.shot}\n`);
+  process.stdout.write(`  ${pad(i + 1)}/${SHOTS.length}  ${s.src.padEnd(7)} ${s.still ? "  photo" : String(s.at).padStart(6) + "s"}  +${s.dur}s  ${s.shot}\n`);
 });
 const total = t;
 
@@ -214,7 +242,7 @@ ${rows.map((r) => `| ${fmt(r.t0)}–${fmt(r.t0 + r.dur)} | ${r.dur} | ${r.src} |
 
 ## Why this sequence
 
-- **Opens on the company's own ground** — the Halban campus from the air, its gate, a factory frontal — and not on a client's landmark. The Public Prosecution HQ, the first cut's opener, now sits in the projects act in the middle of the film.
+- **Opens on the head office** — a frontal, then the drone still, cut in as eased push-ins because no footage of the building exists — then the company's own ground: the gate, a factory frontal, the Halban campus from the air. Not on a client's landmark: the Public Prosecution HQ, the first cut's opener, now sits in the projects act in the middle of the film.
 - **The staff line-up is gone.** In its place the Al Adrak-liveried truck: the one place in the library where the company name is legitimately in the scene.
 - **The finale is sourced earlier in the same shot** (Ahli 133.2s, not 135.8s) so it ends before that file's closing logo animation at 138.2s, which the first cut ran straight into.
 - Cuts ride camera energy; pacing is uneven on purpose (1.8s–4.6s), fastest in the machinery act, slowest at open and close; the dark plasma passage sits in the first third as a contrast valley.

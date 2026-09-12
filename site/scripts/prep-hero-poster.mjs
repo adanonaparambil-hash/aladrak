@@ -5,15 +5,13 @@
  * the film does — a poster is a judgment about one frame, and re-cutting
  * eight minutes of video to change it is the wrong price.
  *
- * The poster is NOT a full 1920×1080 frame. The CWH footage the film opens on
- * carries a bottom-right watermark that the film patches with delogo; in
- * motion that patch reads as motion blur and is invisible, but frozen it is a
- * plain vertical smear across the sheds — and this file is not only the
- * <video poster>, it is also the News page's hero image, where it sits still
- * on screen indefinitely. So the frame is cut above the patch: the delogo
- * box begins at y=930, and the poster keeps rows 0–927 (1920×928, ≈2.07:1).
- * Both places that show it use object-fit: cover, so the wider ratio costs a
- * little foreground road and nothing else.
+ * The frame is the head-office frontal, a photograph — so the full 1920×1080
+ * is kept. KEEP_H exists because the film once opened on CWH drone footage,
+ * which carries a bottom-right watermark the film patches with delogo; in
+ * motion that patch reads as motion blur, but frozen it is a plain smear —
+ * and this file is not only the <video poster>, it is also the News page's
+ * hero image, where it sits still indefinitely. Both places use object-fit:
+ * cover, so a cropped poster costs nothing but a little foreground.
  *
  * Run from site/:  node scripts/prep-hero-poster.mjs
  * Reads the rendered web film, so run prep-hero.mjs first.
@@ -28,10 +26,17 @@ const ARCHIVE = "../vedio/hero-output/hero-poster.jpg";
 const POSTER = "public/images/hero-poster.jpg";
 const TMP = "scripts/.tmp-hero-poster";
 
-/** into the opening drone reveal — the campus fully framed, city beyond */
+/** into the opening shot — the head-office frontal, mid push-in */
 const AT = 1.5;
-/** the delogo patch starts at y=930; keep everything above it */
-const KEEP_H = 928;
+/**
+ * Rows kept, from the top. The opener is now a photograph with no watermark,
+ * so the whole frame stays. It was 928 while the film opened on CWH drone
+ * footage: that source carries a bottom-right watermark that the film patches
+ * with delogo, invisible in motion but a plain smear on a still — and this
+ * file is also the News page hero. If the opener ever goes back to CWH
+ * footage, this goes back to 928 (the patch begins at y=930).
+ */
+const KEEP_H = 1080;
 
 mkdirSync(TMP, { recursive: true });
 execFileSync(
