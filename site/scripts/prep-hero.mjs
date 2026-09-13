@@ -3,19 +3,28 @@
  *
  * Re-cut of 12 Sep 2026. The first cut opened on the Public Prosecution HQ —
  * a client's building — and the client read that as the site fronting someone
- * else's landmark. The company's own property now opens the film: the drone
- * reveal of the Halban campus, the gate with the Al Adrak sign, the duct
- * factory frontal, the yard from the air. The Public Prosecution shots move
- * into the projects act in the middle, where a delivered landmark belongs.
+ * else's landmark. The company's own property opens the film instead: the
+ * gate with the Al Adrak sign, the duct factory frontal, the Halban campus
+ * from the air.
+ *
+ * THE PUBLIC PROSECUTION FOOTAGE IS NOT IN THIS FILM AT ALL, and must not be
+ * added back (13 Sep 2026). Al Adrak built the building, but is not
+ * authorised to show it in its own promotional film — a rights restriction,
+ * not an editorial preference. Its source is deliberately absent from the SRC
+ * map below so that a shot naming it fails loudly instead of shipping it. The
+ * building still appears elsewhere on the site (a sector card, a project
+ * register entry); those are separate photographs and a separate decision.
  *
  * Second pass, same day: the client wants the head office itself to open the
  * film, clearly, before anything else. There is no footage of it anywhere in
- * the archive — every facility film shoots the logistics campus — so the two
- * strongest photographs (a 5.7K frontal, an 8K drone still) are cut in ahead
- * of the campus footage as eased push-ins. A still passes as a camera move
- * when the source is 3–4x oversampled and the move is small and eased: the
- * crop then advances in whole source pixels and never shimmers, and nothing
- * on screen is static long enough to read as a photograph.
+ * the archive — every facility film shoots the logistics campus — so the 5.7K
+ * frontal photograph is cut in ahead of the campus footage as an eased
+ * push-in. A still passes as a camera move when the source is 3–4x
+ * oversampled and the move is small and eased: the crop then advances in whole
+ * source pixels and never shimmers, and nothing on screen is static long
+ * enough to read as a photograph. An 8K drone still of the same building
+ * followed it for one pass; the client asked for one opening photograph, not
+ * two, so it is gone and the film cuts from the frontal into the gate.
  *
  * Two defects in the old tail are gone with it. The engineers' line-up at
  * 60.4s reads as a staff photo dropped into a film; the Al Adrak-liveried
@@ -56,7 +65,10 @@ const SRC = {
   AFW: `${V}/Al adrak_Aluminum Fabrication (AFW).mov`, // 1080p25, caption bar y≈835–915
   NRMF: `${V}/Al Adrak_Duct Fabrication (NRMF).mov`, // 1080p25, caption bar y≈875–955 + watermark
   AHLI: `${V}/AHLI BANK CORPORATE OFFICE VIDEO.mov`, // 1080p60, logo top-right; closing logo anim from 138.2s
-  PPM: `${V}/PPM_6095 (1).MOV`, // 1080p50 HEVC, clean 5–165s
+  // NO PPM ENTRY ON PURPOSE. `PPM_6095 (1).MOV` is the Public Prosecution HQ,
+  // which this film is not cleared to show (see the header). Keeping it out of
+  // this map turns a re-added shot into an immediate crash rather than a
+  // rights problem discovered after it ships.
   MASKAAN: `${V}/CLA-AL MASKAAN VILLAGE- Video 2024-11-26 at 10.25.44_aaec9c7a.mp4`, // 720p30
 };
 /** head-office photographs — the archive's own, gitignored with the rest of /Images */
@@ -80,7 +92,6 @@ const SHOTS = [
   // 1 = bottom); `zoom` is the push-in over the shot; (cx, cy) is the point of
   // the band that stays fixed on screen while it grows — the thing pushed toward.
   { src: "HQ", still: `${HQ}/14 Head office.jpg`, at: "photo", dur: 3.6, zoom: 1.09, band: 0.64, cx: 0.5, cy: 0.66, mx: CENTRE, shot: "Head office, frontal: the facade, the entrance pergola, the Al Adrak mark on the corner", why: "OPENING — the clearest statement of who this is" },
-  { src: "HQ", still: `${HQ}/Head Office- Drone shoot.jpg`, at: "photo", dur: 2.8, zoom: 1.07, band: 0.5, cx: 0.6, cy: 0.5, mx: 866, shot: "Head office from the air: the building on its lawn, the car park, the tower beyond", why: "Where it stands; a drone's slow approach" },
   { src: "CWH", at: 10.7, dur: 1.7, fix: "br", mx: 720, shot: "The gate — the Al Adrak sign over the barrier", why: "Identity beat; real signage, not a graphic" },
   { src: "NRMF", at: 15.6, dur: 2.6, fix: "top", tx: 120, mx: 480, shot: "Duct factory frontal, telehandler carrying steel, NRMF on the wall", why: "A company building at eye level; work already moving" },
   { src: "CWH", at: 95.3, dur: 3.6, fix: "br", mx: CENTRE, shot: "High drone reveal: the whole Halban campus, city beyond", why: "Scale of the operation — the campus entire; motion into the people act" },
@@ -114,26 +125,10 @@ const SHOTS = [
   // carried the whip — a quarter-second radial smear — inside the beat. The
   // entrance take is one continuous shot from 9.0 to 11.9.
   { src: "AHLI", at: 9.2, dur: 2.6, fix: "tr", mx: CENTRE, shot: "Ahli Bank HQ entrance, low angle, flags flying", why: "PROJECTS act opens" },
-  { src: "PPM", at: 6.2, dur: 3.6, fix: null, mx: CENTRE, shot: "Public Prosecution HQ: monumental frontal, arch + reflecting pool", why: "The old opener, now a delivered landmark among landmarks" },
-  { src: "PPM", at: 10.5, dur: 2.6, fix: null, mx: CENTRE, shot: "Golden low-angle rise up the arch", why: "Matching architecture, upward camera energy" },
-  // 23.2 for 1.9s, not 25.5 for 2.6: the old window was three shots — a
-  // second of lounge, 1.4s of atrium, a frame of corridor. The atrium exists
-  // as two takes, 23.2–25.1 (rotating) and 26.5–27.9; neither is 2.6s long,
-  // so the beat takes the longer one whole rather than padding it with the
-  // rooms either side of it.
-  // The take actually begins at ~23.4 (the lounge→atrium cut sits between the
-  // 23.25 and 23.5 samples), so 23.2 still opened on five frames of sofas.
-  // 23.5–25.0 keeps a 0.1s margin at both ends of the 23.4–25.15 take.
-  { src: "PPM", at: 23.5, dur: 1.5, fix: null, mx: CENTRE, shot: "Atrium vertigo look-up, stacked rings, rotating", why: "Interior scale; pure geometry — a short, sharp beat" },
   { src: "AHLI", at: 77.0, dur: 2.8, fix: "tr", mx: CENTRE, shot: "Collaborative floor, wood baffles, green sofas, orbit", why: "Design quality of finished interiors" },
   // 102.3, not 101.0: the boardroom take runs 102.0–104.9; the old window
   // opened on a second of the lounge next door before the cut into it.
   { src: "AHLI", at: 102.3, dur: 2.5, fix: "tr", mx: CENTRE, shot: "Executive boardroom, full symmetry", why: "Premium finish" },
-  // The first cut's "VIP hall under crystal chandelier" (PPM 66.0, 2.6s) is
-  // gone. That window was three rooms — a second of the hall, a meeting room,
-  // a lounge — and the hall itself never exists as more than a 1.7s take
-  // anywhere in 61–70s. A stately beat cannot be stitched from room-hopping,
-  // so the act loses the beat rather than keeping a fake one.
   { src: "MASKAAN", at: 85.5, dur: 2.6, fix: "maskaan", mx: CENTRE, shot: "Dusk top-down aerial: village blocks, glowing pitch", why: "Breadth across Oman; daylight → dusk turn" },
   // ===== VI. THE COMPANY AGAIN, THEN NIGHT =====
   // mx 980, not centre: in the 1920 frame the pallet is at x≈400–770 and the
@@ -141,11 +136,6 @@ const SHOTS = [
   // livery is the reason this shot exists, so the window takes the door and
   // the worker beside it and lets the pallet go.
   { src: "CWH", at: 84.0, dur: 2.8, fix: "br", mx: 980, shot: "Al Adrak-liveried truck; telehandler swings a pallet aboard", why: "Replaces the staff line-up — the company's name in the scene, not over it" },
-  // 160.7, not the 160.3 the first cut used: the source is a plant room — red
-  // fire pipes, a ladder — until 160.25 and cuts to the pergola at 160.5, so
-  // the old in-point put five frames of pump room on screen before the facade.
-  // Clean until the end-card fade begins at ~164.1.
-  { src: "PPM", at: 160.7, dur: 3.1, fix: null, mx: CENTRE, shot: "Facade framed through pergola + mashrabiya", why: "Grace note; frame-within-frame" },
   { src: "AHLI", at: 133.2, dur: 4.6, fix: "tr", mx: 560, shot: "Blue-hour lit HQ against mountains", why: "FINALE — sourced before the 138.2s logo animation the old cut ran into" },
 ];
 
@@ -191,7 +181,19 @@ SHOTS.forEach((s, i) => {
     run(["-i", s.still, "-filter_complex", graph, "-map", "[w]", "-frames:v", String(N), ...ENC, w, "-map", "[mo]", "-frames:v", String(N), ...ENC, m]);
   } else {
     const fix = s.fix === "top" ? FIX.top(s.tx) : s.fix ? FIX[s.fix] : null;
-    const chain = ["fps=25", fix, GRADE, "scale=1920:1080:flags=lanczos", "setsar=1", "format=yuv420p"].filter(Boolean).join(",");
+    // setpts BEFORE fps, or the first frame of the shot is DUPLICATED.
+    // `-ss 10.7` on a 25fps source lands between frames (10.7 = frame 267.5).
+    // The decoded frames keep their source timestamps, and the fps filter
+    // resamples onto a grid anchored at zero — so it emits a duplicate to cover
+    // the half-frame gap. One duplicate at a cut is a 40ms freeze exactly where
+    // the eye is already adjusting: the hitch the client reported right after
+    // the opening photograph. Rebasing the first frame to PTS 0 aligns the grid
+    // with the shot. Measured on CWH 10.7: 1 duplicate pair before, 0 after.
+    // Six shots sit on half-frame in-points, so this is not a one-shot fix.
+    // (Rate conversion still duplicates or drops frames INSIDE a shot — CWS is
+    // 24fps, AHLI 60, Maskaan 30 — but spread through a shot that is ordinary
+    // pulldown, invisible. Only the one at the cut reads as a jerk.)
+    const chain = ["setpts=PTS-STARTPTS", "fps=25", fix, GRADE, "scale=1920:1080:flags=lanczos", "setsar=1", "format=yuv420p"].filter(Boolean).join(",");
     const graph = `[0:v]${chain},split[w][m];${MOBILE}`;
     run(["-ss", String(s.at), "-t", String(s.dur), "-i", SRC[s.src], "-filter_complex", graph, "-map", "[w]", ...ENC, w, "-map", "[mo]", ...ENC, m]);
   }
@@ -242,17 +244,19 @@ ${rows.map((r) => `| ${fmt(r.t0)}–${fmt(r.t0 + r.dur)} | ${r.dur} | ${r.src} |
 
 ## Why this sequence
 
-- **Opens on the head office** — a frontal, then the drone still, cut in as eased push-ins because no footage of the building exists — then the company's own ground: the gate, a factory frontal, the Halban campus from the air. Not on a client's landmark: the Public Prosecution HQ, the first cut's opener, now sits in the projects act in the middle of the film.
+- **Opens on the head office** — one frontal photograph, cut in as an eased push-in because no footage of the building exists — then the company's own ground: the gate, a factory frontal, the Halban campus from the air.
+- **No Public Prosecution footage anywhere in this film.** Al Adrak built the building but is not cleared to show it here, so its source is not even present in the script's SRC map. Do not add it back.
+- **No duplicated frame at any cut.** Shots whose in-point falls between source frames are rebased to PTS 0 before the 25fps grid; without that, the fps filter fills the half-frame gap with a repeat and the cut reads as a hitch.
 - **The staff line-up is gone.** In its place the Al Adrak-liveried truck: the one place in the library where the company name is legitimately in the scene.
 - **The finale is sourced earlier in the same shot** (Ahli 133.2s, not 135.8s) so it ends before that file's closing logo animation at 138.2s, which the first cut ran straight into.
-- Cuts ride camera energy; pacing is uneven on purpose (1.8s–4.6s), fastest in the machinery act, slowest at open and close; the dark plasma passage sits in the first third as a contrast valley.
+- Cuts ride camera energy; pacing is uneven on purpose (1.7s–4.6s), fastest in the machinery act, slowest at open and close; the dark plasma passage sits in the first third as a contrast valley.
 
 ## Burn-in repairs (the film contains no text or logos)
 
 - Ahli Bank: top-right logo patched per clip (delogo x1440 y25 w430 h185); finale ends before the 138.2s logo animation.
 - CWH / CWS: bottom-right watermark patched (delogo x1456 y930 w450 h95).
 - AFW / NRMF: caption bar mid-lower, so each shot is re-framed to a clean 1479×832 top window (≈1.3× punch-in); the bottom-right watermark falls below that window.
-- PPM: no repairs needed. Maskaan: caption-free aerial only, denoised (hqdn3d) before the 720p→1080p upscale.
+- Maskaan: caption-free aerial only, denoised (hqdn3d) before the 720p→1080p upscale.
 
 In-scene physical signage (the gate sign, the truck livery, NRMF/AFW wall lettering, machine labels, vest logos, carved calligraphy) is real-world content, not graphics, and is retained.
 
