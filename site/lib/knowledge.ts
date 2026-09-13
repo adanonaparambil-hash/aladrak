@@ -153,7 +153,7 @@ add({
 add({
   id: "leadership",
   title: "Leadership",
-  body: `${leadership.founder.name}, ${leadership.founder.role}. ${leadership.founder.bio} Directors and heads: ${[...leadership.directors, ...leadership.roster].map((m: { name: string; role: string }) => `${m.name} (${m.role})`).join(", ")}.`,
+  body: `${leadership.founder.name}, ${leadership.founder.role}. ${leadership.founder.bio} Directors and heads: ${[...leadership.directors, ...leadership.officers, ...leadership.roster].map((m: { name: string; role: string }) => `${m.name} (${m.role})`).join(", ")}.`,
   href: S("team"),
   tags: ["runs", "run", "owner", "owns", "boss", "leadership", "management", "chairman", "ceo", "ced", "director", "founder", "team", "head", "who runs"],
 });

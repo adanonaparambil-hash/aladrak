@@ -327,6 +327,26 @@ export const leadership = {
     quote:
       "Our dream is to be the best company in the Sultanate — not in terms of profits or volumes, but in terms of ethics and values.",
     bio: "B.Tech Civil Engineering · Ph.D in Business Administration. Founded Al Adrak in 1986 and built it into Oman's No. 1 construction company.",
+    /**
+     * Condensed from the company's own profile of the founder. Two things in
+     * that document are deliberately NOT carried over:
+     *
+     *   - "35 years ago". The document dates from around 2021 and the site
+     *     derives its age from lib/anniversary.ts, so a written-in number
+     *     would be both wrong today and a new thing to forget to update.
+     *     The sentence is rewritten without a count.
+     *   - "an order-book that tops $1 billion". A financial figure of that
+     *     size, from a document of that age, presented as current, is a
+     *     claim this page should not make on its own. Flagged to the client
+     *     rather than published.
+     *
+     * The workforce number is left out too — the stats band above already
+     * carries it, and prose is where numbers go stale unnoticed.
+     */
+    story: [
+      "A civil engineer by profession, he arrived in Oman with an entrepreneur's ambition and a conviction that construction is, before anything else, a business of relationships — that the work is won and kept by building close and lasting partnerships with clients.",
+      "That ethos is embedded in the company's DNA, and it is why so much of the business is repeat business. The industry has backed Al Adrak for the same reason ever since: projects delivered on time, to quality, and at a fair price, across the length and breadth of Oman.",
+    ],
     honors: [
       "Forbes Top 100 Businessmen — Middle East",
       "No. 1 Construction Company in Oman",
@@ -339,10 +359,21 @@ export const leadership = {
     { name: "Varsha Roy", role: "Executive Director", img: null },
     { name: "Ayyappadas Chandrasekhar", role: "Chief Operating Officer", img: null },
   ] as Person[],
-  roster: [
-    { name: "Biju K. Mammen", role: "Advisor — Plant & Machinery", img: asset("/images/team/roster/biju.jpg") },
+  /**
+   * The two group officers, shown between the board and the roster.
+   *
+   * They were the 2nd and 3rd names in the roster, which put the group's
+   * Chief Executive Officer in a grid of nineteen at the same weight as every
+   * manager in it. They are the same people and the same titles — only the
+   * tier is new, so the reading order now goes founder, board, officers,
+   * then everyone else.
+   */
+  officers: [
     { name: "Riyas Mohamed", role: "Chief Executive Officer", img: asset("/images/team/roster/riyas.jpg") },
     { name: "Earnest V J Shabu", role: "Group Chief Strategy & Transformation Director", img: null },
+  ] as Person[],
+  roster: [
+    { name: "Biju K. Mammen", role: "Advisor — Plant & Machinery", img: asset("/images/team/roster/biju.jpg") },
     { name: "Mahmood Al Ghafri", role: "Vice President — HR & Administration", img: asset("/images/team/roster/mahmood.jpg") },
     { name: "Richard Sequeira", role: "Vice President — Group Facilities, Agriculture & Carbon", img: asset("/images/team/roster/richard.jpg") },
     { name: "Tibi John", role: "Vice President — Group Funding & Financial Advisory", img: asset("/images/team/roster/tibi.jpg") },

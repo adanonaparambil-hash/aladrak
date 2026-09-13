@@ -49,10 +49,26 @@ function Portrait({ person }: { person: Person }) {
   );
 }
 
+/**
+ * One tile in the leadership block — used for the four directors and for the
+ * two group officers below them, so the two rows cannot drift apart.
+ */
+function LeaderCard({ person }: { person: Person }) {
+  return (
+    <div className="group">
+      <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
+        <Portrait person={person} />
+      </div>
+      <p className="font-display text-base md:text-lg leading-snug">{person.name}</p>
+      <p className="label text-cream/50 mt-2">{person.role}</p>
+    </div>
+  );
+}
+
 /** Team Adrak — founder feature, executive directors, and the full roster. */
 export default function Team() {
   const root = useRef<HTMLElement>(null);
-  const { founder, directors, roster } = leadership;
+  const { founder, directors, officers, roster } = leadership;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -118,6 +134,19 @@ export default function Team() {
               <p className="font-light text-cream/70 leading-relaxed mt-8 max-w-xl">
                 {founder.bio}
               </p>
+              {/* The block was a quote, that one credential line and three pills,
+                  so on a wide screen the bottom half of the row was empty dark
+                  green. His own profile fills it. max-w-2xl, not the xl above:
+                  the credential line is a caption and wants to stay short, but
+                  these are paragraphs and read badly in a narrow column. */}
+              {founder.story.map((para) => (
+                <p
+                  key={para.slice(0, 32)}
+                  className="font-light text-cream/70 leading-relaxed mt-5 max-w-2xl"
+                >
+                  {para}
+                </p>
+              ))}
               <div className="flex flex-wrap gap-3 mt-8">
                 {founder.honors.map((h) => (
                   <span
@@ -149,12 +178,19 @@ export default function Team() {
         <Reveal className="mb-24 md:mb-32">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
             {directors.map((d) => (
-              <div key={d.name} className="group">
-                <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
-                  <Portrait person={d} />
-                </div>
-                <p className="font-display text-base md:text-lg leading-snug">{d.name}</p>
-                <p className="label text-cream/50 mt-2">{d.role}</p>
+              <LeaderCard key={d.name} person={d} />
+            ))}
+          </div>
+          {/* The two group officers, in the SAME four-column grid so their tiles
+              are exactly the size of a director's, but starting at column two so
+              a row of two sits centred under a row of four instead of hanging off
+              the left edge. Below md the grid is two columns and they simply fill
+              it, so the offset is scoped to md. The gap between the rows is the
+              grid's own gap, which keeps the six reading as one block. */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8 mt-5 md:mt-8">
+            {officers.map((o, i) => (
+              <div key={o.name} className={i === 0 ? "md:col-start-2" : undefined}>
+                <LeaderCard person={o} />
               </div>
             ))}
           </div>
