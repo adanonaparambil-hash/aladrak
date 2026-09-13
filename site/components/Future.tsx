@@ -6,6 +6,7 @@ import { asset } from "@/lib/asset";
 
 export default function Future() {
   return (
+    <>
     <section id="contact" className="relative z-20 bg-ink text-cream overflow-hidden">
       {/* dusk aerial backdrop */}
       <div className="absolute inset-0">
@@ -65,15 +66,28 @@ export default function Future() {
           <GroupCompanies />
         </Reveal>
 
-        {/* Work with us — the two forms. Placed with the office details rather
-            than in a page of their own: someone who has scrolled this far is
-            already looking for a way to make contact. */}
-        {/* scroll-margin so the fixed header does not sit over the heading
-            when the nav's Contact link lands here */}
-        <div id="work-with-us" className="scroll-mt-28 md:scroll-mt-32 mt-20 md:mt-24 pt-14 border-t border-white/10">
+        </div>
+      </section>
+
+      {/* ===== Work with us — its own LIGHT section =====
+          It was a block inside the near-black contact section, which made the
+          single place on the page where a visitor is asked to type the
+          darkest thing on it. Cream, with the site's light-section palette
+          (brand green for the kicker, forest for the heading, white panels),
+          so the form reads as a form. The dark offices block below keeps the
+          section rhythm the rest of the page uses.
+
+          #work-with-us moves onto the <section> itself — it is the nav's
+          Contact target — and keeps its scroll-margin so the fixed header
+          does not sit over the heading on arrival. */}
+      <section
+        id="work-with-us"
+        className="relative z-20 bg-cream text-ink scroll-mt-28 md:scroll-mt-32"
+      >
+        <div className="shell py-24 md:py-32">
           <Reveal>
-            <p className="label text-gold mb-5">Work with us</p>
-            <h2 className="font-display text-3xl md:text-5xl leading-tight mb-10">
+            <p className="label text-brand mb-5">Work with us</p>
+            <h2 className="font-display text-3xl md:text-5xl leading-tight text-forest mb-10">
               Start a conversation
             </h2>
           </Reveal>
@@ -91,8 +105,8 @@ export default function Future() {
           <Reveal delay={0.08}>
             <ContactForms
               aside={
-                <div className="rounded-3xl border border-white/12 bg-white/[0.03] backdrop-blur-sm p-7 md:p-8">
-                  <p className="label text-gold mb-6">What happens next</p>
+                <div className="rounded-3xl border border-ink/10 bg-white shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-7 md:p-8">
+                  <p className="label text-brand mb-6">What happens next</p>
                   <ol className="space-y-6">
                     {[
                       ["01", "We acknowledge it", "Every enquiry and registration reaches a named person — not a shared tray — within one working day."],
@@ -100,30 +114,30 @@ export default function Future() {
                       ["03", "We come back with next steps", "A scope conversation, a site visit, a request for documents, or an honest no — but an answer either way."],
                     ].map(([no, title, body]) => (
                       <li key={no} className="flex gap-4">
-                        <span className="label label-xs text-gold/80 flex-none pt-1">{no}</span>
+                        <span className="label label-xs text-brand flex-none pt-1">{no}</span>
                         <div>
-                          <p className="font-display text-lg text-cream leading-snug">{title}</p>
-                          <p className="text-cream/65 font-light text-[14px] leading-relaxed mt-1.5">{body}</p>
+                          <p className="font-display text-lg text-forest leading-snug">{title}</p>
+                          <p className="text-ink/70 font-light text-[14px] leading-relaxed mt-1.5">{body}</p>
                         </div>
                       </li>
                     ))}
                   </ol>
 
-                  <div className="mt-8 pt-7 border-t border-white/12">
-                    <p className="label label-xs text-cream/50 mb-4">Rather just talk?</p>
+                  <div className="mt-8 pt-7 border-t border-ink/10">
+                    <p className="label label-xs text-ink/50 mb-4">Rather just talk?</p>
                     <a
                       href={`tel:${site.phone.replace(/[^0-9+]/g, "")}`}
-                      className="font-display text-2xl md:text-[28px] text-cream hover:text-gold transition-colors duration-300 block leading-none"
+                      className="font-display text-2xl md:text-[28px] text-forest hover:text-brand transition-colors duration-300 block leading-none"
                     >
                       {site.phone}
                     </a>
                     <a
                       href={`mailto:${site.email}`}
-                      className="text-cream/75 font-light hover:text-gold transition-colors duration-300 inline-block mt-3"
+                      className="text-ink/75 font-light hover:text-brand transition-colors duration-300 inline-block mt-3"
                     >
                       {site.email}
                     </a>
-                    <p className="label label-xs text-cream/40 mt-5 leading-relaxed">
+                    <p className="label label-xs text-ink/45 mt-5 leading-relaxed">
                       Head office · Halban, Barka · Sun–Thu
                     </p>
                   </div>
@@ -132,9 +146,12 @@ export default function Future() {
             />
           </Reveal>
         </div>
+      </section>
 
-        {/* Offices — each detail with its own icon, as on the Contact page */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-20 md:mt-24 pt-14 border-t border-white/10">
+      {/* ===== Offices — back to dark, closing the page as it opened ===== */}
+      <section className="relative z-20 bg-ink text-cream">
+        <div className="shell py-20 md:py-24">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {offices.map((o, i) => {
             const line =
               "flex items-start gap-3 text-cream/80 font-light leading-relaxed text-[clamp(0.9375rem,0.85vw,1.25rem)]";
@@ -247,8 +264,9 @@ export default function Future() {
               </Reveal>
             );
           })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

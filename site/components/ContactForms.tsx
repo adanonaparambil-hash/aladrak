@@ -187,13 +187,14 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
   };
 
   /**
-   * A filled field, not a bare underline. On this near-black section a single
-   * bottom rule was almost invisible until focused — the form read as floating
-   * labels over nothing. A faint fill gives every input an edge at rest, and
-   * the gold ring on focus stays the strongest signal on the panel.
+   * A filled field, not a bare underline — the reason holds on cream as it
+   * did on ink: a single bottom rule is almost invisible until focused, and
+   * the form reads as floating labels over nothing. White fields on the
+   * panel's own white need a border to exist at rest, and the brand-green
+   * ring on focus is the strongest signal on the panel.
    */
   const inputBase =
-    "w-full rounded-xl bg-ink/45 text-cream px-4 py-3 outline-none border transition-colors duration-300 hover:border-white/30 focus:border-gold focus:bg-ink/60";
+    "w-full rounded-xl bg-white text-ink px-4 py-3 outline-none border transition-colors duration-300 hover:border-ink/30 focus:border-brand focus:bg-white";
 
   return (
     <div>
@@ -212,8 +213,8 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
               onClick={() => switchTab(t.key)}
               className={`px-7 py-3.5 rounded-full label transition-colors duration-300 ${
                 on
-                  ? "bg-gold text-ink"
-                  : "border border-white/20 text-cream/70 hover:border-gold hover:text-gold"
+                  ? "bg-forest text-cream"
+                  : "border border-ink/20 text-ink/70 hover:border-brand hover:text-brand"
               }`}
             >
               {t.title}
@@ -227,7 +228,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
         id={`${idBase}-${active.key}`}
         aria-labelledby={`${idBase}-tab-${active.key}`}
       >
-        <p className="text-cream/70 font-light leading-relaxed mb-7 max-w-2xl">
+        <p className="text-ink/70 font-light leading-relaxed mb-7 max-w-2xl">
           {active.blurb}
         </p>
 
@@ -235,12 +236,12 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
         <form
           onSubmit={submit}
           noValidate
-          className="lg:col-span-7 grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-white/[0.04] border border-white/12 backdrop-blur-sm p-6 md:p-9"
+          className="lg:col-span-7 grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-parchment border border-ink/10 p-6 md:p-9"
         >
           {active.fields.map((f) => {
             const id = fieldId(f.name);
             const bad = errors[f.name];
-            const border = bad ? "border-red-400/70" : "border-white/15";
+            const border = bad ? "border-red-500/70" : "border-ink/15";
             const common = {
               id,
               name: f.name,
@@ -256,9 +257,9 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                     placeholder disappears the moment someone types, so on a
                     nine-field form they lose track of which box they are in,
                     and it is invisible to assistive technology. */}
-                <label htmlFor={id} className="label label-xs text-cream/60 block mb-1">
+                <label htmlFor={id} className="label label-xs text-ink/60 block mb-1">
                   {f.label}
-                  {f.required && <span className="text-gold ml-1.5" aria-hidden>*</span>}
+                  {f.required && <span className="text-brand ml-1.5" aria-hidden>*</span>}
                   {f.required && <span className="sr-only"> (required)</span>}
                 </label>
 
@@ -273,7 +274,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                   <select
                     {...common}
                     onChange={(e) => set(f.name, e.target.value)}
-                    className={`${inputBase} ${border} font-light [&>option]:bg-forest [&>option]:text-cream`}
+                    className={`${inputBase} ${border} font-light [&>option]:bg-white [&>option]:text-ink`}
                   >
                     <option value="">Please choose…</option>
                     {f.options?.map((o) => (
@@ -287,12 +288,12 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                     {...common}
                     type={f.type ?? "text"}
                     onChange={(e) => set(f.name, e.target.value)}
-                    className={`${inputBase} ${border} font-light [color-scheme:dark]`}
+                    className={`${inputBase} ${border} font-light [color-scheme:light]`}
                   />
                 )}
 
                 {bad && (
-                  <p id={`${id}-err`} className="text-red-300 text-[13px] font-light mt-1.5">
+                  <p id={`${id}-err`} className="text-red-700 text-[13px] font-light mt-1.5">
                     {bad}
                   </p>
                 )}
@@ -304,7 +305,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
             <button
               type="submit"
               disabled={state === "sending"}
-              className="px-9 py-4 bg-gold text-ink rounded-full label font-bold hover:bg-cream transition-colors duration-300 disabled:opacity-60"
+              className="px-9 py-4 bg-gold text-ink rounded-full label font-bold hover:bg-forest hover:text-cream transition-colors duration-300 disabled:opacity-60"
             >
               {state === "sending" ? "Sending…" : `Submit ${active.title.toLowerCase()}`}
             </button>
@@ -313,29 +314,29 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                 change, everyone else needs the live region */}
             <p role="status" aria-live="polite" className="text-[15px] font-light">
               {state === "sent" && !ENDPOINT && (
-                <span className="text-cream/75">
+                <span className="text-ink/75">
                   Your email should now be open with the details filled in — press send and we
                   will come back to you. Nothing reaching you? Write to{" "}
-                  <a href={`mailto:${site.email}`} className="text-gold hover:text-cream transition-colors">
+                  <a href={`mailto:${site.email}`} className="text-brand underline hover:text-forest transition-colors">
                     {site.email}
                   </a>
                   .
                 </span>
               )}
               {state === "sent" && ENDPOINT && (
-                <span className="text-gold">Thank you — we have your details and will be in touch.</span>
+                <span className="text-brand">Thank you — we have your details and will be in touch.</span>
               )}
               {state === "failed" && (
-                <span className="text-red-300">
+                <span className="text-red-700">
                   That did not go through. Please email{" "}
-                  <a href={`mailto:${site.email}`} className="underline hover:text-cream">
+                  <a href={`mailto:${site.email}`} className="underline hover:text-forest">
                     {site.email}
                   </a>{" "}
                   instead.
                 </span>
               )}
               {Object.keys(errors).length > 0 && state === "idle" && (
-                <span className="text-red-300">
+                <span className="text-red-700">
                   {Object.keys(errors).length === 1
                     ? "One field needs attention."
                     : `${Object.keys(errors).length} fields need attention.`}

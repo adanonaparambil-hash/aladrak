@@ -460,8 +460,8 @@ export type HotelProperty = {
   address?: string;
   /** further photographs, offered as a small gallery on the card */
   gallery?: string[];
-  /** a short muted loop, offered as the gallery's last slide rather than autoplayed */
-  film?: { src: string; poster: string };
+  /** short muted loops, offered as the gallery's last slides rather than autoplayed */
+  films?: { src: string; poster: string; alt: string }[];
 };
 
 /**
@@ -506,7 +506,11 @@ export const adrakHotelProperties: HotelProperty[] = [
       asset("/images/hotels/leisure-island-3.jpg"),
       asset("/images/hotels/leisure-island-4.jpg"),
     ],
-    film: { src: asset("/videos/hotels/leisure-island.mp4"), poster: asset("/images/hotels/leisure-island-film.jpg") },
+    films: [
+      { src: asset("/videos/hotels/leisure-island.mp4"), poster: asset("/images/hotels/leisure-island-film.jpg"), alt: "the lagoon at golden hour" },
+      { src: asset("/videos/hotels/leisure-island-2.mp4"), poster: asset("/images/hotels/leisure-island-2-film.jpg"), alt: "running the mangrove wall" },
+      { src: asset("/videos/hotels/leisure-island-3.mp4"), poster: asset("/images/hotels/leisure-island-3-film.jpg"), alt: "through the mangrove tunnel" },
+    ],
   },
 ];
 

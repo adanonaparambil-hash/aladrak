@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import {
   groupCompanies,
@@ -105,16 +106,16 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
 /**
  * A property with no website. Where the linked cards are one photograph and a
  * "Visit site", this one is the visit: a main pane, a strip of thumbnails that
- * swap it — four stills and, last, an eight-second muted loop from the boat —
- * and the address, with a Maps link as the only thing that leaves the page.
- * The film is a slide rather than an autoplay because it is 576p phone footage
- * and would sit soft under the stills; chosen, it reads as what it is.
+ * swap it — four stills, then three short muted loops from the boat
+ * — and the address, with a Maps link as the only thing that leaves the page.
+ * The films are slides rather than autoplays: they are phone footage and would
+ * sit soft under the stills, and nothing is fetched until someone picks one.
  */
 function UnlinkedProperty({ p }: { p: HotelProperty }) {
   const slides = [
     { kind: "still" as const, src: p.img, alt: p.name },
     ...(p.gallery ?? []).map((src, i) => ({ kind: "still" as const, src, alt: `${p.name} — photograph ${i + 2}` })),
-    ...(p.film ? [{ kind: "film" as const, src: p.film.src, poster: p.film.poster, alt: `${p.name} — from the boat` }] : []),
+    ...(p.films ?? []).map((f) => ({ kind: "film" as const, src: f.src, poster: f.poster, alt: `${p.name} — ${f.alt}` })),
   ];
   const [at, setAt] = useState(0);
   const cur = slides[at];
@@ -125,12 +126,17 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
   return (
     <div
       data-hotel-card
-      className="mt-4 md:mt-5 rounded-2xl overflow-hidden border border-white/15 bg-ink/30"
+      className="mt-[clamp(10px,2.2dvh,20px)] rounded-2xl overflow-hidden border border-white/15 bg-ink/30"
     >
       <div className="grid sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         {/* media: the pane, then the strip */}
         <div className="bg-ink/50">
-          <div className="relative aspect-[3/2] overflow-hidden">
+          {/* Height from the viewport, not a fixed ratio. Three property
+              cards plus a gallery overflowed a 768px-tall screen by ~40px,
+              which is what made the modal need scrolling at all; tying the
+              media to dvh means the whole panel fits on a short laptop and
+              still fills a tall one. */}
+          <div className="relative h-[clamp(120px,22dvh,240px)] overflow-hidden">
             {cur.kind === "film" ? (
               <video
                 key={cur.src}
@@ -297,7 +303,22 @@ function HotelChooser({
   const linked = properties.filter((p) => p.url);
   const unlinked = properties.filter((p) => !p.url);
 
-  return (
+  /**
+   * Rendered into <body>, not where this component happens to sit.
+   *
+   * `position: fixed` is relative to the viewport only while no ancestor
+   * has a transform, filter, perspective or will-change — any one of those
+   * becomes the containing block instead. GroupCompanies renders inside a
+   * <Reveal>, and GSAP leaves a transform on it (measured on the live page:
+   * matrix(1,0,0,1,0,44)), so the overlay was being laid out inside THAT
+   * div: its rect sat 36,826px down the document instead of at the top of
+   * the screen, and which part of the modal you saw depended on where you
+   * had scrolled. That is the reported "it shows the top or the bottom and
+   * I have to scroll it myself". A portal to <body> puts it back in the
+   * viewport's coordinate system permanently: nothing above <body> can
+   * acquire a transform.
+   */
+  const overlay = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
       <div
         ref={backdrop}
@@ -310,7 +331,7 @@ function HotelChooser({
         role="dialog"
         aria-modal="true"
         aria-label={`${title} — choose a property`}
-        className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-6 md:p-9"
+        className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-5 md:p-[clamp(18px,3.4dvh,36px)]"
       >
         <p className="label text-gold">{title}</p>
         <h3 className="font-display text-2xl md:text-[32px] leading-tight text-cream mt-2">
@@ -324,7 +345,7 @@ function HotelChooser({
         </p>
 
         {/* the two with sites: a pair of link cards, as before */}
-        <div className="grid sm:grid-cols-2 gap-4 md:gap-5 mt-7">
+        <div className="grid sm:grid-cols-2 gap-4 md:gap-5 mt-[clamp(12px,3dvh,28px)]">
           {linked.map((p, i) => (
             <a
               key={p.name}
@@ -340,7 +361,7 @@ function HotelChooser({
                 src={p.img}
                 alt={p.name}
                 loading="lazy"
-                className="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                className="w-full h-[clamp(110px,20dvh,220px)] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               {/* the type sits on the photograph, so it needs its own ground */}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/92 via-ink/35 to-ink/5" />
@@ -376,4 +397,6 @@ function HotelChooser({
       </div>
     </div>
   );
+
+  return typeof document === "undefined" ? overlay : createPortal(overlay, document.body);
 }
