@@ -92,29 +92,29 @@ const SHOTS = [
   // 1 = bottom); `zoom` is the push-in over the shot; (cx, cy) is the point of
   // the band that stays fixed on screen while it grows — the thing pushed toward.
   { src: "HQ", still: `${HQ}/14 Head office.jpg`, at: "photo", dur: 3.6, zoom: 1.09, band: 0.64, cx: 0.5, cy: 0.66, mx: CENTRE, shot: "Head office, frontal: the facade, the entrance pergola, the Al Adrak mark on the corner", why: "OPENING — the clearest statement of who this is" },
-  { src: "CWH", at: 10.7, dur: 1.7, fix: "br", mx: 720, shot: "The gate — the Al Adrak sign over the barrier", why: "Identity beat; real signage, not a graphic" },
-  { src: "NRMF", at: 15.6, dur: 2.6, fix: "top", tx: 120, mx: 480, shot: "Duct factory frontal, telehandler carrying steel, NRMF on the wall", why: "A company building at eye level; work already moving" },
+  { src: "CWH", at: 10.6, dur: 1.68, fix: "br", mx: 720, shot: "The gate — the Al Adrak sign over the barrier", why: "Identity beat; real signage, not a graphic" },
+  { src: "NRMF", at: 15.86, dur: 2.4, fix: "top", tx: 120, mx: 480, shot: "Duct factory frontal, telehandler carrying steel, NRMF on the wall", why: "A company building at eye level; work already moving" },
   { src: "CWH", at: 95.3, dur: 3.6, fix: "br", mx: CENTRE, shot: "High drone reveal: the whole Halban campus, city beyond", why: "Scale of the operation — the campus entire; motion into the people act" },
   // (the low aerial over the yard that followed is gone: with the head office
   //  in front, three aerials inside fourteen seconds was one too many)
   // ===== II. PEOPLE =====
-  { src: "CWS", at: 56.0, dur: 2.4, fix: "br", mx: CENTRE, shot: "Bench-saw trio, low angle, shallow depth", why: "PEOPLE enter — wide-to-face contrast cut" },
+  { src: "CWS", at: 46.14, dur: 1.84, fix: "br", mx: CENTRE, shot: "Joinery floor: bench saw running, timber stacked to the ceiling", why: "PEOPLE enter — wide-to-face contrast cut" },
   // 24.9, not 26.0: the two-workers close-up runs 24.75–26.9 and then cuts to
   // a wide of the whole floor, so the old window (26.0–28.4) was 0.9s of the
   // shot it named and 1.5s of a different one.
-  { src: "AFW", at: 24.9, dur: 1.9, fix: "top", tx: 220, mx: CENTRE, shot: "Two workers over aluminum frame, backlit", why: "Teamwork close; matched yellow-coverall palette" },
-  { src: "CWS", at: 61.5, dur: 2.2, fix: "br", mx: CENTRE, shot: "Radial-arm saw, hands on carriage", why: "Craft detail — hands after faces" },
+  { src: "AFW", at: 24.96, dur: 1.9, fix: "top", tx: 220, mx: CENTRE, shot: "Two workers over aluminum frame, backlit", why: "Teamwork close; matched yellow-coverall palette" },
+  { src: "CWS", at: 62.64, dur: 2.2, fix: "br", mx: CENTRE, shot: "Radial-arm saw, hands on carriage", why: "Craft detail — hands after faces" },
   { src: "CWH", at: 37.0, dur: 2.6, fix: "br", mx: CENTRE, shot: "Follow-shot behind two staff in racking aisle", why: "Human movement carries into the machinery phase" },
   // ===== III. ENGINEERING & MACHINERY =====
-  { src: "NRMF", at: 26.5, dur: 2.5, fix: "top", tx: 220, mx: CENTRE, shot: "Workers flank plasma table, arc ignites", why: "ENERGY rises — anticipation beat" },
-  { src: "NRMF", at: 31.5, dur: 2.1, fix: "top", tx: 220, mx: CENTRE, shot: "Plasma head mid-cut, sparks on dark steel", why: "The action peak; darkest frame of the film" },
-  { src: "AFW", at: 61.0, dur: 2.2, fix: "top", tx: 220, mx: CENTRE, shot: "Drill macro boring aluminum, chips flying", why: "Match-cut: sparks → chips" },
-  { src: "CWS", at: 111.0, dur: 2.2, fix: "br", mx: CENTRE, shot: "Multi-spindle CNC head macro", why: "Machine beauty; chrome after fire" },
-  { src: "CWH", at: 76.0, dur: 2.6, fix: "br", mx: CENTRE, shot: "Telehandler with pallet, low angle vs blue sky", why: "Exhale — dark macros open into daylight" },
+  { src: "NRMF", at: 27.08, dur: 1.84, fix: "top", tx: 220, mx: CENTRE, shot: "Workers flank plasma table, arc ignites", why: "ENERGY rises — anticipation beat" },
+  { src: "NRMF", at: 31.36, dur: 1.8, fix: "top", tx: 220, mx: CENTRE, shot: "Plasma head mid-cut, sparks on dark steel", why: "The action peak; darkest frame of the film" },
+  { src: "AFW", at: 60.54, dur: 1.76, fix: "top", tx: 220, mx: CENTRE, shot: "Drill macro boring aluminum, chips flying", why: "Match-cut: sparks → chips" },
+  { src: "CWS", at: 111.26, dur: 1.64, fix: "br", mx: CENTRE, shot: "Multi-spindle CNC head macro", why: "Machine beauty; chrome after fire" },
+  { src: "CWH", at: 76.18, dur: 2.6, fix: "br", mx: CENTRE, shot: "Telehandler with pallet, low angle vs blue sky", why: "Exhale — dark macros open into daylight" },
   // ===== IV. FACILITIES & CRAFT =====
-  { src: "CWS", at: 100.5, dur: 3.4, fix: "br", mx: CENTRE, shot: "CNC router carving arabesque door panel", why: "SIGNATURE SHOT — craft, technology, Omani identity" },
-  { src: "CWH", at: 45.5, dur: 3.0, fix: "br", mx: CENTRE, shot: "Aerial over cable-drum + pipe yard", why: "Colour, repetition, industrial capacity" },
-  { src: "AFW", at: 56.0, dur: 2.4, fix: "top", tx: 220, mx: CENTRE, shot: "Copy-router operator, red hoses, warm light", why: "Production rhythm, human at the centre" },
+  { src: "CWS", at: 102.12, dur: 1.76, fix: "br", mx: CENTRE, shot: "CNC router carving arabesque door panel", why: "SIGNATURE SHOT — craft, technology, Omani identity" },
+  { src: "CWH", at: 46.72, dur: 3, fix: "br", mx: CENTRE, shot: "Aerial over cable-drum + pipe yard", why: "Colour, repetition, industrial capacity" },
+  { src: "AFW", at: 56.34, dur: 2, fix: "top", tx: 220, mx: CENTRE, shot: "Copy-router operator, red hoses, warm light", why: "Production rhythm, human at the centre" },
   // 29.6, not 31.0: the aerial is one take from 27.0 to 32.4 and then cuts to
   // the racking-aisle follow shot, so the old window (31.0–33.4) crossed that
   // cut and put 0.9s of two men walking indoors inside an "aerial".
@@ -125,18 +125,18 @@ const SHOTS = [
   // carried the whip — a quarter-second radial smear — inside the beat. The
   // entrance take is one continuous shot from 9.0 to 11.9.
   { src: "AHLI", at: 9.2, dur: 2.6, fix: "tr", mx: CENTRE, shot: "Ahli Bank HQ entrance, low angle, flags flying", why: "PROJECTS act opens" },
-  { src: "AHLI", at: 77.0, dur: 2.8, fix: "tr", mx: CENTRE, shot: "Collaborative floor, wood baffles, green sofas, orbit", why: "Design quality of finished interiors" },
+  { src: "AHLI", at: 78.06, dur: 2.04, fix: "tr", mx: CENTRE, shot: "Collaborative floor, wood baffles, green sofas, orbit", why: "Design quality of finished interiors" },
   // 102.3, not 101.0: the boardroom take runs 102.0–104.9; the old window
   // opened on a second of the lounge next door before the cut into it.
   { src: "AHLI", at: 102.3, dur: 2.5, fix: "tr", mx: CENTRE, shot: "Executive boardroom, full symmetry", why: "Premium finish" },
-  { src: "MASKAAN", at: 85.5, dur: 2.6, fix: "maskaan", mx: CENTRE, shot: "Dusk top-down aerial: village blocks, glowing pitch", why: "Breadth across Oman; daylight → dusk turn" },
+  { src: "MASKAAN", at: 86.6, dur: 2.6, fix: "maskaan", mx: CENTRE, shot: "Dusk top-down aerial: village blocks, glowing pitch", why: "Breadth across Oman; daylight → dusk turn" },
   // ===== VI. THE COMPANY AGAIN, THEN NIGHT =====
   // mx 980, not centre: in the 1920 frame the pallet is at x≈400–770 and the
   // cab-door livery at x≈1190–1345. A phone gets 608px of that — and the
   // livery is the reason this shot exists, so the window takes the door and
   // the worker beside it and lets the pallet go.
-  { src: "CWH", at: 84.0, dur: 2.8, fix: "br", mx: 980, shot: "Al Adrak-liveried truck; telehandler swings a pallet aboard", why: "Replaces the staff line-up — the company's name in the scene, not over it" },
-  { src: "AHLI", at: 133.2, dur: 4.6, fix: "tr", mx: 560, shot: "Blue-hour lit HQ against mountains", why: "FINALE — sourced before the 138.2s logo animation the old cut ran into" },
+  { src: "CWH", at: 84.46, dur: 2.8, fix: "br", mx: 980, shot: "Al Adrak-liveried truck; telehandler swings a pallet aboard", why: "Replaces the staff line-up — the company's name in the scene, not over it" },
+  { src: "AHLI", at: 133.3, dur: 4.6, fix: "tr", mx: 560, shot: "Blue-hour lit HQ against mountains", why: "FINALE — sourced before the 138.2s logo animation the old cut ran into" },
 ];
 
 /** one look over five cameras: lifted floor, capped whites, +6% sat, warm shadows */
@@ -195,7 +195,10 @@ SHOTS.forEach((s, i) => {
     // pulldown, invisible. Only the one at the cut reads as a jerk.)
     const chain = ["setpts=PTS-STARTPTS", "fps=25", fix, GRADE, "scale=1920:1080:flags=lanczos", "setsar=1", "format=yuv420p"].filter(Boolean).join(",");
     const graph = `[0:v]${chain},split[w][m];${MOBILE}`;
-    run(["-ss", String(s.at), "-t", String(s.dur), "-i", SRC[s.src], "-filter_complex", graph, "-map", "[w]", ...ENC, w, "-map", "[mo]", ...ENC, m]);
+    const N = Math.round(s.dur * 25);
+    run(["-ss", String(s.at), "-t", String(s.dur + 0.2), "-i", SRC[s.src], "-filter_complex", graph,
+      "-map", "[w]", "-frames:v", String(N), ...ENC, w,
+      "-map", "[mo]", "-frames:v", String(N), ...ENC, m]);
   }
   rows.push({ i, t0: t, ...s });
   t += s.dur;
