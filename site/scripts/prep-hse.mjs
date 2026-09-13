@@ -57,6 +57,48 @@ for (const [src, out] of PICKS) {
   console.log(`photo  ${m.width}x${m.height} -> hse/${out}`);
 }
 
+/**
+ * Section photographs.
+ *
+ * The three section headings added on 12 Sep took their pictures from the
+ * training-centre gallery further down the same page, because every HSE
+ * photograph the company had supplied was already on it — so each one
+ * appeared twice. These four come from the production-facilities shoot
+ * instead (the same 5760x3840 professional set the hero is cut from), none
+ * of them used anywhere else on the site, each chosen for what its own
+ * heading is actually about:
+ *
+ *   leadership — a supervisor in a white helmet working the machine WITH the
+ *                man in the yellow one. "Led in person" is the whole claim.
+ *   controls   — a CNC router with its dust extraction running. The control
+ *                is part of the machine, not a notice taped beside it.
+ *   practice   — full face shield, respirator, gloves, coveralls, mid-task.
+ *                PPE is one of the six things, and this is it being worn.
+ *   partners   — a supervisor with a clipboard checking a racked store while
+ *                the trades work. Verification, which is what that section
+ *                is about.
+ */
+const SECTION = [
+  // the three heading pictures sit in a 4:3 box beside their text
+  ["AFW/ALADRAK_PLANT-95.jpg", "hse-leadership.jpg", 1400, 1050],
+  ["Carpentry/ALADRAK_PLANT-210.jpg", "hse-controls.jpg", 1400, 1050],
+  ["NRMG/ALADRAK_PLANT-224.jpg", "hse-practice.jpg", 1400, 1050],
+  // the trade-partners picture is a full-width band over two text columns, and
+  // its source is already 1.95:1, so a wide cut costs it almost nothing
+  ["Central Logistics/ALADRAK_PLANT-113.jpg", "hse-partners.jpg", 1800, 820],
+];
+{
+  const PLANT = "../Images/Adrak Corporate Images Folder-20260818T042650Z-1-002/Adrak Corporate Images Folder/Production Facilities brochure Photos";
+  for (const [src, out, w, h] of SECTION) {
+    const m = await sharp(`${PLANT}/${src}`).metadata();
+    await sharp(`${PLANT}/${src}`)
+      .resize(w, h, { fit: "cover", position: "attention", kernel: "lanczos3" })
+      .jpeg({ quality: 84, mozjpeg: true })
+      .toFile(`public/images/hse/${out}`);
+    console.log(`sect   ${m.width}x${m.height} -> hse/${out}`);
+  }
+}
+
 /* documents, verbatim */
 for (const [src, out] of [
   [`${HSE}/HSE POLICY.pdf`, "al-adrak-hse-policy.pdf"],

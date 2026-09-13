@@ -335,6 +335,21 @@ export default function HsePage() {
       {/* ===== trade partners & occupational health ===== */}
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
+          {/* A band across both columns. This section was two columns of close
+              text — the densest on the page and the only substantial one with
+              no picture at all. The photograph is 1.95:1 at source, so a wide
+              cut costs it almost nothing. */}
+          <Reveal className="mb-14 md:mb-16">
+            <div className="relative rounded-2xl overflow-hidden aspect-[1800/820] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={hse.subcontractors.img}
+                alt={hse.subcontractors.imgAlt}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          </Reveal>
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20">
             {[
               {
@@ -420,7 +435,10 @@ export default function HsePage() {
         <div className="shell py-24 md:py-32">
           <Reveal>
             <Kicker>Inside the training centre</Kicker>
-            <H2 className="max-w-2xl mb-14">Where it is taught before it is done</H2>
+            <H2 className="max-w-2xl">Where it is taught before it is done</H2>
+            <p className="text-ink/70 font-light leading-relaxed mt-6 mb-14 max-w-3xl text-[15px] md:text-base">
+              {hse.galleryIntro}
+            </p>
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {hse.gallery.map((g, i) => (
@@ -491,6 +509,15 @@ export default function HsePage() {
             <p className="text-ink/70 font-light leading-relaxed mt-6 max-w-3xl text-[15px]">
               {hse.certsNote}. Every document below is the current original —
               click to read it.
+            </p>
+            <p className="text-ink/70 font-light leading-relaxed mt-4 max-w-3xl text-[15px]">
+              The three standards cover different ground and are held together:
+              45001 for occupational health and safety, 14001 for environmental
+              management, 9001 for quality. The policies listed beneath them are
+              the documents those systems are actually run on — the life-saving
+              rules every person on site is evaluated against, and the road
+              safety, drug and alcohol, and smoke-free policies that apply to
+              Al Adrak staff and trade contractors alike.
             </p>
           </Reveal>
 

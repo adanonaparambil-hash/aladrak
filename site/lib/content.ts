@@ -706,8 +706,8 @@ export const hse = {
     img: asset("/images/hse/hse-induction.jpg"),
   },
   practice: {
-    img: asset("/images/hse/hse-toolbox.jpg"),
-    imgAlt: "A weekly toolbox talk at the workface",
+    img: asset("/images/hse/hse-practice.jpg"),
+    imgAlt: "Face shield, respirator, gloves and coveralls — PPE mid-task, not on a hook",
   },
   pillars: [
     { no: "01", title: "Induction before the first shift", desc: "Every worker and every subcontractor is inducted before they set foot on a site — the hazards of that specific project, the rules that apply, and who to stop work with." },
@@ -717,9 +717,14 @@ export const hse = {
     { no: "05", title: "Emergency response", desc: "Fire drills, extinguisher handling and first-aid training, so the response to an incident is practised rather than improvised." },
     { no: "06", title: "Environmental care", desc: "Waste segregation, dust and noise control, and protection of the ground and water around every site — the commitments behind the ISO 14001 certification." },
   ],
+  galleryIntro: "Everything below is the company's own training centre at Halban, photographed as it is used: the hall where inductions and supervisor sessions run, the equipment wall each trade is issued from, the notice board in the languages the workforce actually reads, and the scaffold rig standing in the yard for working-at-height practice. Nothing here is a stock photograph and nothing is a mock-up.",
   gallery: [
     { src: asset("/images/hse/hse-ppe-wall.jpg"), label: "The PPE wall — what each trade is issued, and what good condition looks like" },
-    { src: asset("/images/hse/hse-toolbox.jpg"), label: "A weekly toolbox talk at the workface" },
+    /* Called "a toolbox talk at the workface" until 13 Sep 2026, which is not
+       what it shows: it is the training hall, the same room as the frame
+       below it. Toolbox talks happen at the work face and there is no
+       photograph of one in the library. */
+    { src: asset("/images/hse/hse-toolbox.jpg"), label: "A safety briefing in the training hall, before the shift goes out" },
     { src: asset("/images/hse/hse-classroom.jpg"), label: "A supervisor session in the training hall" },
     { src: asset("/images/hse/hse-noticeboard.jpg"), label: "Safety notices in the languages the workforce speaks" },
     { src: asset("/images/hse/hse-scaffold.jpg"), label: "The scaffold rig used for working-at-height training" },
@@ -735,16 +740,18 @@ export const hse = {
   ],
   certsNote: "Certified since 2018 · FAHSS, an IAS-accredited certification body · current certificates valid to 16 June 2028",
 
-  /* The three section images below are re-used from the training-centre
-     gallery further down this page: every HSE photograph the company has
-     supplied is already on the page, so a header image is necessarily a
-     second appearance. Each is matched to its own heading — the scaffold rig
-     is a physical control, the toolbox talk is one of the six things, the
-     briefing is safety being led in person — and swapping in new photography
-     is a one-line change per section. */
+  /* The heading pictures (13 Sep 2026).
+
+     They used to be re-used from the training-centre gallery further down
+     this same page — every HSE photograph the company had supplied was
+     already on it, so each heading picture was a second appearance and the
+     page showed three photographs twice. These four come from the
+     production-facilities shoot instead, none of them used anywhere else on
+     the site, and each shows what its own heading is about rather than
+     something merely adjacent to it. See scripts/prep-hse.mjs. */
   culture: {
-    img: asset("/images/hse/hse-ppe-brief.jpg"),
-    imgAlt: "A supervisor briefing the crew in person before the shift",
+    img: asset("/images/hse/hse-leadership.jpg"),
+    imgAlt: "A supervisor in a white helmet working the machine alongside the man operating it",
     intro: "Our safety framework engages every tier of the organization — senior project leadership, site incharges and trade supervisors, and the frontline workforce — under an Incident and Injury-Free (IIF) commitment that leadership drives in person.",
     items: [
       { title: "Executive engagement", desc: "Senior management participate directly in site safety walks, high-risk work reviews and safety leadership workshops — the IIF commitment is led from the top, not delegated." },
@@ -755,8 +762,8 @@ export const hse = {
   },
 
   operations: {
-    img: asset("/images/hse/hse-scaffold.jpg"),
-    imgAlt: "The scaffold rig — a physical control practised on the ground",
+    img: asset("/images/hse/hse-controls.jpg"),
+    imgAlt: "A CNC router running with its dust extraction — the control is part of the machine",
     intro: "Safety controls are embedded directly into site execution strategy, method statements (RAMS) and daily workflows — hazard identification tools, a strengthened high-risk Permit to Work system, and specialized programs for the work that can hurt people.",
     highRisk: ["Work at height", "Heavy & critical lifting", "Deep excavation & trenching", "Confined space entry", "Electrical safety", "Hot works", "Temporary works stability"],
     items: [
@@ -788,7 +795,13 @@ export const hse = {
   ],
 
   subcontractors: {
-    intro: "Specialized trade partners perform significant volumes of site execution, so every subcontractor is integrated completely into the Al Adrak HSE management system — same rules, same training, same boundaries.",
+    /* A band over both columns of this section, which was ~180 words of
+       close text with nothing to look at. A supervisor with a clipboard
+       checking a racked store while the trades work: verification, which is
+       what the column beneath it is about. */
+    img: asset("/images/hse/hse-partners.jpg"),
+    imgAlt: "A supervisor with a clipboard checking a racked store while trade crews work behind him",
+    intro: "Specialized trade partners perform significant volumes of site execution, so every subcontractor is integrated completely into the Al Adrak HSE management system — same rules, same training, same boundaries. A trade contractor on an Al Adrak site is held to the standard the company holds itself to, and is inducted, evaluated and monitored the same way.",
     items: [
       { title: "Pre-qualification & onboarding", desc: "Strict pre-qualification on historical HSE performance, safety management capability and equipment maintenance records." },
       { title: "Heat stress management", desc: "Thermal Work Limit monitoring and structured summer protocols — work-rest regimes, shaded break areas and hydration stations — enforced across all trades." },
@@ -819,7 +832,7 @@ export const hse = {
 
   objectives: {
     year: "2026",
-    intro: "Set by top management, signed by the Chief Executive Director, and reviewed quarterly — the 2026 objectives commit every site to measurable targets.",
+    intro: "Set by top management, signed by the Chief Executive Director, and reviewed quarterly — the 2026 objectives commit every site to measurable targets. They are deliberately of two kinds: lagging numbers, which count what has already happened, and leading ones, which count the work done to stop it happening at all. The Corporate HSE Executive Committee reviews both monthly, alongside high-potential incidents — the near misses that could have been serious — and the lessons taken from them.",
     kpis: [
       { value: "0", label: "Work fatalities — the only acceptable number" },
       { value: "0", label: "Lost-time injuries" },
