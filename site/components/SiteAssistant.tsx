@@ -173,18 +173,23 @@ export default function SiteAssistant() {
           id={panelId}
           role="dialog"
           aria-label="Ask Adrak — search this site"
-          className="chat-in fixed bottom-44 right-6 z-[95] w-[min(25rem,calc(100vw-3rem))] max-h-[min(34rem,calc(100vh-14rem))] flex flex-col rounded-3xl bg-cream border border-ink/12 shadow-[0_40px_120px_rgba(10,15,12,0.35)] overflow-hidden isolate"
+          className="chat-in fixed bottom-44 right-6 z-[95] w-[min(25rem,calc(100vw-3rem))] max-h-[min(34rem,calc(100vh-14rem))] flex flex-col rounded-3xl bg-[#fbf8f0] border border-ink/10 shadow-[0_40px_120px_rgba(10,15,12,0.35)] overflow-hidden isolate"
         >
-          <div className="px-5 py-4 bg-parchment border-b border-ink/10 flex items-start justify-between gap-3 flex-none">
+          {/* A coloured crown on a light body, rather than light on light.
+              All-cream read as a blank form; the green band with its gold rule
+              gives the panel a brand and a top, and leaves the conversation
+              underneath the lightest thing in it. */}
+          <div className="relative px-5 py-4 bg-gradient-to-br from-forest via-brand to-forest text-cream flex items-start justify-between gap-3 flex-none">
+            <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             <div className="flex items-center gap-3">
-              <span className="grid place-items-center w-9 h-9 rounded-full bg-brand/10 border border-brand/35 flex-none">
-                <span className="w-2 h-2 rounded-full bg-brand chat-dot" aria-hidden />
+              <span className="grid place-items-center w-9 h-9 rounded-full bg-cream/15 border border-gold/60 flex-none">
+                <span className="w-2 h-2 rounded-full bg-gold chat-dot" aria-hidden />
               </span>
               <div>
-                <p className="font-display text-lg text-forest leading-none">Ask Adrak</p>
+                <p className="font-display text-lg text-cream leading-none">Ask Adrak</p>
                 {/* Say what it is. A visitor who thinks this is ChatGPT will ask
                     it to write them a poem and conclude the site is broken. */}
-                <p className="label label-xs text-ink/45 mt-1.5 leading-relaxed">Searches this website</p>
+                <p className="label label-xs text-sand mt-1.5 leading-relaxed">Searches this website</p>
               </div>
             </div>
             {/* Close only. "Start again" used to sit beside it, which put the
@@ -195,7 +200,7 @@ export default function SiteAssistant() {
               type="button"
               onClick={() => { setOpen(false); opener.current?.focus(); }}
               aria-label="Close"
-              className="w-8 h-8 flex-none rounded-full border border-ink/15 text-ink/55 hover:border-brand hover:text-brand transition-colors grid place-items-center"
+              className="w-8 h-8 flex-none rounded-full border border-cream/30 text-cream/80 hover:border-gold hover:text-gold hover:bg-ink/20 transition-colors grid place-items-center"
             >
               <svg width="11" height="11" viewBox="0 0 14 14" aria-hidden>
                 <path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -221,7 +226,7 @@ export default function SiteAssistant() {
                         type="button"
                         onClick={() => ask(s)}
                         style={{ animationDelay: `${i * 45}ms` }}
-                        className="chat-in text-left text-[13px] font-light px-3.5 py-2 rounded-full bg-white border border-ink/12 text-ink/70 hover:border-brand hover:text-brand hover:-translate-y-0.5 transition-all duration-300"
+                        className="chat-in text-left text-[13px] font-light px-3.5 py-2 rounded-full bg-brand/[0.07] border border-brand/25 text-brand hover:bg-brand hover:border-brand hover:text-cream hover:-translate-y-0.5 transition-all duration-300"
                       >
                         {s}
                       </button>
@@ -234,17 +239,20 @@ export default function SiteAssistant() {
                 t.who === "you" ? (
                   <p
                     key={i}
-                    className="chat-in ml-auto max-w-[85%] w-fit rounded-2xl rounded-br-sm bg-forest text-cream px-4 py-2.5 text-[14px] font-light"
+                    className="chat-in ml-auto max-w-[85%] w-fit rounded-2xl rounded-br-sm bg-gradient-to-br from-brand to-forest text-cream px-4 py-2.5 text-[14px] font-light shadow-[0_4px_16px_rgba(16,39,26,0.22)]"
                   >
                     {t.text}
                   </p>
                 ) : (
                   <div key={i} className="chat-in flex gap-2.5 max-w-[95%]">
-                    <span className="grid place-items-center w-7 h-7 rounded-full bg-brand/10 border border-brand/30 flex-none mt-0.5" aria-hidden>
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    <span className="grid place-items-center w-7 h-7 rounded-full bg-gradient-to-br from-gold to-sand border border-gold/50 flex-none mt-0.5" aria-hidden>
+                      <span className="w-1.5 h-1.5 rounded-full bg-forest" />
                     </span>
                     <div className="min-w-0">
-                      <div className="rounded-2xl rounded-bl-sm bg-white border border-ink/10 shadow-[0_1px_10px_rgba(10,15,12,0.05)] px-4 py-3">
+                      {/* The answer sits on white with a green spine down its
+                          left edge — enough colour to separate it from the
+                          question above without another filled bubble. */}
+                      <div className="rounded-2xl rounded-bl-sm bg-white border border-ink/10 border-l-[3px] border-l-brand shadow-[0_2px_14px_rgba(10,15,12,0.07)] px-4 py-3">
                         <p className="text-ink/80 font-light text-[14px] leading-relaxed">{t.text}</p>
                         {t.hits[0] && (
                           <a
@@ -266,7 +274,7 @@ export default function SiteAssistant() {
                               key={h.entry.id}
                               href={h.entry.href}
                               onClick={() => setOpen(false)}
-                              className="text-[12px] font-light px-3 py-1.5 rounded-full bg-white border border-ink/12 text-ink/60 hover:border-brand hover:text-brand transition-colors"
+                              className="text-[12px] font-light px-3 py-1.5 rounded-full bg-gold/10 border border-gold/40 text-ink/70 hover:bg-gold hover:border-gold hover:text-ink transition-colors"
                             >
                               {h.entry.title}
                             </a>
@@ -280,13 +288,13 @@ export default function SiteAssistant() {
 
               {thinking && (
                 <div className="chat-in flex gap-2.5" aria-live="polite" aria-label="Searching">
-                  <span className="grid place-items-center w-7 h-7 rounded-full bg-brand/10 border border-brand/30 flex-none mt-0.5" aria-hidden>
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                  <span className="grid place-items-center w-7 h-7 rounded-full bg-gradient-to-br from-gold to-sand border border-gold/50 flex-none mt-0.5" aria-hidden>
+                    <span className="w-1.5 h-1.5 rounded-full bg-forest" />
                   </span>
-                  <div className="rounded-2xl rounded-bl-sm bg-white border border-ink/10 px-4 py-3.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-ink/40 chat-dot" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-ink/40 chat-dot [animation-delay:0.18s]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-ink/40 chat-dot [animation-delay:0.36s]" />
+                  <div className="rounded-2xl rounded-bl-sm bg-white border border-ink/10 border-l-[3px] border-l-brand px-4 py-3.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand chat-dot" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand chat-dot [animation-delay:0.18s]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand chat-dot [animation-delay:0.36s]" />
                   </div>
                 </div>
               )}
@@ -311,7 +319,7 @@ export default function SiteAssistant() {
 
           <form
             onSubmit={(e) => { e.preventDefault(); ask(q); }}
-            className="p-3 bg-parchment border-t border-ink/10 flex items-center gap-2 flex-none"
+            className="p-3 bg-parchment border-t border-gold/30 flex items-center gap-2 flex-none"
           >
             {/* "Start again", down here where the conversation ends. It keeps
                 its place in the row rather than appearing and shifting the
@@ -323,7 +331,7 @@ export default function SiteAssistant() {
               disabled={turns.length === 0}
               aria-label="Start again"
               title="Start again"
-              className="flex-none w-9 h-9 rounded-full border border-ink/15 text-ink/50 hover:border-brand hover:text-brand transition-colors grid place-items-center disabled:opacity-0 disabled:pointer-events-none"
+              className="flex-none w-9 h-9 rounded-full bg-white border border-brand/30 text-brand/70 hover:bg-brand hover:border-brand hover:text-cream transition-colors grid place-items-center disabled:opacity-0 disabled:pointer-events-none"
             >
               <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
                 <path d="M12 7a5 5 0 1 1-1.6-3.7M12 1.5V5H8.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -335,13 +343,13 @@ export default function SiteAssistant() {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Ask a question…"
               aria-label="Ask a question about Al Adrak"
-              className="flex-1 min-w-0 rounded-full bg-white border border-ink/15 text-ink placeholder-ink/35 px-4 py-2.5 text-[14px] font-light outline-none focus:border-brand transition-colors"
+              className="flex-1 min-w-0 rounded-full bg-white border border-ink/12 text-ink placeholder-ink/35 px-4 py-2.5 text-[14px] font-light outline-none focus:border-brand focus:shadow-[0_0_0_3px_rgba(61,115,69,0.14)] transition-all"
             />
             <button
               type="submit"
               disabled={!q.trim() || thinking}
               aria-label="Send"
-              className="group/send flex-none w-11 h-11 rounded-full bg-forest text-cream grid place-items-center hover:bg-brand transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed enabled:hover:scale-105"
+              className="group/send flex-none w-11 h-11 rounded-full bg-gradient-to-br from-gold to-[#b2823a] text-ink grid place-items-center shadow-[0_4px_14px_rgba(201,155,69,0.4)] hover:from-brand hover:to-forest hover:text-cream transition-all duration-300 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed enabled:hover:scale-105"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden className="transition-transform duration-300 group-enabled/send:group-hover/send:translate-x-0.5">
                 <path d="M1 8h12M8 3l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
