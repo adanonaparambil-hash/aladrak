@@ -126,6 +126,9 @@ export default function HsePage() {
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
                 {hse.culture.intro}
               </p>
+              <p className="text-ink/70 font-light leading-relaxed mt-4 text-[15px] md:text-base">
+                {hse.culture.note}
+              </p>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
@@ -211,6 +214,21 @@ export default function HsePage() {
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
                 {hse.operations.intro}
               </p>
+              {/* The seven high-risk activities used to sit in a band under this
+                  row, which left the column beside the photograph holding two
+                  lines of text and a lot of cream. They belong here anyway: the
+                  sentence above ends on "the work that can hurt people", and
+                  this is that work, named. */}
+              <ul className="flex flex-wrap gap-2.5 mt-7">
+                {hse.operations.highRisk.map((h) => (
+                  <li
+                    key={h}
+                    className="px-5 py-2.5 bg-white border border-ink/15 rounded-full label label-xs text-ink/75"
+                  >
+                    {h}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
@@ -224,19 +242,7 @@ export default function HsePage() {
               </div>
             </Reveal>
           </div>
-          <Reveal className="mt-10">
-            <div className="flex flex-wrap gap-3">
-              {hse.operations.highRisk.map((h) => (
-                <span
-                  key={h}
-                  className="px-5 py-2.5 bg-white border border-ink/15 rounded-full label label-xs text-ink/75"
-                >
-                  {h}
-                </span>
-              ))}
-            </div>
-          </Reveal>
-          <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-12">
+          <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-14">
             {hse.operations.items.map((it, i) => (
               <Reveal key={it.title} delay={i * 0.07}>
                 <div className="h-full border-t border-ink/15 pt-6">
@@ -301,6 +307,9 @@ export default function HsePage() {
             <Reveal className="lg:col-span-7">
               <Kicker>In practice</Kicker>
               <H2>Six things that happen on every project</H2>
+              <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
+                {hse.practice.intro}
+              </p>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
@@ -335,12 +344,14 @@ export default function HsePage() {
       {/* ===== trade partners & occupational health ===== */}
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
-          {/* A band across both columns. This section was two columns of close
-              text — the densest on the page and the only substantial one with
-              no picture at all. The photograph is 1.95:1 at source, so a wide
-              cut costs it almost nothing. */}
+          {/* The photograph carries the words rather than sitting above them.
+              As a plain full-width picture it was a large silent rectangle;
+              behind type it says what the two columns underneath have in
+              common, which neither column states because each covers only its
+              own half. The scrim runs bottom-up so the supervisor and the
+              racking stay readable while the text sits on the lower third. */}
           <Reveal className="mb-14 md:mb-16">
-            <div className="relative rounded-2xl overflow-hidden aspect-[1800/820] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+            <div className="relative rounded-2xl overflow-hidden border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)] min-h-[clamp(340px,48dvh,520px)] flex items-end">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={hse.subcontractors.img}
@@ -348,6 +359,14 @@ export default function HsePage() {
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/92 via-ink/60 to-ink/10" />
+              <div className="relative p-7 md:p-12 max-w-3xl">
+                <Kicker onDark>{hse.subcontractors.bandKicker}</Kicker>
+                <H2 onDark>{hse.subcontractors.bandTitle}</H2>
+                <p className="text-cream/80 font-light leading-relaxed mt-5 text-[15px] md:text-base">
+                  {hse.subcontractors.bandLine}
+                </p>
+              </div>
             </div>
           </Reveal>
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20">

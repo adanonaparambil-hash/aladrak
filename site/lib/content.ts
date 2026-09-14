@@ -706,6 +706,7 @@ export const hse = {
     img: asset("/images/hse/hse-induction.jpg"),
   },
   practice: {
+    intro: "None of the six is optional and none is project-specific. Whatever the job — a hospital, a highway, a data centre, a workers' village — they run the same way and in the same order: nobody sets foot on a site before the first of them, and the last one is still running as the site is handed back.",
     img: asset("/images/hse/hse-practice.jpg"),
     imgAlt: "Face shield, respirator, gloves and coveralls — PPE mid-task, not on a hook",
   },
@@ -753,6 +754,7 @@ export const hse = {
     img: asset("/images/hse/hse-leadership.jpg"),
     imgAlt: "A supervisor in a white helmet working the machine alongside the man operating it",
     intro: "Our safety framework engages every tier of the organization — senior project leadership, site incharges and trade supervisors, and the frontline workforce — under an Incident and Injury-Free (IIF) commitment that leadership drives in person.",
+    note: "The distinction is not a formality. A rule that arrives as a circular gets complied with; a rule that arrives with the person who set it gets believed. The four structures below are simply where that contact is made — in the committee room, on the monthly walk, and in the work zone itself.",
     items: [
       { title: "Executive engagement", desc: "Senior management participate directly in site safety walks, high-risk work reviews and safety leadership workshops — the IIF commitment is led from the top, not delegated." },
       { title: "Corporate HSE Executive Committee", desc: "Chaired by top management: monthly reviews of company-wide leading and lagging KPIs, high-potential incidents and systemic lessons learned, alongside monthly executive site inspections." },
@@ -801,6 +803,9 @@ export const hse = {
        what the column beneath it is about. */
     img: asset("/images/hse/hse-partners.jpg"),
     imgAlt: "A supervisor with a clipboard checking a racked store while trade crews work behind him",
+    bandKicker: "Everyone on site",
+    bandTitle: "One system, whoever the employer",
+    bandLine: "Al Adrak's own crews and the trade partners working alongside them answer to a single HSE management system and a single medical standard. The two columns below are how that is enforced — before anyone is mobilised, and for as long as they stay on site.",
     intro: "Specialized trade partners perform significant volumes of site execution, so every subcontractor is integrated completely into the Al Adrak HSE management system — same rules, same training, same boundaries. A trade contractor on an Al Adrak site is held to the standard the company holds itself to, and is inducted, evaluated and monitored the same way.",
     items: [
       { title: "Pre-qualification & onboarding", desc: "Strict pre-qualification on historical HSE performance, safety management capability and equipment maintenance records." },
