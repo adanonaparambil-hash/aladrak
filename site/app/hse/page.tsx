@@ -120,7 +120,7 @@ export default function HsePage() {
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
-            <Reveal className="lg:col-span-7">
+            <Reveal className="lg:col-span-8">
               <Kicker>Leadership &amp; culture</Kicker>
               <H2>Safety is led in person, not delegated</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
@@ -136,7 +136,7 @@ export default function HsePage() {
                 {hse.culture.items.map((it) => (
                   <div
                     key={it.title}
-                    className="h-full rounded-2xl bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-6 md:p-7"
+                    className="h-full rounded-2xl bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-5 md:p-6"
                   >
                     <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
                       {it.title}
@@ -148,11 +148,12 @@ export default function HsePage() {
                 ))}
               </div>
             </Reveal>
-            <Reveal delay={0.1} className="lg:col-span-5">
-              {/* No fixed ratio at lg and up: the picture takes the height of
-                  the column beside it, so neither can leave a gap however wide
-                  the screen gets. Below lg the columns stack and 4:3 stands. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+            <Reveal delay={0.1} className="lg:col-span-4">
+              {/* Four columns, not five. Stretching the picture to the text beside
+                  it removed the gap but made it enormous — 740x806 at 1920. A
+                  narrower track shrinks it and widens the text, which shortens
+                  the column, so the picture comes down on both axes at once. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.culture.img}
@@ -215,7 +216,7 @@ export default function HsePage() {
               breathing space; the max-w-3xl measures are gone because the
               column now sets the line length. */}
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
-            <Reveal className="lg:col-span-7">
+            <Reveal className="lg:col-span-8">
               <Kicker>On site</Kicker>
               <H2>Controls built into the work, not around it</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
@@ -251,11 +252,12 @@ export default function HsePage() {
                 ))}
               </div>
             </Reveal>
-            <Reveal delay={0.1} className="lg:col-span-5">
-              {/* No fixed ratio at lg and up: the picture takes the height of
-                  the column beside it, so neither can leave a gap however wide
-                  the screen gets. Below lg the columns stack and 4:3 stands. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+            <Reveal delay={0.1} className="lg:col-span-4">
+              {/* Four columns, not five. Stretching the picture to the text beside
+                  it removed the gap but made it enormous — 740x806 at 1920. A
+                  narrower track shrinks it and widens the text, which shortens
+                  the column, so the picture comes down on both axes at once. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.operations.img}
@@ -273,7 +275,7 @@ export default function HsePage() {
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
-            <Reveal className="lg:col-span-6">
+            <Reveal className="lg:col-span-5">
               {/* No fixed ratio at lg and up — it takes the height of the text
                   beside it, so neither column can leave a gap. */}
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[280px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
@@ -285,7 +287,7 @@ export default function HsePage() {
                 />
               </div>
             </Reveal>
-            <Reveal delay={0.1} className="lg:col-span-6">
+            <Reveal delay={0.1} className="lg:col-span-7">
               <H2>{hse.centre.title}</H2>
               <p className="text-ink/75 font-light leading-relaxed mt-6 text-[15px] md:text-base">
                 {hse.centre.body}
@@ -295,7 +297,7 @@ export default function HsePage() {
               </blockquote>
               {/* How the teaching actually reaches the workforce — moved up out
                   of a band underneath, where it left this column short. */}
-              <div className="mt-9 space-y-6">
+              <div className="grid sm:grid-cols-3 gap-x-7 gap-y-6 mt-9">
                 {hse.trainingExtras.map((it) => (
                   <div key={it.title} className="border-t border-ink/15 pt-5">
                     <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
@@ -316,7 +318,7 @@ export default function HsePage() {
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
-            <Reveal className="lg:col-span-7">
+            <Reveal className="lg:col-span-8">
               <Kicker>In practice</Kicker>
               <H2>Six things that happen on every project</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
@@ -326,7 +328,7 @@ export default function HsePage() {
                   against a photograph this size was the emptiest row on the
                   page; six numbered items fill the column and give the
                   photograph a height worth having. */}
-              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-9 mt-10">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-9 mt-10">
                 {hse.pillars.map((p) => (
                   <div key={p.no} className="border-t border-ink/15 pt-5">
                     <span className="label label-xs text-brand">{p.no}</span>
@@ -340,11 +342,12 @@ export default function HsePage() {
                 ))}
               </div>
             </Reveal>
-            <Reveal delay={0.1} className="lg:col-span-5">
-              {/* No fixed ratio at lg and up: the picture takes the height of
-                  the column beside it, so neither can leave a gap however wide
-                  the screen gets. Below lg the columns stack and 4:3 stands. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+            <Reveal delay={0.1} className="lg:col-span-4">
+              {/* Four columns, not five. Stretching the picture to the text beside
+                  it removed the gap but made it enormous — 740x806 at 1920. A
+                  narrower track shrinks it and widens the text, which shortens
+                  the column, so the picture comes down on both axes at once. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.practice.img}
