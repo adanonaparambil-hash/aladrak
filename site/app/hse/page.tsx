@@ -119,7 +119,7 @@ export default function HsePage() {
       {/* ===== leadership & culture ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-7">
               <Kicker>Leadership &amp; culture</Kicker>
               <H2>Safety is led in person, not delegated</H2>
@@ -129,9 +129,30 @@ export default function HsePage() {
               <p className="text-ink/70 font-light leading-relaxed mt-4 text-[15px] md:text-base">
                 {hse.culture.note}
               </p>
+              {/* The four structures move up beside the photograph. They used to
+                  sit in a band underneath, which left this column holding two
+                  paragraphs against a picture half a metre tall. */}
+              <div className="grid sm:grid-cols-2 gap-5 md:gap-6 mt-10">
+                {hse.culture.items.map((it) => (
+                  <div
+                    key={it.title}
+                    className="h-full rounded-2xl bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-6 md:p-7"
+                  >
+                    <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
+                      {it.title}
+                    </h3>
+                    <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
+                      {it.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              {/* No fixed ratio at lg and up: the picture takes the height of
+                  the column beside it, so neither can leave a gap however wide
+                  the screen gets. Below lg the columns stack and 4:3 stands. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.culture.img}
@@ -141,20 +162,6 @@ export default function HsePage() {
                 />
               </div>
             </Reveal>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-14">
-            {hse.culture.items.map((it, i) => (
-              <Reveal key={it.title} delay={(i % 2) * 0.07}>
-                <div className="h-full rounded-2xl bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-7 md:p-8">
-                  <h3 className="font-display text-xl md:text-2xl text-forest leading-snug">
-                    {it.title}
-                  </h3>
-                  <p className="text-ink/70 font-light leading-relaxed mt-3.5 text-[15px]">
-                    {it.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
@@ -207,7 +214,7 @@ export default function HsePage() {
               right half of the row empty, which read as a gap rather than as
               breathing space; the max-w-3xl measures are gone because the
               column now sets the line length. */}
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-7">
               <Kicker>On site</Kicker>
               <H2>Controls built into the work, not around it</H2>
@@ -229,9 +236,26 @@ export default function HsePage() {
                   </li>
                 ))}
               </ul>
+              {/* PTW and the pre-task assessments move up beside the picture,
+                  for the same reason the high-risk list did. */}
+              <div className="grid sm:grid-cols-2 gap-6 md:gap-8 mt-10">
+                {hse.operations.items.map((it) => (
+                  <div key={it.title} className="h-full border-t border-ink/15 pt-5">
+                    <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
+                      {it.title}
+                    </h3>
+                    <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
+                      {it.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              {/* No fixed ratio at lg and up: the picture takes the height of
+                  the column beside it, so neither can leave a gap however wide
+                  the screen gets. Below lg the columns stack and 4:3 stands. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.operations.img}
@@ -242,29 +266,17 @@ export default function HsePage() {
               </div>
             </Reveal>
           </div>
-          <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-14">
-            {hse.operations.items.map((it, i) => (
-              <Reveal key={it.title} delay={i * 0.07}>
-                <div className="h-full border-t border-ink/15 pt-6">
-                  <h3 className="font-display text-xl md:text-2xl text-forest leading-snug">
-                    {it.title}
-                  </h3>
-                  <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
-                    {it.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* ===== the training centre ===== */}
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              {/* No fixed ratio at lg and up — it takes the height of the text
+                  beside it, so neither column can leave a gap. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[280px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.centre.img}
@@ -281,21 +293,21 @@ export default function HsePage() {
               <blockquote className="font-serifit italic text-ink/70 text-lg md:text-xl leading-snug mt-8 pl-5 border-l-2 border-gold">
                 {hse.trainingQuote}
               </blockquote>
+              {/* How the teaching actually reaches the workforce — moved up out
+                  of a band underneath, where it left this column short. */}
+              <div className="mt-9 space-y-6">
+                {hse.trainingExtras.map((it) => (
+                  <div key={it.title} className="border-t border-ink/15 pt-5">
+                    <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
+                      {it.title}
+                    </h3>
+                    <p className="text-ink/70 font-light leading-relaxed mt-2.5 text-[15px]">
+                      {it.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </Reveal>
-          </div>
-          <div className="grid md:grid-cols-3 gap-x-10 gap-y-10 mt-16">
-            {hse.trainingExtras.map((it, i) => (
-              <Reveal key={it.title} delay={i * 0.06}>
-                <div className="border-t border-ink/15 pt-6">
-                  <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
-                    {it.title}
-                  </h3>
-                  <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
-                    {it.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
@@ -303,16 +315,36 @@ export default function HsePage() {
       {/* ===== in practice ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-7">
               <Kicker>In practice</Kicker>
               <H2>Six things that happen on every project</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
                 {hse.practice.intro}
               </p>
+              {/* All six move up beside the picture. A kicker and a heading
+                  against a photograph this size was the emptiest row on the
+                  page; six numbered items fill the column and give the
+                  photograph a height worth having. */}
+              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-9 mt-10">
+                {hse.pillars.map((p) => (
+                  <div key={p.no} className="border-t border-ink/15 pt-5">
+                    <span className="label label-xs text-brand">{p.no}</span>
+                    <h3 className="font-display text-lg md:text-xl text-forest mt-2.5 leading-snug">
+                      {p.title}
+                    </h3>
+                    <p className="text-ink/70 font-light leading-relaxed mt-2.5 text-[15px]">
+                      {p.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-5">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              {/* No fixed ratio at lg and up: the picture takes the height of
+                  the column beside it, so neither can leave a gap however wide
+                  the screen gets. Below lg the columns stack and 4:3 stands. */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[260px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.practice.img}
@@ -322,21 +354,6 @@ export default function HsePage() {
                 />
               </div>
             </Reveal>
-          </div>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-12 mt-16">
-            {hse.pillars.map((p, i) => (
-              <Reveal key={p.no} delay={i * 0.05}>
-                <div className="border-t border-ink/15 pt-6">
-                  <span className="label label-xs text-brand">{p.no}</span>
-                  <h3 className="font-display text-xl md:text-2xl text-forest mt-3 leading-snug">
-                    {p.title}
-                  </h3>
-                  <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
-                    {p.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
@@ -417,16 +434,15 @@ export default function HsePage() {
       {/* ===== Wellness Tracking ===== */}
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <Reveal className="lg:col-span-5">
-              <Kicker>{hse.wellness.kicker}</Kicker>
-              <H2>{hse.wellness.title}</H2>
-              <p className="text-ink/75 font-light leading-relaxed mt-6 text-[15px] md:text-base">
-                {hse.wellness.body}
-              </p>
-            </Reveal>
-            <Reveal delay={0.1} className="lg:col-span-7">
-              <div className="grid grid-cols-2 gap-4 md:gap-5">
+          <Reveal>
+            <Kicker>{hse.wellness.kicker}</Kicker>
+            <H2 className="max-w-3xl">{hse.wellness.title}</H2>
+            <p className="text-ink/75 font-light leading-relaxed mt-6 max-w-3xl text-[15px] md:text-base">
+              {hse.wellness.body}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1} className="mt-12 md:mt-14">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
                 {hse.wellness.photos.map((ph) => (
                   <figure key={ph.src} className="group">
                     <div className="relative rounded-2xl overflow-hidden aspect-[3/2] border border-ink/10 shadow-[0_6px_24px_rgba(10,15,12,0.10)]">
@@ -444,8 +460,7 @@ export default function HsePage() {
                   </figure>
                 ))}
               </div>
-            </Reveal>
-          </div>
+          </Reveal>
         </div>
       </section>
 
