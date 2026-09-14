@@ -198,18 +198,21 @@ body {
  * wrong for a conversation: with 2,500px of answers in a 400px window there
  * was nothing on screen to say more existed, and nothing to drag. This keeps
  * the bar but makes it slim and in-palette, so it reads as part of the panel.
+ *
+ * Ink, not gold: the panel is cream now, and a gold thumb on cream was barely
+ * there — the one thing a scrollbar cannot afford to be.
  */
 .chat-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(201, 155, 69, 0.45) transparent;
+  scrollbar-color: rgba(10, 15, 12, 0.22) transparent;
 }
 .chat-scroll::-webkit-scrollbar { width: 7px; }
 .chat-scroll::-webkit-scrollbar-track { background: transparent; }
 .chat-scroll::-webkit-scrollbar-thumb {
-  background: rgba(201, 155, 69, 0.4);
+  background: rgba(10, 15, 12, 0.2);
   border-radius: 99px;
 }
-.chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(201, 155, 69, 0.7); }
+.chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(61, 115, 69, 0.55); }
 
 /* a message arriving */
 @keyframes chat-in {

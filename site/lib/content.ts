@@ -382,8 +382,10 @@ export const leadership = {
     { name: "Anoop Das", role: "General Manager — Design & Build", img: asset("/images/team/roster/anoop.jpg") },
     { name: "Visakh U B", role: "General Manager — Project Management & Controls", img: asset("/images/team/roster/visakh.jpg") },
     { name: "Gnanasekaran T", role: "General Manager — Production & Sales", img: asset("/images/team/roster/gnanasekaran.jpg") },
-    { name: "Kausthubh Rai", role: "General Manager — QA/QC & Training", img: asset("/images/team/roster/kausthubh.jpg") },
+    /* Iman closes the second row and Kausthubh opens the third — the two
+       simply trade places; nobody else moves. */
     { name: "Iman Al Shaafari", role: "General Manager — Finance & Accounts", img: asset("/images/team/roster/iman.jpg") },
+    { name: "Kausthubh Rai", role: "General Manager — QA/QC & Training", img: asset("/images/team/roster/kausthubh.jpg") },
     { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: null },
     { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
     { name: "Nauf Al Bulushi", role: "Deputy General Manager — Projects", img: asset("/images/team/roster/nauf.jpg") },
@@ -522,32 +524,43 @@ export type GroupCompany = {
   choose?: HotelProperty[];
 };
 
+/**
+ * The group, in the order the business asked for: the core construction
+ * company first, then real estate, then the rest of construction, facilities
+ * and ventures, industry, consultancy, hospitality, healthcare, food and
+ * finally education. It was alphabetical-by-accident before, which opened the
+ * wall on a hospital and buried the contracting arm two rows down.
+ */
 export const groupCompanies: GroupCompany[] = [
-  { name: "AdLife Hospital", img: asset("/images/group/adlife.jpg"), url: "https://www.adlifeoman.com" },
-  /* One hotel tile, not two. It used to link straight to
+  /* construction — the core business */
+  { name: "Adrak India", img: asset("/images/group/india.jpg") },
+  /* real estate */
+  { name: "Adrak Developers", img: asset("/images/group/developers.jpg"), url: "https://www.haialnaseem.com" },
+  { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
+  { name: "Adrak Builders", img: asset("/images/group/builders.jpg") },
+  { name: "Adrak Facilities", img: asset("/images/group/facilities.jpg") },
+  { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
+  { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },
+  { name: "Insight Solutions", img: asset("/images/group/insight.jpg"), url: "https://insightoman.org" },
+  /* hospitality. One hotel tile, not two: it used to link straight to
      adrakhotelsandresorts.com while a second "Adrak Hotels" tile beside it
      opened the chooser — the same business twice, one of them a dead end.
      This tile now opens the chooser for all three properties. */
   { name: "Adrak Hotels & Resorts", img: asset("/images/group/hotels.jpg"), choose: adrakHotelProperties },
-  { name: "Hai Al Naseem", img: asset("/images/group/hai-al-naseem.jpg"), url: "https://www.haialnaseem.com" },
-  { name: "Al Maskaan Village", img: asset("/images/group/maskaan.jpg"), url: "https://almaskaanvillage.com" },
-  { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
-  { name: "Insight Solutions", img: asset("/images/group/insight.jpg"), url: "https://insightoman.org" },
-  { name: "Adrak Developers", img: asset("/images/group/developers.jpg"), url: "https://www.haialnaseem.com" },
-  { name: "Adrak Builders", img: asset("/images/group/builders.jpg") },
-  { name: "Adrak Facilities", img: asset("/images/group/facilities.jpg") },
-  { name: "Adrak India", img: asset("/images/group/india.jpg") },
-  { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
-  { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },
-  /* aimsoman.com has no working HTTPS — its certificate belongs to an
-     unrelated domain — so this has to stay an http:// link until the host is
-     fixed. Browsers will mark the destination "not secure". */
-  { name: "AIMS Pharmacy", img: asset("/images/group/aims.jpg"), url: "http://aimsoman.com/" },
   /* Aloft Muscat — the group's maiden hospitality investment, operated under
      Marriott's Aloft brand. Its own tile rather than a card inside the Adrak
      Hotels chooser: the brand is Marriott's, and a visitor looking for it
      would never think to open a menu named after someone else. */
   { name: "Aloft Muscat", img: asset("/images/group/aloft-muscat.jpg"), url: "https://www.marriott.com/en-us/hotels/mctal-aloft-muscat/overview/" },
+  { name: "Al Maskaan Village", img: asset("/images/group/maskaan.jpg"), url: "https://almaskaanvillage.com" },
+  { name: "Hai Al Naseem", img: asset("/images/group/hai-al-naseem.jpg"), url: "https://www.haialnaseem.com" },
+  /* healthcare */
+  { name: "AdLife Hospital", img: asset("/images/group/adlife.jpg"), url: "https://www.adlifeoman.com" },
+  /* aimsoman.com has no working HTTPS — its certificate belongs to an
+     unrelated domain — so this has to stay an http:// link until the host is
+     fixed. Browsers will mark the destination "not secure". */
+  { name: "AIMS Pharmacy", img: asset("/images/group/aims.jpg"), url: "http://aimsoman.com/" },
+  /* agriculture, then education */
   { name: "Trufud Farm", img: asset("/images/group/trufud.jpg"), url: "https://trufudoman.com" },
   { name: "Trinity College of Engineering", img: asset("/images/group/trinity.jpg"), url: "https://thetrinitycollege.in" },
 ];
