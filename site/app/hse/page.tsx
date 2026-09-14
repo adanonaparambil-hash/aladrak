@@ -170,16 +170,16 @@ export default function HsePage() {
       {/* ===== the 9 Life-Saving Rules — the page's dark anchor ===== */}
       <section className={DARK}>
         <div className="shell py-24 md:py-32">
+          {/* Kicker, heading and intro all stack on the left. The intro used to
+              sit in a four-column track on the right, where it read as a caption
+              drifting away from the title; under the heading it runs left to
+              right as one long line, the way the other sections open. */}
           <Reveal>
-            <div className="grid lg:grid-cols-12 gap-8 lg:items-end">
-              <div className="lg:col-span-8">
-                <Kicker onDark>Non-negotiable</Kicker>
-                <H2 onDark>The 9 Life-Saving Rules</H2>
-              </div>
-              <p className="lg:col-span-4 text-cream/75 font-light leading-relaxed text-[15px]">
-                {hse.lifeSavingRules.intro}
-              </p>
-            </div>
+            <Kicker onDark>Non-negotiable</Kicker>
+            <H2 onDark>The 9 Life-Saving Rules</H2>
+            <p className="text-cream/75 font-light leading-relaxed mt-6 text-[15px] md:text-base max-w-4xl">
+              {hse.lifeSavingRules.intro}
+            </p>
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mt-14">
             {hse.lifeSavingRules.rules.map((r, i) => (
