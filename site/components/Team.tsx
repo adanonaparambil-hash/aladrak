@@ -175,19 +175,30 @@ export default function Team() {
             tile from xl up, where the roster goes five-across; between lg and
             xl both grids are four-across and the tiles match, which is parity
             rather than inversion and reads fine under the Key Personnel rule. */}
-        <Reveal className="mb-24 md:mb-32">
+        <Reveal className="mb-16 md:mb-24">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
             {directors.map((d) => (
               <LeaderCard key={d.name} person={d} />
             ))}
           </div>
-          {/* The two group officers, in the SAME four-column grid so their tiles
-              are exactly the size of a director's, but starting at column two so
-              a row of two sits centred under a row of four instead of hanging off
-              the left edge. Below md the grid is two columns and they simply fill
-              it, so the offset is scoped to md. The gap between the rows is the
-              grid's own gap, which keeps the six reading as one block. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8 mt-5 md:mt-8">
+        </Reveal>
+
+        {/* ===== Key personnel =====
+            The heading opens at the Chief Executive Officer rather than at
+            the roster tiles below him. The four above are the board; every
+            name from Riyas Mohamed down is key personnel, so the officers
+            belong under this heading too rather than being annexed to the
+            directors' block. */}
+        <Reveal>
+          <p className="label text-gold text-center mb-12">Key Personnel</p>
+        </Reveal>
+        <Reveal className="mb-12 md:mb-16">
+          {/* The officers keep the directors' four-column grid so their tiles
+              are exactly the size of a director's, but start at column two so
+              a row of two sits centred under a row of four instead of hanging
+              off the left edge. Below md the grid is two columns and they
+              simply fill it, so the offset is scoped to md. */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
             {officers.map((o, i) => (
               <div key={o.name} className={i === 0 ? "md:col-start-2" : undefined}>
                 <LeaderCard person={o} />
@@ -195,20 +206,22 @@ export default function Team() {
             ))}
           </div>
         </Reveal>
-
-        {/* ===== Key personnel roster ===== */}
-        <Reveal>
-          <p className="label text-gold text-center mb-12">Key Personnel</p>
-        </Reveal>
+        {/* Wrapped flex rather than a grid, because the roster does not divide
+            evenly into the track: the last row held four tiles in a five-column
+            grid and sat hard against the left edge with a tile's worth of forest
+            green beside it. Flex with justify-center leaves a full row untouched
+            - it fills the line exactly - and centres only the short one. The
+            basis calculations reproduce the old column counts (2 / 3 / 4 / 5)
+            from one gap variable, so tile widths are unchanged at every width. */}
         <div
           data-roster
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6 [perspective:1200px]"
+          className="flex flex-wrap justify-center gap-[var(--tile-gap)] [--tile-gap:1.25rem] md:[--tile-gap:1.5rem] [perspective:1200px]"
         >
           {roster.map((m) => (
             <div
               key={m.name}
               data-roster-item
-              className="group transform-gpu transition-transform duration-500 hover:-translate-y-1.5"
+              className="group shrink-0 grow-0 basis-[calc((100%_-_var(--tile-gap))/2)] sm:basis-[calc((100%_-_2*var(--tile-gap))/3)] lg:basis-[calc((100%_-_3*var(--tile-gap))/4)] xl:basis-[calc((100%_-_4*var(--tile-gap))/5)] transform-gpu transition-transform duration-500 hover:-translate-y-1.5"
             >
               <div className="relative rounded-2xl overflow-hidden aspect-[5/6]">
                 <Portrait person={m} />

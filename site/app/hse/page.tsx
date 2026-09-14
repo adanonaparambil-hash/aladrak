@@ -440,7 +440,7 @@ export default function HsePage() {
           <Reveal>
             <Kicker>{hse.wellness.kicker}</Kicker>
             <H2 className="max-w-3xl">{hse.wellness.title}</H2>
-            <p className="text-ink/75 font-light leading-relaxed mt-6 max-w-3xl text-[15px] md:text-base">
+            <p className="text-ink/75 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16">
               {hse.wellness.body}
             </p>
           </Reveal>
@@ -473,7 +473,7 @@ export default function HsePage() {
           <Reveal>
             <Kicker>Inside the training centre</Kicker>
             <H2 className="max-w-2xl">Where it is taught before it is done</H2>
-            <p className="text-ink/70 font-light leading-relaxed mt-6 mb-14 max-w-3xl text-[15px] md:text-base">
+            <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16 mb-14">
               {hse.galleryIntro}
             </p>
           </Reveal>
@@ -506,7 +506,7 @@ export default function HsePage() {
           <Reveal>
             <Kicker>Objectives &amp; targets, {hse.objectives.year}</Kicker>
             <H2 className="max-w-3xl">Measured, reviewed, signed at the top</H2>
-            <p className="text-ink/70 font-light leading-relaxed mt-6 max-w-3xl text-[15px] md:text-base">
+            <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16">
               {hse.objectives.intro}
             </p>
           </Reveal>
@@ -543,11 +543,12 @@ export default function HsePage() {
           <Reveal>
             <Kicker>The paperwork behind the claim</Kicker>
             <H2 className="max-w-3xl">Certificates &amp; policies</H2>
-            <p className="text-ink/70 font-light leading-relaxed mt-6 max-w-3xl text-[15px]">
+            <div className="grid md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-4 mt-6">
+            <p className="text-ink/70 font-light leading-relaxed text-[15px]">
               {hse.certsNote}. Every document below is the current original —
               click to read it.
             </p>
-            <p className="text-ink/70 font-light leading-relaxed mt-4 max-w-3xl text-[15px]">
+            <p className="text-ink/70 font-light leading-relaxed text-[15px]">
               The three standards cover different ground and are held together:
               45001 for occupational health and safety, 14001 for environmental
               management, 9001 for quality. The policies listed beneath them are
@@ -556,6 +557,7 @@ export default function HsePage() {
               safety, drug and alcohol, and smoke-free policies that apply to
               Al Adrak staff and trade contractors alike.
             </p>
+            </div>
           </Reveal>
 
           <div className="grid sm:grid-cols-3 gap-5 md:gap-6 mt-14">
