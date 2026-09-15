@@ -370,7 +370,7 @@ export const leadership = {
    */
   officers: [
     { name: "Riyas Mohamed", role: "Chief Executive Officer", img: asset("/images/team/roster/riyas.jpg") },
-    { name: "Earnest V J Shabu", role: "Group Chief Strategy & Transformation Director", img: null },
+    { name: "Earnest V J Shabu", role: "Group Chief Strategy & Transformation Director", img: asset("/images/team/roster/earnest.jpg") },
   ] as Person[],
   roster: [
     { name: "Biju K. Mammen", role: "Advisor — Plant & Machinery", img: asset("/images/team/roster/biju.jpg") },
