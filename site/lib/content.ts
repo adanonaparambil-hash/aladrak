@@ -357,7 +357,7 @@ export const leadership = {
     { name: "Dr. Aadil Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/aadil.jpg") },
     { name: "Annie Thomas Alexander", role: "Executive Director", img: asset("/images/team/roster/annie.jpg") },
     { name: "Varsha Roy", role: "Executive Director", img: asset("/images/team/roster/varsha.jpg") },
-    { name: "Ayyappadas Chandrasekhar", role: "Chief Operating Officer", img: null },
+    { name: "Ayyappadas Chandrasekhar", role: "Chief Operating Officer", img: asset("/images/team/roster/ayyappadas.jpg") },
   ] as Person[],
   /**
    * The two group officers, shown between the board and the roster.
