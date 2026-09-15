@@ -111,7 +111,7 @@ export default function Team() {
           the gap that is specified and nothing more.
         */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-center mb-24 md:mb-32">
-          <Reveal className="w-full max-w-md lg:flex-none lg:w-[clamp(320px,26vw,440px)]">
+          <Reveal className="w-full max-w-lg lg:flex-none lg:w-[clamp(380px,31vw,540px)]">
             <div className="relative rounded-2xl overflow-hidden aspect-[4/5] mx-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -131,18 +131,18 @@ export default function Team() {
               <blockquote className="font-serifit italic text-3xl md:text-4xl leading-snug text-cream/95">
                 “{founder.quote}”
               </blockquote>
-              <p className="font-light text-cream/70 leading-relaxed mt-8 max-w-xl">
+              <p className="font-light text-cream/70 leading-relaxed mt-8">
                 {founder.bio}
               </p>
-              {/* The block was a quote, that one credential line and three pills,
-                  so on a wide screen the bottom half of the row was empty dark
-                  green. His own profile fills it. max-w-2xl, not the xl above:
-                  the credential line is a caption and wants to stay short, but
-                  these are paragraphs and read badly in a narrow column. */}
+              {/* No measure caps on the prose. They were max-w-xl and max-w-2xl,
+                  which left every line breaking at the same point a third of the
+                  way across a wide screen with dark green beyond it — a ragged
+                  column beside a portrait rather than a page. The lines now run
+                  the width of the column the picture leaves them. */}
               {founder.story.map((para) => (
                 <p
                   key={para.slice(0, 32)}
-                  className="font-light text-cream/70 leading-relaxed mt-5 max-w-2xl"
+                  className="font-light text-cream/70 leading-relaxed mt-5"
                 >
                   {para}
                 </p>
