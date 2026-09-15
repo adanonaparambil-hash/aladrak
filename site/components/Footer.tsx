@@ -59,25 +59,25 @@ export default function Footer() {
           <a
             href={asset("/al-adrak-brochure.pdf")}
             download
-            className="label text-gold hover:text-cream transition-colors"
+            className="label text-gold hover:text-cream transition-colors py-2.5"
           >
             Brochure ↓
           </a>
           <a
             href={asset("/news")}
-            className="label text-gold hover:text-cream transition-colors"
+            className="label text-gold hover:text-cream transition-colors py-2.5"
           >
             News
           </a>
           <a
             href={asset("/careers")}
-            className="label text-gold hover:text-cream transition-colors"
+            className="label text-gold hover:text-cream transition-colors py-2.5"
           >
             Careers
           </a>
           <a
             href={asset("/hse")}
-            className="label text-gold hover:text-cream transition-colors"
+            className="label text-gold hover:text-cream transition-colors py-2.5"
           >
             HSE
           </a>

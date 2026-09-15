@@ -86,7 +86,7 @@ export default function AwardsCerts() {
                       </div>
                     </div>
                     <p className="font-display text-[clamp(1rem,0.9vw,1.375rem)] mt-3.5">{c.name}</p>
-                    <p className="label label-xs text-taupe mt-1.5">{c.scope}</p>
+                    <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{c.scope}</p>
                   </button>
                 </Reveal>
               ))}
@@ -111,7 +111,7 @@ export default function AwardsCerts() {
                     />
                     <div className="px-4 py-3 border-t border-ink/10">
                       <p className="font-display text-[clamp(0.9375rem,0.9vw,1.375rem)] leading-snug">{a.name}</p>
-                      <p className="label label-xs text-taupe mt-1.5">{a.detail}</p>
+                      <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{a.detail}</p>
                     </div>
                   </div>
                 </Reveal>

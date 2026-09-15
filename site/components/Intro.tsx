@@ -134,7 +134,7 @@ export default function Intro() {
 
         {/* Vision / Mission — glass panels over a brand gradient */}
         <div className="relative mt-24 md:mt-32 [perspective:1200px]">
-          <div className="pointer-events-none absolute -inset-8 bg-gradient-to-br from-brand/25 via-gold/15 to-forest/25 blur-2xl rounded-[3rem]" />
+          <div className="pointer-events-none absolute -inset-y-8 inset-x-0 bg-gradient-to-br from-brand/25 via-gold/15 to-forest/25 blur-2xl rounded-[3rem]" />
           <div className="relative grid md:grid-cols-2 gap-6 md:gap-8">
             <div className="rounded-3xl bg-white/50 backdrop-blur-xl border border-white/70 shadow-[0_20px_50px_rgba(16,39,26,0.12)] p-10 md:p-12 transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(1deg)]">
               <p className="label text-brand mb-6">Vision</p>

@@ -153,7 +153,7 @@ export default function HsePage() {
                   it removed the gap but made it enormous — 740x806 at 1920. A
                   narrower track shrinks it and widens the text, which shortens
                   the column, so the picture comes down on both axes at once. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.culture.img}
@@ -257,7 +257,7 @@ export default function HsePage() {
                   it removed the gap but made it enormous — 740x806 at 1920. A
                   narrower track shrinks it and widens the text, which shortens
                   the column, so the picture comes down on both axes at once. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.operations.img}
@@ -278,7 +278,7 @@ export default function HsePage() {
             <Reveal className="lg:col-span-5">
               {/* No fixed ratio at lg and up — it takes the height of the text
                   beside it, so neither column can leave a gap. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[280px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[280px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.centre.img}
@@ -347,7 +347,7 @@ export default function HsePage() {
                   it removed the gap but made it enormous — 740x806 at 1920. A
                   narrower track shrinks it and widens the text, which shortens
                   the column, so the picture comes down on both axes at once. */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[240px] border border-ink/10 shadow-[0_10px_40px_rgba(10,15,12,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.practice.img}

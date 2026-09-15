@@ -105,7 +105,7 @@ export default function Header() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-9">
+        <nav className="hidden lg:flex items-center gap-9">
           {links.map((l) =>
             hasChildren(l) ? (
               /* The group opens on hover AND on focus-within, so it is reachable
@@ -165,7 +165,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <a
             href={`mailto:${site.email}`}
-            className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 label text-ink bg-gold rounded-full hover:bg-cream transition-colors duration-300"
+            className="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 label text-ink bg-gold rounded-full hover:bg-cream transition-colors duration-300"
           >
             Enquire
           </a>
@@ -176,7 +176,7 @@ export default function Header() {
             // w-11 h-11 is the 44px minimum: p-2 around two 1px bars left this
             // 40x24, the smallest target on the page and the one that opens the
             // whole menu
-            className="md:hidden relative z-50 w-11 h-11 flex flex-col items-center justify-center gap-1.5"
+            className="lg:hidden relative z-50 w-11 h-11 flex flex-col items-center justify-center gap-1.5"
           >
             <span
               className={`block h-px w-6 bg-cream transition-transform duration-300 ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
@@ -197,7 +197,7 @@ export default function Header() {
         the page behind it.
       */}
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-ink/[0.97] backdrop-blur-xl transition-opacity duration-400 ${
+        className={`lg:hidden fixed inset-0 z-40 bg-ink/[0.97] backdrop-blur-xl transition-opacity duration-400 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!open}
