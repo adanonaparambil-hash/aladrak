@@ -460,6 +460,8 @@ export type HotelProperty = {
   url?: string;
   /** postal address; the thing shown in place of a site */
   address?: string;
+  /** who to call, while there is no website to visit */
+  contact?: { name: string; phone: string };
   /** further photographs, offered as a small gallery on the card */
   gallery?: string[];
   /** short muted loops, offered as the gallery's last slides rather than autoplayed */
@@ -502,6 +504,7 @@ export const adrakHotelProperties: HotelProperty[] = [
     kind: "Backwater Resort",
     place: "Paravoor, Kollam",
     address: "Adrak Ventures, Paravoor, Kollam, Kerala",
+    contact: { name: "Ajaykumar", phone: "+91 70348 45624" },
     img: asset("/images/hotels/leisure-island.jpg"),
     gallery: [
       asset("/images/hotels/leisure-island-2.jpg"),

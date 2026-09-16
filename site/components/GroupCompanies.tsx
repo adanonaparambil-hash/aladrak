@@ -206,6 +206,20 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
               {p.address}
             </p>
           )}
+          {/* A name and a number, on the same rule as the address: with no
+              website to visit, calling someone is the whole enquiry path, so
+              the number is a tel: link rather than text to copy out by hand. */}
+          {p.contact && (
+            <p className="text-cream/60 font-light text-sm leading-relaxed mt-3 pl-3 border-l border-gold/50">
+              Contact: {p.contact.name}
+              <a
+                href={`tel:${p.contact.phone.replace(/\s/g, "")}`}
+                className="block text-cream/90 hover:text-gold transition-colors py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-sm"
+              >
+                {p.contact.phone}
+              </a>
+            </p>
+          )}
           <p className="text-cream/45 font-light text-xs leading-relaxed mt-3">
             No website yet — the photographs and the short film are the tour for now.
           </p>
