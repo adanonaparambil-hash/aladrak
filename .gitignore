@@ -98,6 +98,11 @@ Al-Adrak-HSE-page.docx
 # certificate PDFs from /Images/HSE (itself covered by /Images/ above).
 /site/scripts/.src-hse/
 
+# Staging for scripts/prep-portraits.mjs — the client-supplied studio
+# originals (5-8 MB each). Only the cropped 500x600 / 1400x1750 derivatives
+# belong in public/, which ships verbatim to the static export.
+/site/scripts/.src-portraits/
+
 # Untouched master of the corporate film. scripts/prep-story.mjs re-cuts it into
 # public/videos/story.mp4; keeping both in git would double a 31MB asset.
 /site/scripts/.src-story/
