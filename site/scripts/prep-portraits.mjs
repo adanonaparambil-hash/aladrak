@@ -115,6 +115,12 @@ await roster("richard-sequeira.png", "richard", { top: 0.02, bottom: 0.65, cx: 0
 await roster("sayed-iftequar-ali.jpeg", "iftikhar", { top: 0.05, bottom: 0.70, cx: 0.50 }, "roster"); // head 9%, chin 31%
 await roster("visakh-ub.jpeg", "visakh", { top: 0.03, bottom: 0.68, cx: 0.50 }, "roster"); // head 7%, chin 28%
 await roster("gnanasekaran-t.png", "gnanasekaran", { top: 0.12, bottom: 0.76, cx: 0.50 }, "roster"); // head 16%, chin 38%
+/* Tibi's source arrives at 1145x1374 — already exactly 5:6, so this is the one
+   that could have gone in untouched. It shouldn't: at full frame his head sits
+   13%–46% down the tile, where the rest of this grid runs about 6%–42%, which
+   reads as him being further from the camera than everyone beside him. Trimming
+   the empty wall off the top lifts him into line. */
+await roster("tibi-john.png", "tibi", { top: 0.05, bottom: 1.0, cx: 0.52 }, "roster"); // head 13%, chin 46%
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
    3376x6000. Massar tops out at ~7%, chin ~27%, hands ~85%. Full width;
