@@ -201,6 +201,12 @@ await cut(
       width: HW,
       height: HH,
     })
+    // The frame is underexposed as delivered — median luma 101 of 255, with
+    // the whole left half in shadow — which is why the hero read as dark even
+    // before the scrim went over it. Lifting the photograph is the honest fix:
+    // veiling it less would have bought brightness out of the text contrast,
+    // and there was none to spare.
+    .modulate({ brightness: 1.18 })
     // a 1.2x upscale; light unsharp keeps the hi-vis edges crisp
     .sharpen({ sigma: 0.8, m1: 0.4, m2: 1.6 })
     .jpeg({ quality: 86, mozjpeg: true })

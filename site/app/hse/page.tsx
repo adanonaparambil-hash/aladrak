@@ -85,11 +85,11 @@ export default function HsePage() {
               reaches. Measured, every from/via pair either dropped the worst
               glyph background under AA there (ink/85 still only reached
               3.97:1) or washed the CED out on the right.
-              Holding 72% flat across the text band and clearing between it
-              and him does both jobs: 7.06:1 at the worst pixel, and 6% ink
+              Holding 62% flat across the text band and clearing between it
+              and him does both jobs: 4.88:1 at the worst pixel, and 5% ink
               over the CED himself — he is the reason for the picture, so he
               stays unveiled. */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,15,12,0.72)_0%,rgba(10,15,12,0.72)_55%,rgba(10,15,12,0)_82%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,15,12,0.62)_0%,rgba(10,15,12,0.62)_56%,rgba(10,15,12,0)_82%)]" />
           {/* Vertical: a dark top for the fixed header's cream nav to read
               against, and a cream foot so the hero dissolves into the page
               rather than ending on a hard line.
@@ -105,7 +105,7 @@ export default function HsePage() {
             <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
               {hse.title}
             </h1>
-            <p className="text-cream/90 font-light text-lg md:text-xl leading-relaxed mt-8 max-w-2xl">
+            <p className="text-cream font-light text-lg md:text-xl leading-relaxed mt-8 max-w-2xl">
               {hse.lead}
             </p>
           </Reveal>
