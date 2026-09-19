@@ -121,6 +121,14 @@ await roster("gnanasekaran-t.png", "gnanasekaran", { top: 0.12, bottom: 0.76, cx
    reads as him being further from the camera than everyone beside him. Trimming
    the empty wall off the top lifts him into line. */
 await roster("tibi-john.png", "tibi", { top: 0.05, bottom: 1.0, cx: 0.52 }, "roster"); // head 13%, chin 46%
+/* Vinod's source is 1145x1374 — also exactly 5:6 — but unlike Tibi's it takes
+   the full frame untouched. It arrives cropped far tighter than the rest of
+   the grid (head 5%-55%, where the others run 6%-42%), and the only ways to
+   loosen it are to invent backdrop above his head or to shrink him by cropping
+   in, which makes a tight frame tighter. It is left alone because it already
+   matches the tile he has had since September at the same scale, so he is
+   consistent with himself; the tighter framing is the photograph's, not ours. */
+await roster("vinod-pv-pillai.png", "vinod", { top: 0, bottom: 1.0, cx: 0.50 }, "roster"); // head 5%, chin 55%
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
    3376x6000. Massar tops out at ~7%, chin ~27%, hands ~85%. Full width;
