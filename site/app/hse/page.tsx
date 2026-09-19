@@ -74,12 +74,22 @@ export default function HsePage() {
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={asset("/images/hse/hse-hero-ppe.jpg")}
-            alt="An Al Adrak carpenter in full protective equipment — hard hat, goggles, mask and gloves — at a radial arm saw"
+            src={asset("/images/hse/hse-hero-ced-walk.jpg")}
+            alt="Al Adrak’s Chief Executive Director on a site safety walk in full protective equipment, watching a machine being demonstrated"
             className="w-full h-full object-cover"
           />
-          {/* horizontal: holds the heading, clears where the worker is */}
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/62 via-ink/28 to-transparent" />
+          {/* Horizontal, with explicit stops rather than from/via/to.
+              Tailwind pins `via` at 50%, so the ramp is already halfway to
+              clear by 45% across — which on this photograph is the worker in
+              bright yellow coveralls, and is also as far as a heading line
+              reaches. Measured, every from/via pair either dropped the worst
+              glyph background under AA there (ink/85 still only reached
+              3.97:1) or washed the CED out on the right.
+              Holding 72% flat across the text band and clearing between it
+              and him does both jobs: 7.06:1 at the worst pixel, and 6% ink
+              over the CED himself — he is the reason for the picture, so he
+              stays unveiled. */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,15,12,0.72)_0%,rgba(10,15,12,0.72)_55%,rgba(10,15,12,0)_82%)]" />
           {/* Vertical: a dark top for the fixed header's cream nav to read
               against, and a cream foot so the hero dissolves into the page
               rather than ending on a hard line.

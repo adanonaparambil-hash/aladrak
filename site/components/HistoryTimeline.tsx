@@ -21,7 +21,7 @@ gsap.registerPlugin(ScrollTrigger);
 const STEP = 15; // degrees per year
 
 const MILESTONES = [
-  { year: "1986", img: asset("/images/team/founder.jpg"), text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
+  { year: "1986", img: asset("/images/timeline/m-1986-founder.jpg"), text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
   /* The early-era plates are the company's own period photographs, supplied
      as rephotographed film prints (rotated and cropped in preparation). A
      modern villa or a drone shot standing in for the nineties read as filler;
