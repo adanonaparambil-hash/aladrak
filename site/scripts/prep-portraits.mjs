@@ -148,6 +148,16 @@ await roster("tibi-john.png", "tibi", { top: 0.05, bottom: 1.0, cx: 0.52 }, "ros
    matches the tile he has had since September at the same scale, so he is
    consistent with himself; the tighter framing is the photograph's, not ours. */
 await roster("vinod-pv-pillai.png", "vinod", { top: 0, bottom: 1.0, cx: 0.50 }, "roster"); // head 5%, chin 55%
+/* Amani Ahmed Juma Al Zadjali — 1094x1438, front-facing headshot, narrower
+   than the grid's 5:6 (0.761), so the full frame has width to spare at any
+   reasonable span; no fallback widening needed.
+   A first cut at 0.05-0.66 (head 9%, chin 65% of the original) held her face
+   at the same fraction of the crop as the men's tighter portraits, but next
+   to Hauriya and Nauf — the grid's other two women, both looser front-facing
+   shots — it read as noticeably more zoomed in. Pulling back to 0.0-0.75
+   matches their scale: same headroom above the hijab, same amount of
+   shoulder below the chin. */
+await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, cx: 0.50 }, "roster"); // matched to Hauriya/Nauf scale
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
    3376x6000. Massar tops out at ~7%, chin ~27%, hands ~85%. Full width;

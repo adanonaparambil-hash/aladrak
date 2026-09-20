@@ -393,7 +393,7 @@ export const leadership = {
     { name: "Vinod PV Pillai", role: "Assistant General Manager — IT", img: asset("/images/team/roster/vinod.jpg") },
     { name: "Sayed Iftequar Ali", role: "Senior Manager — HSE", img: asset("/images/team/roster/iftikhar.jpg") },
     { name: "Nawaf Al Zadjali", role: "Manager — HR", img: asset("/images/team/roster/nawaf.jpg") },
-    { name: "Amani Ahmed Juma Al Zadjali", role: "Adrak Developers — CRM Lead", img: null },
+    { name: "Amani Ahmed Juma Al Zadjali", role: "Adrak Developers — CRM Lead", img: asset("/images/team/roster/amani-zadjali.jpg") },
   ] as Person[],
 };
 
@@ -544,6 +544,7 @@ export const groupCompanies: GroupCompany[] = [
   { name: "Adrak Facilities", img: asset("/images/group/facilities.jpg") },
   { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
   { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },
+  { name: "Thanveer Concrete & Stone Products", img: asset("/images/group/thanveer.jpg") },
   { name: "Insight Solutions", img: asset("/images/group/insight.jpg"), url: "https://insightoman.org" },
   /* hospitality. One hotel tile, not two: it used to link straight to
      adrakhotelsandresorts.com while a second "Adrak Hotels" tile beside it

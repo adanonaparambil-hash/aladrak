@@ -86,6 +86,11 @@ await tile(`${SRC}/trinity.png`, "trinity.jpg");
 // LibreOffice's PNG export of the same file comes back 461x322, which would
 // upscale into the tile.
 await tile(`${SRC}/aloft.svg`, "aloft-muscat.jpg", { density: 300 });
+// Thanveer Concrete & Stone Products — the rebranded logo (SPC, not the older
+// LLC/Arabic wordmark that used to sit unused at public/images/Thanveerlogo.jpg).
+// Already a clean raster on white at 4961x3508, so it goes through tile()
+// directly with no format conversion.
+await tile(`${SRC}/thanveer.jpg`, "thanveer.jpg");
 
 await shot(`${SRC}/mountain-mist.jpg`, "mountain-mist.jpg");
 await shot(`${SRC}/summer-sand.jpg`, "summer-sand.jpg");
