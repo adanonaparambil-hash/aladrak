@@ -148,15 +148,16 @@ await roster("farah-mukhtar.png", "farah", { top: 0.032, bottom: 0.843, cx: 0.50
    75%, centred on that 43%, which keeps him well inside the frame with room
    below the crossed arms rather than cutting through them. */
 await roster("hariprasad-shetty-v2.png", "hariprasad", { top: 0.0, bottom: 0.75, cx: 0.44 }, "roster"); // head 6%, chin 15%
-/* Hauriya and Rajan both arrived on 20 Sep as fresh studio originals — 3437x4667
-   and 3194x4577, several megabytes each — dropped straight into public/ over the
-   tiles already there, with a .jpeg extension the page does not ask for. Both
-   are re-cut here from the staged sources instead. The boxes put the head top
-   near 8% and the chin near 47% of the tile, which is where the rest of this
-   grid sits; Rajan's source is the wider frame of the two, so his box is the
-   shallower one. */
-await roster("huriya-al-balushi.jpeg", "huriya", { top: 0.150, bottom: 0.700, cx: 0.487 }, "roster"); // head 18%, chin 41%
-await roster("rajan-prabhakaran.jpeg", "rajan", { top: 0.071, bottom: 0.533, cx: 0.450 }, "roster"); // head 11%, chin 29%
+/* Hauriya and Rajan, from studio originals supplied on 20 Sep (3437x4667 and
+   3194x4577). Both were first cut to the head-and-shoulders scale the older
+   half of this grid uses, and both are now cut to show half the body instead,
+   the way Hariprasad's does — these are standing half-length frames and the
+   suit, the posture and the hands are the half worth keeping.
+   0.78 of the frame is the balance point: the whole span (0.88 for her, 0.84
+   for him, where the box runs out of source width) shows a little more torso
+   but drops the head small enough to read poorly in a 250px tile. */
+await roster("huriya-al-balushi.jpeg", "huriya", { top: 0.120, bottom: 0.900, cx: 0.487 }, "roster"); // head 18%, chin 41%
+await roster("rajan-prabhakaran.jpeg", "rajan", { top: 0.053, bottom: 0.833, cx: 0.450 }, "roster"); // head 11%, chin 29%
 /* Tibi's source arrives at 1145x1374 — already exactly 5:6, so this is the one
    that could have gone in untouched. It shouldn't: at full frame his head sits
    13%–46% down the tile, where the rest of this grid runs about 6%–42%, which
