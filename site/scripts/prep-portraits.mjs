@@ -110,7 +110,26 @@ async function roster(srcName, slug, { top, bottom, cx = 0.5 }, label) {
    top 40% of the tile, shoulders filling the rest.
    --------------------------------------------------------------------- */
 await roster("anoop-das.png", "anoop", { top: 0.08, bottom: 0.70, cx: 0.48 }, "roster"); // head 13%, chin 35%
-await roster("riyas-mohamed.jpeg", "riyas", { top: 0.17, bottom: 0.82, cx: 0.52 }, "roster"); // head 22%, chin 47%
+/* Riyas was re-framed by hand on 20 Sep — the client cropped the same
+   photograph looser and squarer (467x488) and dropped it in as riyas.png.
+   Two things were wrong with using that file directly: the page asks for
+   riyas.jpg, so the tile would have 404ed; and at 0.957 it is not the grid's
+   5:6, so object-cover would have taken 13% off each side — clipping exactly
+   the shoulders the looser crop was made to include, and upscaling a 467px
+   frame into a 500px tile besides.
+   The numbers below reproduce that framing from the 1181x1600 original
+   instead, and they were found by template-matching their crop against it
+   rather than read off a grid: left 24, top 280, 957x999. Reading it by eye
+   put the span several percent out, which was enough to get the head size
+   wrong and leave his hands in a frame that had been cropped to exclude them.
+   The match also shows they cropped OFF-CENTRE, at 42.5% across — every
+   centred attempt was always going to look wrong.
+   Their 0.957 cannot be the grid's 0.833, so something has to give: holding
+   their vertical span and taking the difference out of the width trims the
+   frame from 981px to 918px on his left shoulder, where holding their width
+   and extending downward instead brings his hands into shot. A shoulder
+   meeting the edge is normal across this grid; hands are not. */
+await roster("riyas-mohamed.jpeg", "riyas", { top: 0.175, bottom: 0.799, cx: 0.425 }, "roster"); // head 22%, chin 47%
 await roster("richard-sequeira.png", "richard", { top: 0.02, bottom: 0.65, cx: 0.50 }, "roster"); // head 6%, chin 28%
 await roster("sayed-iftequar-ali.jpeg", "iftikhar", { top: 0.05, bottom: 0.70, cx: 0.50 }, "roster"); // head 9%, chin 31%
 await roster("visakh-ub.jpeg", "visakh", { top: 0.03, bottom: 0.68, cx: 0.50 }, "roster"); // head 7%, chin 28%
