@@ -134,6 +134,11 @@ await roster("richard-sequeira.png", "richard", { top: 0.02, bottom: 0.65, cx: 0
 await roster("sayed-iftequar-ali.jpeg", "iftikhar", { top: 0.05, bottom: 0.70, cx: 0.50 }, "roster"); // head 9%, chin 31%
 await roster("visakh-ub.jpeg", "visakh", { top: 0.03, bottom: 0.68, cx: 0.50 }, "roster"); // head 7%, chin 28%
 await roster("gnanasekaran-t.png", "gnanasekaran", { top: 0.12, bottom: 0.76, cx: 0.50 }, "roster"); // head 16%, chin 38%
+/* Farah's source is 1129x1393, a passport frame at 0.810 — very nearly the 5:6
+   this grid wants, so the crop is almost the whole picture. Taken untouched it
+   would still sit a shade loose: trimming the headroom brings him to head 7%,
+   chin 62%, in line with the tiles beside him. */
+await roster("farah-mukhtar.png", "farah", { top: 0.032, bottom: 0.843, cx: 0.50 }, "roster"); // head 9%, chin 53%
 /* Tibi's source arrives at 1145x1374 — already exactly 5:6, so this is the one
    that could have gone in untouched. It shouldn't: at full frame his head sits
    13%–46% down the tile, where the rest of this grid runs about 6%–42%, which

@@ -386,7 +386,7 @@ export const leadership = {
        simply trade places; nobody else moves. */
     { name: "Iman Al Shaafari", role: "General Manager — Finance & Accounts", img: asset("/images/team/roster/iman.jpg") },
     { name: "Kausthubh Rai", role: "General Manager — QA/QC & Training", img: asset("/images/team/roster/kausthubh.jpg") },
-    { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: null },
+    { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: asset("/images/team/roster/farah.jpg") },
     { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
     { name: "Nauf Al Bulushi", role: "Deputy General Manager — Projects", img: asset("/images/team/roster/nauf.jpg") },
     { name: "Amani Said Humaid Masoud Al Ofi", role: "Deputy General Manager — Finance & Accounts, Real Estate", img: null },
