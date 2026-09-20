@@ -110,3 +110,7 @@ Al-Adrak-HSE-page.docx
 # scratch clips from the media prep scripts — each rmSyncs its own on success,
 # but an interrupted render must not be committable
 /site/scripts/.tmp-*/
+
+# Staging for scripts/prep-life.mjs — the two phone frames of the Sunday
+# briefing. Only the 16:10 tile and the podium card belong in public/.
+/site/scripts/.src-life/

@@ -249,7 +249,9 @@ export default function Team() {
                 {lifeAtAdrak.statement}
               </p>
             </div>
-            <div className="lg:col-span-8 grid grid-cols-2 gap-4">
+            {/* One column on a phone, where a half-width 16:10 tile is barely
+                160px across and the briefing's inset would be unreadable. */}
+            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {lifeAtAdrak.photos.map((ph) => (
                 <figure
                   key={ph.src}
@@ -262,6 +264,19 @@ export default function Team() {
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-105"
                   />
+                  {"inset" in ph && ph.inset && (
+                    /* Laid over the top-right corner, not the bottom: that
+                       corner of the wide shot is empty building, so the card
+                       covers no one, and it stays clear of the caption's
+                       gradient at the foot of the tile. */
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={ph.inset.src}
+                      alt={ph.inset.alt}
+                      loading="lazy"
+                      className="absolute top-[4%] right-[4%] w-[38%] sm:w-[34%] aspect-[4/3] object-cover rounded-lg ring-[3px] ring-cream/90 shadow-[0_10px_28px_rgba(10,15,12,0.45)]"
+                    />
+                  )}
                   <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink/85 to-transparent px-5 pt-10 pb-4">
                     <span className="label label-xs text-cream/85">
                       {ph.label}

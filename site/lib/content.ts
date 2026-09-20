@@ -48,7 +48,18 @@ export const lifeAtAdrak = {
   statement:
     "A happy, skilled workforce builds better landmarks. From modern accommodation camps with sports and recreation facilities to training programmes and air-conditioned mess halls — Adrak invests in its people first.",
   photos: [
-    { src: asset("/images/life/life-briefing.jpg"), label: "Morning briefing on site" },
+    /* Two frames of the same Sunday briefing. The wide shot carries the tile;
+       the close frame is laid over its corner because it is the only one of
+       the two in which the Chief Executive Director can be made out at all.
+       scripts/prep-life.mjs cuts both. */
+    {
+      src: asset("/images/life/life-briefing.jpg"),
+      label: "Morning briefing on site",
+      inset: {
+        src: asset("/images/life/life-briefing-podium.jpg"),
+        alt: "The Chief Executive Director addressing the briefing from the podium",
+      },
+    },
     { src: asset("/images/life/life-3.jpg"), label: "Life at the office" },
   ],
 };
