@@ -139,12 +139,15 @@ await roster("gnanasekaran-t.png", "gnanasekaran", { top: 0.12, bottom: 0.76, cx
    would still sit a shade loose: trimming the headroom brings him to head 7%,
    chin 62%, in line with the tiles beside him. */
 await roster("farah-mukhtar.png", "farah", { top: 0.032, bottom: 0.843, cx: 0.50 }, "roster"); // head 9%, chin 53%
-/* Hariprasad's new source is a full-length studio shot at 3199x4667 — far
-   wider a frame than the rest of the grid, with the head occupying only the
-   top ~20% of it. The box takes the top 46% of the original, centred on the
-   face at 43% across (he sits left of the frame's own centre), which brings
-   him to the same head-and-shoulders scale as the tiles beside him. */
-await roster("hariprasad-shetty.jpeg", "hariprasad", { top: 0.0, bottom: 0.46, cx: 0.43 }, "roster"); // head 10%, chin 24%
+/* Hariprasad's source (replaced 20 Sep — same photograph, a fresh 1038x1515
+   export) is a full-length studio shot, arms crossed, with the head occupying
+   only the top fifth of the frame and off-centre besides (he sits at 43%
+   across, not 50%). A tight head-and-shoulders box was tried first, matching
+   the rest of the grid, but the client asked for more of him — the crossed-arm
+   half-body pose is the point of this photograph. The box now takes the top
+   75%, centred on that 43%, which keeps him well inside the frame with room
+   below the crossed arms rather than cutting through them. */
+await roster("hariprasad-shetty-v2.png", "hariprasad", { top: 0.0, bottom: 0.75, cx: 0.44 }, "roster"); // head 6%, chin 15%
 /* Tibi's source arrives at 1145x1374 — already exactly 5:6, so this is the one
    that could have gone in untouched. It shouldn't: at full frame his head sits
    13%–46% down the tile, where the rest of this grid runs about 6%–42%, which
