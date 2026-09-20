@@ -54,10 +54,10 @@ export const lifeAtAdrak = {
        scripts/prep-life.mjs cuts both. */
     {
       src: asset("/images/life/life-briefing.jpg"),
-      label: "Morning briefing on site",
+      label: "Morning briefing at the Head Office",
       inset: {
         src: asset("/images/life/life-briefing-podium.jpg"),
-        alt: "The Chief Executive Director addressing the briefing from the podium",
+        alt: "The Chief Executive Director addressing the Head Office briefing from the podium",
       },
     },
     { src: asset("/images/life/life-3.jpg"), label: "Life at the office" },

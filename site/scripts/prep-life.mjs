@@ -60,20 +60,27 @@ const OUT = "public/images/life";
 
   /* the speaker's head, measured off a percentage grid of the 1280x720 frame */
   const speaker = { x: 622, y: 296 };
-  const cw = 230;
-  const ch = Math.round((cw * 3) / 4);
-  /* he sits above the middle of the card, so the podium and the front row of
-     heads below him stay in shot and the card reads as a room, not a portrait */
+
+  /* 3:2 rather than 4:3, and he sits in the upper third rather than the middle.
+     Both are for the same reason: the wall behind him is a blank projection
+     screen, and a squarer box centred on him filled half the card with flat
+     grey. Sitting him high trades that grey for the row of heads along the
+     bottom, so the card reads as a room. */
+  const cw = 280;
+  const ch = Math.round((cw * 2) / 3);
   const left = Math.round(speaker.x - cw / 2);
-  const top = Math.round(speaker.y - ch * 0.4);
+  const top = Math.round(speaker.y - ch * 0.27);
   if (left < 0 || top < 0 || left + cw > m.width || top + ch > m.height) {
     throw new Error(`${src}: the podium box falls outside the frame`);
   }
 
+  /* The card is ~46% of the tile, so ~270px at 1920 and ~350px at 2560. This
+     is an upscale of a phone frame either way — there is no more detail in the
+     source — but it holds at the size it is actually drawn. */
   await sharp(src)
     .extract({ left, top, width: cw, height: ch })
-    .resize(480, 360, { kernel: "lanczos3" })
-    .jpeg({ quality: 86, mozjpeg: true })
+    .resize(720, 480, { kernel: "lanczos3" })
+    .jpeg({ quality: 88, mozjpeg: true })
     .toFile(`${OUT}/life-briefing-podium.jpg`);
-  console.log(`podium   ${m.width}x${m.height} -> ${OUT}/life-briefing-podium.jpg  (480x360)`);
+  console.log(`podium   ${m.width}x${m.height} -> ${OUT}/life-briefing-podium.jpg  (720x480)`);
 }
