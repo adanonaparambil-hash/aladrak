@@ -11,11 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * A portrait, or a monogram where there is no photograph yet.
  *
- * Four of the twenty-three have no picture on file. A missing <img> would leave
- * a broken tile and a ragged grid, and a generic silhouette would look like an
- * error; initials in the display face read as deliberate and keep the row
- * rhythm intact. Supplying the photograph later is a one-word change in
- * content.ts — null becomes a path — with nothing to alter here.
+ * Every face on the roster now has a photograph — Amani Al Ofi was the last
+ * one still lettered, and her studio frame came in on 26 Sep. The monogram
+ * stays for whoever joins next: a missing <img> would leave a broken tile and
+ * a ragged grid, and a generic silhouette would look like an error, where
+ * initials in the display face read as deliberate and keep the row rhythm
+ * intact. Supplying a photograph is a one-word change in content.ts — null
+ * becomes a path — with nothing to alter here.
  */
 function Portrait({ person }: { person: Person }) {
   if (person.img) {

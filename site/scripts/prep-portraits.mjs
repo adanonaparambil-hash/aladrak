@@ -182,6 +182,18 @@ await roster("vinod-pv-pillai.png", "vinod", { top: 0, bottom: 1.0, cx: 0.50 }, 
    matches their scale: same headroom above the hijab, same amount of
    shoulder below the chin. */
 await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, cx: 0.50 }, "roster"); // matched to Hauriya/Nauf scale
+/* Amani Said Humaid Masoud Al Ofi — 977x1280, the same kind of front-facing
+   white-backdrop headshot as the other Amani's, and at 0.763 almost the same
+   shape. It arrives framed tighter than hers, though: the hijab tops out at
+   5.4% of the original and the chin sits at 53%, where hers has 10% of
+   headroom and a chin at 45%. So there is no looser cut to be had — taking
+   the whole height (and letting the width fallback trim the bottom to 92%)
+   only drops her visibly further from the camera than the tiles beside her.
+   Cropping IN is what closes the gap: 0.0-0.80 puts the head at 7% and the
+   chin at 67% of the tile, which reads at the same distance as Amani Al
+   Zadjali and Nauf. cx is 0.513, not 0.50 — she stands a shade right of
+   centre, measured off the hijab's span rather than guessed. */
+await roster("amani-al-ofi.jpg", "amani-al-ofi", { top: 0.0, bottom: 0.80, cx: 0.513 }, "roster"); // head 5.4%, chin 53% of the original
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
    3376x6000. Massar tops out at ~7%, chin ~27%, hands ~85%. Full width;
