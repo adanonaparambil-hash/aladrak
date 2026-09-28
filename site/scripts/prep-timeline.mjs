@@ -69,4 +69,6 @@ await cover("public/images/Adrak Developers.jpeg", "m-2022-adrak-developers.jpg"
 await cover("public/images/blog/dossier-construction-awards-2023.jpg", "m-2023-dossier.jpg", { sharpen: true });
 await cover("public/images/blog/sultan-haitham-city-a-new-milestone-in-urban-dev.jpg", "m-2024-sultan-haitham-city.jpg", { sharpen: true });
 await cover("public/images/Thumrait.jpg", "m-2025-thumrait.jpg");
-await cover("public/images/blog/gems-international-school-hai-al-naseem.jpg", "m-2026-gems.jpg");
+// swapped from the school render to the actual GEMS/Adrak signing-ceremony
+// photograph — the milestone is the partnership being signed, not the building
+await cover("public/images/blog/gems-adrak-signing-ceremony.jpg", "m-2026-gems.jpg");
