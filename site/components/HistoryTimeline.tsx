@@ -20,9 +20,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const STEP = 15; // degrees per year
 
-type Milestone = { year: string; img: string | null; text: string };
-
-const MILESTONES: Milestone[] = [
+const MILESTONES = [
   { year: "1986", img: asset("/images/timeline/m-1986-founder.jpg"), text: "Al Adrak is founded in Muscat, Oman, by Dr. Thomas Alexander—starting as a modest enterprise with a vision for nation-building and world-class construction." },
   /* The early-era plates are the company's own period photographs, supplied
      as rephotographed film prints (rotated and cropped in preparation). A
@@ -43,11 +41,6 @@ const MILESTONES: Milestone[] = [
   { year: "2013", img: asset("/images/projects/kom4.jpg"), text: "Regional ambition: laying the groundwork for expansion across the Middle East and the Indian Subcontinent." },
   { year: "2015", img: asset("/images/blog/dr-thomas-alexander-receiving-the-achievement-aw.jpg"), text: "Dr. Thomas Alexander receives Omani citizenship in recognition of his contributions to nation-building and the construction industry." },
   { year: "2017", img: asset("/images/timeline/m-2017-key-handover.jpg"), text: "Group diversification: Adrak Developers, hospitality and real estate ventures extend the Al Adrak footprint." },
-  /* No plate. The Dubai groundbreaking photograph that sat here was a collage
-     of six small frames, and at plate size it read as a contact sheet rather
-     than as a moment. A year may carry its text alone — both renderers below
-     skip the picture when there is none. */
-  { year: "2018", img: null, text: "Al Adrak Contracting Co LLC established in Dubai—UAE presence strengthens our regional delivery." },
   /* ---- the modern chapter -------------------------------------------------
      Every plate from 2019 on is baked to the wheel's own 5:4 by
      scripts/prep-timeline.mjs. The sources are news photographs of wildly
@@ -109,7 +102,6 @@ export default function HistoryTimeline() {
     let timer = 0;
     const warm = () => {
       for (const m of MILESTONES) {
-        if (!m.img) continue;
         const im = new Image();
         im.src = m.img;
       }
@@ -429,20 +421,18 @@ export default function HistoryTimeline() {
             the bottom of the pinned stage on a short one. Lifted to 47vh to
             make the room for it. */}
         <div className="hidden lg:block absolute z-10 left-[11%] top-[47vh] w-[min(30vw,52vh)] aspect-[5/4]">
-          {MILESTONES.map((m, i) =>
-            m.img ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                key={m.year}
-                src={m.img}
-                alt={`Al Adrak in ${m.year}`}
-                loading="lazy"
-                className={`absolute inset-0 w-full h-full object-cover object-top rounded-xl border border-cream/10 transition-opacity duration-500 ${
-                  i === active ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ) : null
-          )}
+          {MILESTONES.map((m, i) => (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              key={m.year}
+              src={m.img}
+              alt={`Al Adrak in ${m.year}`}
+              loading="lazy"
+              className={`absolute inset-0 w-full h-full object-cover object-top rounded-xl border border-cream/10 transition-opacity duration-500 ${
+                i === active ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
         </div>
 
         {/* ===== the wheel ===== */}
@@ -534,15 +524,13 @@ export default function HistoryTimeline() {
                   className="absolute -left-[1.6rem] top-2 w-2.5 h-2.5 rounded-full bg-gold"
                 />
                 <p className="font-display text-3xl text-cream mb-3">{m.year}</p>
-                {m.img && (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={m.img}
-                    alt={`Al Adrak in ${m.year}`}
-                    loading="lazy"
-                    className="w-full aspect-[5/4] object-cover object-top rounded-xl border border-cream/10 mb-4"
-                  />
-                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={m.img}
+                  alt={`Al Adrak in ${m.year}`}
+                  loading="lazy"
+                  className="w-full aspect-[5/4] object-cover object-top rounded-xl border border-cream/10 mb-4"
+                />
                 <p className="text-cream/80 font-light leading-relaxed text-[clamp(0.9375rem,0.85vw,1.25rem)]">
                   {m.text}
                 </p>
