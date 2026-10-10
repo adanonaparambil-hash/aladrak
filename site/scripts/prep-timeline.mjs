@@ -58,6 +58,23 @@ async function contain(src, out, { pad = 0.08, trim = false } = {}) {
   console.log(`contain -> ${out}`);
 }
 
+/* 1995 previously carried the Al Kamil Filling Station film print. It is a fine
+   picture, but the man standing in it is the same man standing in the 1990
+   print directly before it, so the wheel showed him twice in a row. This is the
+   Knowledge Oasis ring-road job: earthworks, retaining wall and a crew in Al
+   Adrak yellow — infrastructure being built, which is what the 1995 line is
+   about. The print stays in the repo; nothing else used it, but it is the
+   company's own archive. */
+await cover("public/images/projects/kom-ring-road.jpg", "era-1995-infrastructure.jpg");
+
+/* 2017 is a 525x295 news thumbnail and already tightly framed: filling the 5:4
+   plate throws away 30% of its width, and both outer faces — the man on the
+   left and the woman on the right — live in exactly that 30%. So it is fitted
+   to the plate's width instead and sat on the section's own ink, the same
+   treatment the award wordmarks get. The bands above and below are invisible
+   against the section; a cropped-off face is not. */
+await contain("public/images/blog/adrak-developers-marks-first-key-handove.jpg", "m-2017-key-handover.jpg", { pad: 0 });
+
 await contain("public/images/awards/award-forbes.jpg", "m-2019-forbes.jpg", { pad: 0.07, trim: true });
 // the panoramic site shot cropped square was mostly empty desert; the aerial of
 // the silo field is the picture that actually says "greenfield dairy city"
