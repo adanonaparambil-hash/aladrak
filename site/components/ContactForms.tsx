@@ -7,28 +7,32 @@ import { enquiryTypes, site, vendorProducts } from "@/lib/content";
  * The two contact forms: a client enquiry and a vendor registration.
  *
  * ── Where the submission goes ────────────────────────────────────────────────
- * This site is a static export on GitHub Pages. There is no server of ours to
- * POST to, so a plain `<form action="/api/...">` would 405 and a form that
- * silently swallows what someone typed is worse than no form at all.
+ * This is a static export: HTML and assets, no server of ours inside it. A
+ * browser cannot send mail by itself, so something on the host has to take the
+ * submission and pass it on. Which host decides what that is, so the path is
+ * one build-time setting rather than a code change:
  *
- * So the submit path is explicit and switchable:
+ *   unset            → composes a mailto: to the address below, with every
+ *                      field laid out in the body. Works anywhere, including
+ *                      GitHub Pages, which serves files and never executes
+ *                      them. The cost is real: it hands off to the visitor's
+ *                      mail client, and anyone on webmail without one
+ *                      configured gets nothing — the enquiry is simply lost.
+ *                      A fallback, not a destination.
  *
- *   ENDPOINT = ""    → composes a mailto: to the address below, with every
- *                      field laid out in the body. Works today, with no
- *                      account and no key, on any host. The cost is that it
- *                      hands off to the visitor's mail client, which some
- *                      webmail users do not have configured.
+ *   a URL or path    → POSTs the fields as JSON there instead, and the sending
+ *                      states below report what came back.
  *
- *   ENDPOINT = url   → POSTs JSON to that URL instead (Formspree, Web3Forms,
- *                      a Google Apps Script, or a real backend). Set the one
- *                      constant and the forms start submitting directly, with
- *                      no other change: the success and failure states below
- *                      already handle it.
+ * On GoDaddy's Linux hosting that URL is `/contact.php`, which ships in this
+ * repo at public/contact.php and lands beside index.html in the export. PHP
+ * sends the mail from the company's own domain, so there is no third-party
+ * form service holding client enquiries and no monthly submission cap.
  *
- * Until an endpoint exists, mailto is the honest option — the visitor can see
- * exactly what is being sent and to whom.
+ * Set NEXT_PUBLIC_CONTACT_ENDPOINT=/contact.php when building for a PHP host.
+ * The GitHub Pages workflow leaves it unset, so that deploy keeps the mailto
+ * fallback and never posts to a file it cannot run.
  */
-const ENDPOINT = "";
+const ENDPOINT = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT ?? "";
 
 /** mailto: bodies get truncated by some clients past roughly this length */
 const MAILTO_SAFE_BODY = 1800;
@@ -238,6 +242,27 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
           noValidate
           className="lg:col-span-7 grid sm:grid-cols-2 gap-x-7 gap-y-6 rounded-3xl bg-parchment border border-ink/10 p-6 md:p-9"
         >
+          {/* Spam trap. A public form on a company site is found by scrapers
+              within days, and they fill in every input they can see. This one
+              no human can: it is off-screen, out of the tab order and hidden
+              from screen readers, so only a bot ever puts anything in it.
+              contact.php drops any submission that arrives with it filled —
+              answering 200, because telling a bot it failed only teaches it to
+              come back differently. Kept out of `fields` deliberately: it must
+              never be validated, labelled or counted as a question. */}
+          <div aria-hidden className="hidden">
+            <label htmlFor={fieldId("website")}>Leave this field empty</label>
+            <input
+              id={fieldId("website")}
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={values.website ?? ""}
+              onChange={(e) => setValues((v) => ({ ...v, website: e.target.value }))}
+            />
+          </div>
+
           {active.fields.map((f) => {
             const id = fieldId(f.name);
             const bad = errors[f.name];
