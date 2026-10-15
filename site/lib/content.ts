@@ -198,6 +198,12 @@ export type ShopFloorMedia = {
   label: string;
   /** matches a facilities[].name — omitted where the shot spans the whole campus */
   facility?: string;
+  /**
+   * "contain" shows the picture whole over a blurred copy of itself, instead of
+   * cropping it to fill the viewer's wide frame. For the occasional near-square
+   * or small photograph that object-cover would turn into a magnified strip.
+   */
+  fit?: "contain";
 };
 
 /** The "step inside our factories" reel. `facility` is only set where the shot
@@ -307,6 +313,13 @@ export const facilityGallery: Record<string, ShopFloorMedia[]> = {
     { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-6.jpg"), label: "Crushing plant set among the quarry hills", facility: "Crusher & Quarries" },
     { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-7.jpg"), label: "Wheel loader among graded aggregate stockpiles", facility: "Crusher & Quarries" },
     { type: "img", src: asset("/images/facilities/gallery/crusher-and-quarries-8.jpg"), label: "Panorama of conveyor network across the plant", facility: "Crusher & Quarries" },
+  ],
+  /* The card's own photograph leads, so the card opens onto what was clicked.
+     Without it here the viewer would open on the head-office shot and tuck the
+     cover away last — the viewer appends covers, and dedupes this one by src. */
+  "IT & Data Centre": [
+    { type: "img", src: asset("/images/facilities/it-data-centre.jpg"), label: "Tier IV data centre — cabinet aisle", facility: "IT & Data Centre" },
+    { type: "img", src: asset("/images/facilities/gallery/it-and-data-centre-1.jpg"), label: "Head office data centre cabinets", facility: "IT & Data Centre", fit: "contain" },
   ],
 };
 

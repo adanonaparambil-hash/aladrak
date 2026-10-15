@@ -235,13 +235,29 @@ export default function FacilityMedia() {
               className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              key={item.src}
-              src={item.src}
-              alt={item.label}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <>
+              {item.fit === "contain" && (
+                /* the picture's own colours, blurred and dimmed, fill the frame
+                   so the whole photograph can sit uncropped in front of it */
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={`${item.src}-bg`}
+                  src={item.src}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl brightness-50"
+                />
+              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                key={item.src}
+                src={item.src}
+                alt={item.label}
+                className={`absolute inset-0 w-full h-full ${
+                  item.fit === "contain" ? "object-contain" : "object-cover"
+                }`}
+              />
+            </>
           )}
 
           {/* the set's size, said on the picture itself */}

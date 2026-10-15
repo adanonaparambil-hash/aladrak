@@ -40,3 +40,30 @@ await sharp(SRC)
   .jpeg({ quality: 86, mozjpeg: true })
   .toFile("public/images/facilities/it-data-centre.jpg");
 console.log("wrote public/images/facilities/it-data-centre.jpg (1024x768)");
+
+/**
+ * The second photograph: the head-office data centre cabinets.
+ *
+ * 270x259 — smaller still than the aisle shot, and with the brochure's
+ * "Head office Data Center" caption printed across its bottom-left (text spans
+ * about y=245-255) plus a thin white page edge down the left side. Both are
+ * cropped away; the cabinets' feet end around y=243, so the cut sits right at
+ * them.
+ *
+ * Doubled with Lanczos — about as far as a source this size will stretch
+ * before it turns to mush — and left near-square on purpose. The facility
+ * viewer's frame is a wide band that crops with object-cover, which would turn
+ * this into a thin strip magnified five times; the gallery entry carries
+ * fit: "contain" so the viewer shows it whole instead. See FacilityMedia.tsx.
+ */
+const HO = "scripts/.src-facilities/head-office-data-centre.png";
+if (existsSync(HO)) {
+  const L = 4, T = 0, CW = 262, CH = 243;   // clear of the caption (starts y=245)
+  if (T + CH > 244) throw new Error("the crop would reach the brochure caption");
+  await sharp(HO)
+    .extract({ left: L, top: T, width: CW, height: CH })
+    .resize(CW * 2, CH * 2, { kernel: "lanczos3" })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile("public/images/facilities/gallery/it-and-data-centre-1.jpg");
+  console.log("wrote public/images/facilities/gallery/it-and-data-centre-1.jpg (524x486)");
+}
