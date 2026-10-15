@@ -114,3 +114,7 @@ Al-Adrak-HSE-page.docx
 # Staging for scripts/prep-life.mjs — the two phone frames of the Sunday
 # briefing. Only the 16:10 tile and the podium card belong in public/.
 /site/scripts/.src-life/
+
+# Build artefacts packaged for upload to the host — 120MB of zip has no
+# business in git, and `npm run build:php` recreates them in a minute.
+/*.zip

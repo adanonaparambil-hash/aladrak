@@ -1,0 +1,61 @@
+# Apache settings for the static export, read by GoDaddy's Linux hosting.
+#
+# Ships from public/ so it lands in public_html beside index.html. It is
+# ignored by GitHub Pages, which is not Apache — so this file is harmless
+# there and does nothing until the site is on the real host.
+#
+# Deliberately contains no redirects. Cloudflare sits in front of this domain
+# and already decides http/https and www/non-www; a second opinion down here
+# is how redirect loops start.
+
+# The export writes its own 404 page. Without this Apache serves GoDaddy's
+# generic one instead, which carries none of the site's branding.
+ErrorDocument 404 /404.html
+
+# trailingSlash is on in next.config.ts, so every route is a directory with an
+# index.html inside it. Say so explicitly rather than relying on the host's
+# default DirectoryIndex.
+DirectoryIndex index.html
+
+# Never list the contents of a folder that has no index.
+Options -Indexes
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  # Photographs, video and PDFs are already compressed; running deflate over
+  # them costs CPU and saves nothing.
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Everything under /_next/static/ carries a content hash in its filename, so
+  # a changed file is a different URL. These can never go stale.
+  <FilesMatch "\.(js|css|woff2?)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, immutable"
+  </FilesMatch>
+
+  # Media keeps its own name across deploys, so cache it for a week rather
+  # than a year — long enough to help, short enough that a replaced
+  # photograph appears without anyone clearing a cache.
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ico)$">
+    ExpiresDefault "access plus 7 days"
+  </FilesMatch>
+
+  # HTML must always be rechecked, or a content change never reaches anyone.
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# The enquiry handler is the one executable file here; everything else is
+# static. Make sure it is never served as plain text if PHP is misconfigured.
+<Files "send-enquiry.php">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-store"
+  </IfModule>
+</Files>
