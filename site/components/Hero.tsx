@@ -154,7 +154,9 @@ export default function Hero() {
           data-tilt
           className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform"
         >
-          <p data-hero-stagger className="label text-gold mb-6">
+          {/* .hero-eyebrow, not .label — see globals.css. The caption tier put
+              the company's own name at 10px over a sunlit aerial shot. */}
+          <p data-hero-stagger className="hero-eyebrow text-gold mb-6">
             {site.legalName}
           </p>
           <h1

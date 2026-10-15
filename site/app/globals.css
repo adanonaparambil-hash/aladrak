@@ -178,6 +178,37 @@ body {
   }
 }
 
+/**
+ * The company's full legal name, over the hero film.
+ *
+ * It wore .label, which is a caption tier — 10px at the width most visitors
+ * arrive on. Under a 120px headline, on a moving aerial shot, the one line
+ * that says who this company actually is was the hardest thing on the screen
+ * to read. It is not a caption; it is the masthead.
+ *
+ * Its own tier rather than a bigger .label: that class is on hundreds of
+ * elements across the site and was tuned at these widths on purpose.
+ *
+ * Declared after the phone override above so it wins there too — both are
+ * single-class selectors, so the later one takes it.
+ *
+ * The shadow is doing as much work as the size. The hero's scrim is a
+ * top-and-bottom gradient that passes through ink/10 at the middle, which is
+ * exactly the height this line sits at, and the film underneath it is a
+ * white-roofed yard in full sun. Gold on near-white carries almost no
+ * contrast; the headline below already leans on drop-shadow-2xl for the same
+ * reason.
+ */
+.hero-eyebrow {
+  font-family: var(--font-space), sans-serif;
+  font-size: clamp(13px, 1.2vw, 21px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-shadow:
+    0 1px 2px rgba(10, 15, 12, 0.55),
+    0 2px 14px rgba(10, 15, 12, 0.45);
+}
+
 /* word-reveal target */
 .reveal-word {
   opacity: 0.15;
