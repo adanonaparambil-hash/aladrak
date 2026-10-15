@@ -54,7 +54,10 @@ export const lifeAtAdrak = {
        small picture stuck on a large one and it is gone. The frame is still
        staged in scripts/.src-life/ if it is ever wanted again. */
     { src: asset("/images/life/life-briefing.jpg"), label: "Morning briefing at the Head Office" },
-    { src: asset("/images/life/life-3.jpg"), label: "Life at the office" },
+    /* The team in the lobby under the company sign. Kept whole rather than cropped to
+       the tile — see scripts/prep-life.mjs. It replaced a single-portrait "Life at the
+       office" frame, whose caption said little about the place or the people. */
+    { src: asset("/images/life/life-team.jpg"), label: "The Al Adrak team, together" },
   ],
 };
 
