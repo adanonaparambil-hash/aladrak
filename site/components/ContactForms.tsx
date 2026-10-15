@@ -23,12 +23,12 @@ import { enquiryTypes, site, vendorProducts } from "@/lib/content";
  *   a URL or path    → POSTs the fields as JSON there instead, and the sending
  *                      states below report what came back.
  *
- * On GoDaddy's Linux hosting that URL is `/contact.php`, which ships in this
- * repo at public/contact.php and lands beside index.html in the export. PHP
+ * On GoDaddy's Linux hosting that URL is `/send-enquiry.php`, which ships in this
+ * repo at public/send-enquiry.php and lands beside index.html in the export. PHP
  * sends the mail from the company's own domain, so there is no third-party
  * form service holding client enquiries and no monthly submission cap.
  *
- * Set NEXT_PUBLIC_CONTACT_ENDPOINT=/contact.php when building for a PHP host.
+ * Set NEXT_PUBLIC_CONTACT_ENDPOINT=/send-enquiry.php when building for a PHP host.
  * The GitHub Pages workflow leaves it unset, so that deploy keeps the mailto
  * fallback and never posts to a file it cannot run.
  */
@@ -246,7 +246,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
               within days, and they fill in every input they can see. This one
               no human can: it is off-screen, out of the tab order and hidden
               from screen readers, so only a bot ever puts anything in it.
-              contact.php drops any submission that arrives with it filled —
+              send-enquiry.php drops any submission that arrives with it filled —
               answering 200, because telling a bot it failed only teaches it to
               come back differently. Kept out of `fields` deliberately: it must
               never be validated, labelled or counted as a question. */}

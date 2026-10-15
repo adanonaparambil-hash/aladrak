@@ -16,7 +16,13 @@
  * NEXT_PUBLIC_CONTACT_ENDPOINT is set at build time; left unset, the forms keep
  * their mailto: behaviour and this file is simply never called.
  *
- * Expects: POST, JSON body, from the same origin.
+ * Named send-enquiry.php, not contact.php: the site currently on aladrak.com
+ * already has a contact.php, and it is a PAGE — the old site's contact screen,
+ * which may well be linked and indexed. A file dropped in beside it under that
+ * name would replace a page people can reach with an endpoint that answers
+ * "Use POST" to anyone who opens it.
+ *
+ * Expects: POST, JSON body.
  * Returns: JSON {ok:true} or {ok:false,error:"..."} with a fitting status.
  */
 
@@ -43,9 +49,36 @@ const MAX_BYTES = 64 * 1024;
 /* ── plumbing ─────────────────────────────────────────────────────────────── */
 
 header('Content-Type: application/json; charset=utf-8');
-/* the form is served from this same domain, so no cross-origin access is
-   wanted and none is granted */
 header('X-Content-Type-Options: nosniff');
+
+/**
+ * Normally the form is served from this same domain and no cross-origin
+ * access is needed. The exception is the preview build on GitHub Pages: that
+ * host cannot run PHP, so while the new site is still being reviewed there,
+ * its forms can post here instead of falling back to a mailto.
+ *
+ * An allowlist, never "*": this endpoint sends mail, and a wildcard would let
+ * any site on the internet drive it.
+ */
+const ALLOWED_ORIGINS = [
+    'https://aladrak.com',
+    'https://www.aladrak.com',
+    'https://adanonaparambil-hash.github.io',
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($origin !== '' && in_array($origin, ALLOWED_ORIGINS, true)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Vary: Origin');
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+}
+
+/* a JSON POST from another origin is preflighted; answer and stop */
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 /* Typed void, not never: `never` is PHP 8.1, and a GoDaddy plan may still be
    running 7.4 or 8.0, where it is a fatal parse error rather than a warning.
