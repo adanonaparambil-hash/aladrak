@@ -144,8 +144,26 @@ export default function NewsList() {
             ref={panel}
             role="dialog"
             aria-modal="true"
-            className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-cream text-ink shadow-[0_60px_140px_rgba(0,0,0,0.7)]"
+            className="relative w-full max-w-3xl max-h-[92dvh] flex flex-col overflow-hidden rounded-3xl bg-cream text-ink shadow-[0_60px_140px_rgba(0,0,0,0.7)]"
           >
+            {/*
+              The article scrolls inside the panel, not the panel inside the
+              page. Three things were wrong with the old arrangement:
+                - .no-scrollbar hid the only sign that a long story continued,
+                  so a reader saw half a paragraph cut by the frame and no cue;
+                - Lenis owns the wheel for the whole page and had no idea this
+                  was a scroll area, so the wheel could be swallowed before it
+                  reached the story. data-lenis-prevent hands it back;
+                - the close button lived inside the scrolling content, so it
+                  left the screen with the first scroll. It now sits on the
+                  panel itself and stays put.
+              overscroll-contain keeps the end of the story from chaining into
+              the page behind the overlay.
+            */}
+            <div
+              data-lenis-prevent
+              className="chat-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain"
+            >
             {post.img && (
               <div className="relative aspect-[16/8] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -174,10 +192,11 @@ export default function NewsList() {
                 ))}
               </div>
             </div>
+            </div>
             <button
               onClick={close}
               aria-label="Close"
-              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400"
+              className="absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400"
             >
               <svg width="14" height="14" viewBox="0 0 14 14">
                 <path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />

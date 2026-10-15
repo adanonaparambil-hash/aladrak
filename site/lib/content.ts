@@ -386,7 +386,6 @@ export const leadership = {
     { name: "Rajan Prabhakaran", role: "General Manager — Projects & Development", img: asset("/images/team/roster/rajan.jpg") },
     { name: "Anoop Das", role: "General Manager — Design & Build", img: asset("/images/team/roster/anoop.jpg") },
     { name: "Visakh U B", role: "General Manager — Project Management & Controls", img: asset("/images/team/roster/visakh.jpg") },
-    { name: "Gnanasekaran T", role: "General Manager — Production & Sales", img: asset("/images/team/roster/gnanasekaran.jpg") },
     /* Iman closes the second row and Kausthubh opens the third — the two
        simply trade places; nobody else moves. */
     { name: "Iman Al Shaafari", role: "General Manager — Finance & Accounts", img: asset("/images/team/roster/iman.jpg") },

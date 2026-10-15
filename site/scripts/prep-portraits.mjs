@@ -140,7 +140,6 @@ await roster("riyas-mohamed-white.jpg", "riyas", { top: 0.175, bottom: 0.799, cx
 await roster("richard-sequeira.png", "richard", { top: 0.02, bottom: 0.65, cx: 0.50 }, "roster"); // head 6%, chin 28%
 await roster("sayed-iftequar-ali.jpeg", "iftikhar", { top: 0.05, bottom: 0.70, cx: 0.50 }, "roster"); // head 9%, chin 31%
 await roster("visakh-ub.jpeg", "visakh", { top: 0.03, bottom: 0.68, cx: 0.50 }, "roster"); // head 7%, chin 28%
-await roster("gnanasekaran-t.png", "gnanasekaran", { top: 0.12, bottom: 0.76, cx: 0.50 }, "roster"); // head 16%, chin 38%
 /* Farah's source is 1129x1393, a passport frame at 0.810 — very nearly the 5:6
    this grid wants, so the crop is almost the whole picture. Taken untouched it
    would still sit a shade loose: trimming the headroom brings him to head 7%,
