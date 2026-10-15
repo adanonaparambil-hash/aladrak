@@ -129,7 +129,14 @@ await roster("anoop-das.png", "anoop", { top: 0.08, bottom: 0.70, cx: 0.48 }, "r
    frame from 981px to 918px on his left shoulder, where holding their width
    and extending downward instead brings his hands into shot. A shoulder
    meeting the edge is normal across this grid; hands are not. */
-await roster("riyas-mohamed.jpeg", "riyas", { top: 0.175, bottom: 0.799, cx: 0.425 }, "roster"); // head 22%, chin 47%
+/* ...and the source is the KEYED copy, not the original. His is the only
+   portrait in the grid shot on an orange backdrop; every other sitter is on
+   white, so his tile read as a different photo session rather than a row of
+   colleagues. scripts/key-backdrop.mjs does the replacement and keeps the
+   frame size, so the measurements above are unaffected:
+     node scripts/key-backdrop.mjs scripts/.src-portraits/riyas-mohamed.jpeg \
+          scripts/.src-portraits/riyas-mohamed-white.jpg 1.6 */
+await roster("riyas-mohamed-white.jpg", "riyas", { top: 0.175, bottom: 0.799, cx: 0.425 }, "roster"); // head 22%, chin 47%
 await roster("richard-sequeira.png", "richard", { top: 0.02, bottom: 0.65, cx: 0.50 }, "roster"); // head 6%, chin 28%
 await roster("sayed-iftequar-ali.jpeg", "iftikhar", { top: 0.05, bottom: 0.70, cx: 0.50 }, "roster"); // head 9%, chin 31%
 await roster("visakh-ub.jpeg", "visakh", { top: 0.03, bottom: 0.68, cx: 0.50 }, "roster"); // head 7%, chin 28%
