@@ -326,15 +326,45 @@ export function search(query: string, limit = 3): Hit[] {
     score *= entry.weight ?? 1;
     hits.push({ entry, score });
   }
-  return hits.sort((a, b) => b.score - a.score).slice(0, limit);
+  hits.sort((a, b) => b.score - a.score);
+  if (!hits.length) return [];
+
+  /**
+   * Drop the stragglers.
+   *
+   * The runners-up are offered to the visitor as "did you mean" chips, so a
+   * weak one is not harmless — it is the site saying these are related when
+   * they are not. Asked about job openings, the leader scored 12.4 and the
+   * next two were 2.8 and 1.4: a news item about an awards night and another
+   * about a school, both suggested purely because they share a common word.
+   *
+   * A runner-up has to be a genuine near-miss — within a quarter of the
+   * leader's score — or it does not appear at all. Better one right answer
+   * than one right answer and two pieces of noise.
+   *
+   * The absolute floor matters as well as the ratio. "Who is the chairman"
+   * puts Leadership first on only 10 points, so a quarter of that is 2.5 —
+   * low enough to let an unrelated awards item through on the strength of one
+   * shared word. Nothing under 4 is a near-miss at any leader's score.
+   */
+  const floor = Math.max(hits[0].score * 0.25, 4);
+  return hits.filter((h, i) => i === 0 || h.score >= floor).slice(0, limit);
 }
 
 /** shown as starter chips, and as the fallback when nothing matches */
+/**
+ * The openers offered before anyone types.
+ *
+ * Two were dropped: "What projects are under construction?" and "Do you have
+ * any job openings?". Both invite an answer that goes stale the moment the
+ * register turns over or a vacancy is filled, and an assistant that reads from
+ * a fixed page cannot know when that happens — so it would keep answering
+ * confidently with last month's truth. Both subjects are still answered if
+ * someone asks; they are simply not put in front of them as a promise.
+ */
 export const SUGGESTIONS = [
   "What does Al Adrak build?",
   "How do I register as a supplier?",
   "Are you ISO certified?",
-  "What projects are under construction?",
   "How do I contact you?",
-  "Do you have any job openings?",
 ];

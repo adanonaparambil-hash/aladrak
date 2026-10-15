@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/content";
 import { asset } from "@/lib/asset";
@@ -58,6 +58,7 @@ export default function Header() {
     { href: section("work-with-us"), label: "Contact" },
   ];
 
+  const menuId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -171,7 +172,14 @@ export default function Header() {
           </a>
           {/* Mobile burger */}
           <button
-            aria-label="Menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            // A screen reader needs to know this is a toggle and which way it
+            // is currently set — without aria-expanded it is announced as a
+            // plain button called "Menu", with no hint that it opens anything
+            // or that the panel is already open. aria-controls ties it to the
+            // panel it governs.
+            aria-expanded={open}
+            aria-controls={menuId}
             onClick={() => setOpen(!open)}
             // w-11 h-11 is the 44px minimum: p-2 around two 1px bars left this
             // 40x24, the smallest target on the page and the one that opens the
@@ -197,6 +205,7 @@ export default function Header() {
         the page behind it.
       */}
       <div
+        id={menuId}
         className={`lg:hidden fixed inset-0 z-40 bg-ink/[0.97] backdrop-blur-xl transition-opacity duration-400 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
