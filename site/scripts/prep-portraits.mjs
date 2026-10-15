@@ -196,13 +196,20 @@ await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, 
 await roster("amani-al-ofi.jpg", "amani-al-ofi", { top: 0.0, bottom: 0.80, cx: 0.513 }, "roster"); // head 5.4%, chin 53% of the original
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
-   3376x6000. Massar tops out at ~7%, chin ~27%, hands ~85%. Full width;
-   2%–72.33% puts a little air above the massar and ends just above the hands.
+   Replaced 15 Oct 2026 with a new studio portrait, supplied at 1462x2000.
+   It is already framed close — head to about mid-thigh on an olive ground —
+   where the previous source was a 3376x6000 full-length frame that had to
+   lose most of its height.
+
+   0.731 against the card's 4:5, so 172px comes off, and it comes off the
+   BOTTOM. Taking it from the top instead crowds the massar against the edge;
+   leaving it at the bottom also keeps body under his name and title, which
+   are laid over that corner of the card on a dark gradient.
    --------------------------------------------------------------------- */
 await cut(
-  `${SRC}/thomas-alexander.jpg`,
+  `${SRC}/thomas-alexander-2026.jpg`,
   "public/images/team/founder.jpg",
-  { top: 0.02, bottom: 0.72333 },
+  { top: 0, bottom: 0.914 },
   1400,
   1750,
   "founder"

@@ -23,7 +23,14 @@ const jobs = [
   ["mazoon-dairy", P("002", "Project pics- updated/31 - MDP1.jpg")],
   ["aloft", P("014", "Project pics- updated/Aloft Hotel Muscat/BSK-5867.jpg")],
   ["buraimi-university", P("002", "Project pics- updated/10 - buraimi univerty.jpg")],
-  ["kom4", P("002", "Project pics- updated/16 - KOM 4.jpg")],
+  /* KOM 4 is cropped, not just resized. The master has an orange Jeep parked
+     across the foreground — it dates the photograph, pulls the eye off a
+     building the picture is meant to be about, and it is the first thing the
+     2013 plate on the history wheel shows. Taking the top 72% of the frame
+     loses it along with the rest of the parked cars, and keeps the whole
+     building including the circular atrium. 72% and not more: at 75% the
+     Jeep's roof comes back into shot (measured — 2,293 of its pixels). */
+  ["kom4", P("002", "Project pics- updated/16 - KOM 4.jpg"), { keepTop: 0.72 }],
   ["forensic-lab", P("002", "Project pics- updated/30 - forensic lab.jpg")],
 ];
 
@@ -31,15 +38,31 @@ const outDir = "public/images/projects";
 mkdirSync(outDir, { recursive: true });
 
 let fail = 0;
-for (const [slug, src] of jobs) {
+for (const [slug, src, opts] of jobs) {
   if (!existsSync(src)) {
     console.error(`MISSING: ${slug} <- ${src}`);
     fail++;
     continue;
   }
   const out = path.join(outDir, `${slug}.jpg`);
-  await sharp(src)
-    .rotate() // respect EXIF orientation
+  let pipe = sharp(src).rotate(); // respect EXIF orientation
+
+  /* keepTop trims the bottom of the frame and holds the original aspect, so
+     the derivative drops in at the same shape every consumer already expects
+     and no layout has to change. */
+  if (opts?.keepTop) {
+    const m = await sharp(src).rotate().metadata();
+    const height = Math.round(opts.keepTop * m.height);
+    const width = Math.round(height * (m.width / m.height));
+    pipe = pipe.extract({
+      left: Math.round((m.width - width) / 2),
+      top: 0,
+      width,
+      height,
+    });
+  }
+
+  await pipe
     .resize({ width: 1600, withoutEnlargement: true })
     .jpeg({ quality: 80, mozjpeg: true })
     .toFile(out);
