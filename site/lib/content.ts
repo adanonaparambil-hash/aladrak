@@ -189,6 +189,7 @@ export const facilities = [
   { name: "Formwork & Scaffolding", img: asset("/images/facilities/formwork.jpg"), desc: "A 13,500 sqm yard of PERI, Doka and cuplock systems — 350+ components." },
   { name: "Plant & Machinery", img: asset("/images/facilities/plant.jpg"), desc: "One of the largest equipment fleets in the country — 1,000+ units, centrally managed." },
   { name: "Crusher & Quarries", img: asset("/images/facilities/crusher.jpg"), desc: "Gabbro aggregate quarries at Duqm and Nakhal with mobile crushing units." },
+  { name: "IT & Data Centre", img: asset("/images/facilities/it-data-centre.jpg"), desc: "A Tier IV data centre — 180 fully loaded cabinets to Uptime Institute standards, with Cat 7A structured cabling." },
 ];
 
 export type ShopFloorMedia = {

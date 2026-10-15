@@ -57,7 +57,7 @@ export default function Facilities() {
               </h2>
             </div>
             <p className="md:col-span-4 md:col-start-9 text-taupe font-light leading-relaxed">
-              Ten dedicated production and support facilities give Al Adrak
+              Eleven dedicated production and support facilities give Al Adrak
               complete control over quality, cost and time — a rare industry
               blend of true turnkey capability.
             </p>

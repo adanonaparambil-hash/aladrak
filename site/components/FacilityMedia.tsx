@@ -8,7 +8,7 @@ import { facilities, facilityGallery, shopFloor, type ShopFloorMedia } from "@/l
  * Open the facility viewer.
  *
  * A number is a shop-floor strip index; a string is a facility name, which is
- * what the ten facility cards send. Either way the modal builds a playlist of
+ * what the facility cards send. Either way the modal builds a playlist of
  * everything RELATED — the clicked item first, then the rest of that
  * facility's media, then its extra gallery photographs — so one click on a
  * facility shows all of it, without the strip on the page having to carry
