@@ -561,7 +561,6 @@ export const groupCompanies: GroupCompany[] = [
   /* real estate */
   { name: "Adrak Developers", img: asset("/images/group/developers.jpg"), url: "https://www.haialnaseem.com" },
   { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
-  { name: "Adrak Builders", img: asset("/images/group/builders.jpg") },
   { name: "Adrak Facilities", img: asset("/images/group/facilities.jpg") },
   { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
   { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },

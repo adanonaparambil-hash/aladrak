@@ -19,7 +19,6 @@ const jobs = [
   ["maskaan", L("001", "Al Maskaan Village.png")],
   ["adante", L("001", "Adante Logo Double Stack ENG (1).png")],
   ["hai-al-naseem", L("001", "Hai Al Naseem  Logo png.png")],
-  ["builders", L("001", "Adrak-Builders-Logo.png")],
   ["developers", L("001", "1 Adrak Developers LLC.jpg")],
   ["facilities", L("001", "Adrak Facilities.jpg")],
   ["india", L("001", "2Adrak India.jpg")],

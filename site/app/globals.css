@@ -312,6 +312,175 @@ html.js-failed [style*="visibility: hidden"] {
   .map-split [data-stopcard] h4 { font-size: 1.5rem; margin-bottom: 0.5rem; }
 }
 
+/* =====================================================================
+ * FINISHING TOUCHES — all additive. Behaviour is in components/PremiumFX.tsx;
+ * what each one looks like is here. None of it rewrites a rule that was
+ * already in this file, and all of it is off under reduced motion.
+ * ===================================================================== */
+
+/* ---- tap ripple (touch and pen): a ring, a bloom and six sparks ---- */
+.fx-ripple {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 400;
+}
+.fx-ripple > i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+.fx-ring {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(201, 155, 69, 0.95);
+  box-shadow: 0 0 18px rgba(201, 155, 69, 0.5), inset 0 0 10px rgba(201, 155, 69, 0.3);
+  animation: fx-ring 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.fx-core {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, rgba(255, 246, 214, 0.95), rgba(201, 155, 69, 0) 70%);
+  animation: fx-core 0.5s ease-out forwards;
+}
+.fx-spark {
+  width: 4px;
+  height: 4px;
+  background: #f4dd95;
+  box-shadow: 0 0 8px #c99b45;
+  animation: fx-spark 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fx-ring {
+  from { transform: scale(0.35); opacity: 1; }
+  to   { transform: scale(5.2);  opacity: 0; }
+}
+@keyframes fx-core {
+  from { transform: scale(0.5); opacity: 1; }
+  to   { transform: scale(3.4); opacity: 0; }
+}
+@keyframes fx-spark {
+  from { transform: translate(0, 0) scale(1);                           opacity: 1; }
+  to   { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.2);   opacity: 0; }
+}
+
+/* ---- press feedback on touch: things sink a touch under a finger ----
+   `scale` (the individual property), not `transform`, so it composes with the transforms
+   GSAP and the Tailwind utilities already put on these elements instead of fighting them. */
+@media (hover: none) {
+  a:active,
+  button:active,
+  [role="button"]:active {
+    scale: 0.97;
+  }
+}
+
+/* ---- card spotlight: a soft gold light follows the pointer (fine pointers only) ----
+   The card's own pseudo-element: nothing is added to the markup, and neither card type
+   used ::after before. News cards were not positioned, so they are now (a static element
+   made `relative` moves nothing; it only gives the glow something to be absolute against).
+
+   The layer exists ONLY WHILE THE CARD IS HOVERED. An earlier version kept one invisible
+   (opacity 0) glow layer permanently on every card and faded it in; on the facilities page
+   that is a dozen extra GPU layers over cards that are already composited, tilted in 3D and
+   carry blurred badges, and in testing it ended with Chromium no longer painting them — the
+   cards went black, then the page. With no layer at rest there is nothing to pile up, and
+   one while a card is under the pointer. The fade is an animation for the same reason: a
+   transition needs the layer to exist beforehand. */
+@media (hover: hover) and (pointer: fine) {
+  [data-ncard] {
+    position: relative;
+  }
+  [data-fcard]:hover::after,
+  [data-ncard]:hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    border-radius: inherit;
+    pointer-events: none;
+    animation: fx-glow-in 0.4s ease both;
+    background: radial-gradient(
+      380px circle at var(--sx, 50%) var(--sy, 50%),
+      rgba(201, 155, 69, 0.2),
+      rgba(201, 155, 69, 0.06) 45%,
+      transparent 70%
+    );
+    /* A BORDER, not `box-shadow: inset 0 0 0 1px`: that inset shadow on this layer also stopped
+       Chromium painting the facility cards. A border does not. Do not put a box-shadow here. */
+    border: 1px solid rgba(201, 155, 69, 0.3);
+    box-sizing: border-box;
+  }
+  /* the news cards are pale: the same gold needs a little more weight to be seen on cream */
+  [data-ncard]:hover::after {
+    background: radial-gradient(
+      380px circle at var(--sx, 50%) var(--sy, 50%),
+      rgba(201, 155, 69, 0.3),
+      rgba(201, 155, 69, 0.09) 45%,
+      transparent 70%
+    );
+    border-color: rgba(201, 155, 69, 0.45);
+  }
+}
+@keyframes fx-glow-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- light sweep across the main gold buttons: the hero's first button, the header's Enquire,
+   and the form's submit — named, not matched by colour, so the floating chat button and the
+   small gold dots are never caught by it.
+
+   The highlight is a SECOND BACKGROUND drawn on the button itself, slid across by animating its
+   background-position, and only while the button is hovered. It is deliberately not a pseudo-element
+   or an overlay: two earlier versions were (a permanent translated ::after under overflow hidden and
+   isolation, then a hover-only ::after on a position:relative button) and both ended with Chromium no
+   longer painting the page — the menu bar's blurred backdrop sits right behind the Enquire button and
+   the form behind the submit. Putting `position: relative` on those three was enough on its own, found by
+   switching rules off one at a time on a live page. So: no pseudo-element, no positioning, no overflow,
+   no extra layer, and nothing at all at rest. All three buttons are plain solid-colour pills, so there
+   is no existing background-image for this to replace. ---- */
+@media (hover: hover) and (pointer: fine) {
+  .hero-cta a:first-child:hover,
+  header a[href^="mailto"]:hover,
+  #work-with-us button[type="submit"]:hover {
+    background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.5) 50%, transparent 62%);
+    background-repeat: no-repeat;
+    background-size: 250% 100%;
+    animation: fx-sweep 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@keyframes fx-sweep {
+  from { background-position: 103% 0; }
+  to   { background-position: -3% 0; }
+}
+
+/* ---- keyboard focus: a gold ring in the brand's own colour, only for keyboard users ---- */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* everything above stays off for visitors who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  .fx-ripple { display: none; }
+  [data-fcard]:hover::after,
+  [data-ncard]:hover::after { display: none; }
+  a:active, button:active, [role="button"]:active { scale: none; }
+  .hero-cta a:first-child:hover,
+  header a[href^="mailto"]:hover,
+  #work-with-us button[type="submit"]:hover { background-image: none; animation: none; }
+}
+
 /* word-reveal target */
 .reveal-word {
   opacity: 0.15;

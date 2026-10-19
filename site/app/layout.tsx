@@ -3,6 +3,7 @@ import { Marcellus, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import CursorFX from "@/components/CursorFX";
+import PremiumFX from "@/components/PremiumFX";
 import IntroLoader from "@/components/IntroLoader";
 import { years } from "@/lib/anniversary";
 import SiteAssistant from "@/components/SiteAssistant";
@@ -72,6 +73,7 @@ export default function RootLayout({
       >
         <SmoothScroll>{children}</SmoothScroll>
         <CursorFX />
+        <PremiumFX />
         <IntroLoader />
         <SiteAssistant />
       </body>
