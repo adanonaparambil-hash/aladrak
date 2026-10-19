@@ -76,35 +76,26 @@ export default function HistoryTimeline() {
   /** one entry per milestone — apply() drives the paragraph's opacity off the
       wheel's actual angle, which React state (quantized to an index) cannot */
   const storyEls = useRef<(HTMLDivElement | null)[]>([]);
-  /** the wheel is a wide-screen device; phones and reduced motion get the list */
-  const [wheel, setWheel] = useState(false);
+  /**
+   * The wheel is the design, so it is drawn on every screen; only reduced motion gets the plain list.
+   * Two layouts of the same wheel, chosen by the screen's shape (data-wheel, used by the `desk:` and
+   * `tall:` variants in globals.css):
+   *   wide  a landscape screen — desktop, laptop, a zoomed-in browser, a phone on its side. Sized in vw/vh,
+   *         so it keeps its proportions at any size.
+   *   tall  a portrait screen — phone, tablet. The wheel's pivot is pushed off the left edge so its rim
+   *         is an arc on the screen, with the heading and photograph stacked above it.
+   * Zooming a desktop browser changes the CSS width but not the shape, so it stays on "wide".
+   */
+  const [wheel, setWheel] = useState<false | "wide" | "tall">(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    /* The wheel is drawn for a tall screen. A large phone on its side is 1000px+ wide but only
-       ~400px tall, which passes the width test and leaves a wheel with no room to turn — so a screen
-       under 520px tall gets the list too, whatever its width. */
-    const short = window.matchMedia("(max-height: 520px)");
-    /* A desktop browser zoomed in (or on a 125-150% Windows display) shrinks the CSS width: a 1920px screen
-       at 250% is a 770px-wide page, which fails the width test above and used to get the phone list, with
-       none of the scroll effect. The wheel is drawn in vw/vh, so it looks identical there. What tells that
-       screen from a phone is the pointer (a mouse) and the PHYSICAL width (CSS width x pixel ratio), which
-       zoom does not change. A phone has a touch pointer and stays on the list. */
-    const mouse = window.matchMedia("(hover: hover) and (pointer: fine)");
     const sync = () => {
-      const desktop = mq.matches && !short.matches;
-      const zoomed = mouse.matches && window.innerWidth >= 560 && window.innerWidth * window.devicePixelRatio >= 1500;
-      setWheel((desktop || zoomed) && motionOK());
+      if (!motionOK()) return setWheel(false);
+      setWheel(window.innerWidth / window.innerHeight < 1 ? "tall" : "wide");
     };
     sync();
-    mq.addEventListener("change", sync);
-    short.addEventListener("change", sync);
-    window.addEventListener("resize", sync);   // zooming fires resize
-    return () => {
-      mq.removeEventListener("change", sync);
-      short.removeEventListener("change", sync);
-      window.removeEventListener("resize", sync);
-    };
+    window.addEventListener("resize", sync);   // turning a phone, or zooming, fires resize
+    return () => window.removeEventListener("resize", sync);
   }, []);
 
   /**
@@ -407,7 +398,7 @@ export default function HistoryTimeline() {
   }, [wheel]);
 
   return (
-    <section ref={section} id="history" className="relative bg-ink text-cream overflow-hidden">
+    <section ref={section} id="history" data-wheel={wheel || undefined} className="relative bg-ink text-cream overflow-hidden">
       {wheel && (
       <div className="relative h-[100dvh]" data-stage>
         {/* gold radial glow behind the wheel */}
@@ -425,11 +416,15 @@ export default function HistoryTimeline() {
           className="pointer-events-none absolute inset-0 w-full h-full opacity-40"
         />
 
-        {/* ===== left column — heading, intro, crossfading image ===== */}
-        <div className="absolute z-10 left-6 right-6 top-[7vh] desk:top-auto desk:bottom-[54vh] desk:left-[11%] desk:right-auto desk:w-[24vw]">
+        {/* ===== left column — heading, intro, crossfading image =====
+            Wide: the wrapper has no box, so the heading and the plate are each placed on the stage, as
+            they always were. Tall: they stack in one column from the top, so they can never overlap each
+            other or the wheel below, whatever the height of the screen. */}
+        <div className="desk:contents tall:absolute tall:z-10 tall:left-6 tall:right-6 tall:top-[max(76px,9vh)] tall:flex tall:flex-col tall:gap-3">
+        <div className="desk:absolute desk:z-10 desk:bottom-[54vh] desk:left-[11%] desk:w-[24vw]">
           <p className="label text-gold mb-3">Est. 1986</p>
           <h2 className="font-display text-4xl desk:text-[3vw] leading-none mb-4">Our History</h2>
-          <p className="text-cream/70 font-light text-sm desk:text-[1.05vw] leading-relaxed max-w-md">
+          <p className="hist-intro text-cream/70 font-light text-sm desk:text-[max(11px,1.05vw)] leading-relaxed max-w-md">
             {years()}+ years of building for what’s next. From a modest enterprise in
             Muscat to a leading EPC firm—civil, mechanical, electrical and
             infrastructural engineering across Oman and the region.
@@ -440,7 +435,7 @@ export default function HistoryTimeline() {
             height term) so it grows on wide screens without ever running past
             the bottom of the pinned stage on a short one. Lifted to 47vh to
             make the room for it. */}
-        <div className="hidden desk:block absolute z-10 left-[11%] top-[47vh] w-[min(30vw,52vh)] aspect-[5/4]">
+        <div className="tall:relative desk:absolute desk:z-10 desk:left-[11%] desk:top-[47vh] desk:w-[min(30vw,52vh)] tall:w-[min(calc(100vw-3rem),35vh)] aspect-[5/4]">
           {MILESTONES.map((m, i) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -454,9 +449,10 @@ export default function HistoryTimeline() {
             />
           ))}
         </div>
+        </div>
 
         {/* ===== the wheel ===== */}
-        <div className="absolute top-0 bottom-0 left-[-40%] w-[130vw] translate-y-[6%] desk:translate-y-0 desk:left-[11vw] desk:w-[70vw] flex items-center">
+        <div className="absolute desk:top-0 desk:bottom-0 desk:left-[11vw] desk:w-[70vw] tall:left-[-42vw] tall:w-[140vw] tall:bottom-[14dvh] tall:h-[34dvh] flex items-center">
           <div
             ref={wheelRef}
             className="relative grid w-full will-change-transform select-none [place-items:center_stretch]"
@@ -467,7 +463,7 @@ export default function HistoryTimeline() {
               <div
                 key={r.src}
                 aria-hidden
-                className="absolute right-0 top-1/2 w-[210vw] h-[210vw] desk:w-[140vw] desk:h-[140vw]"
+                className="absolute right-0 top-1/2 desk:w-[140vw] desk:h-[140vw] tall:w-[280vw] tall:h-[280vw]"
                 style={{
                   background: `url(${r.src}) no-repeat center / 100% 100%`,
                   transform: `translateY(-50%) scale(${r.scale})`,
@@ -486,7 +482,7 @@ export default function HistoryTimeline() {
                   style={{ transform: `rotate(${i * STEP}deg)`, transformOrigin: "0% 50%" }}
                 >
                   <div
-                    className={`absolute right-1/2 top-1/2 font-display leading-none text-[7vw] desk:text-[2.4vw] text-right transition-transform duration-500 ${
+                    className={`absolute right-1/2 top-1/2 font-display leading-none desk:text-[2.4vw] tall:text-[clamp(26px,8vw,48px)] text-right transition-transform duration-500 ${
                       i === active ? "translate-x-0 -translate-y-1/2" : "-translate-x-[20%] -translate-y-1/2"
                     }`}
                   >
@@ -501,12 +497,12 @@ export default function HistoryTimeline() {
                     ref={(el) => {
                       storyEls.current[i] = el;
                     }}
-                    className={`relative font-light text-[3.07vw] desk:text-[1.25vw] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
+                    className={`relative font-light desk:text-[max(12px,1.25vw)] tall:text-[clamp(14px,3.9vw,21px)] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
                       i === active ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     <span
-                      className={`absolute top-1/2 -translate-y-1/2 right-[103%] w-[2vw] h-[2vw] desk:w-[1vw] desk:h-[1vw] rounded-full bg-brand transition-opacity duration-500 ${
+                      className={`absolute top-1/2 -translate-y-1/2 right-[103%] desk:w-[1vw] desk:h-[1vw] tall:w-[2.2vw] tall:h-[2.2vw] rounded-full bg-brand transition-opacity duration-500 ${
                         i === active ? "opacity-100" : "opacity-0"
                       }`}
                     />

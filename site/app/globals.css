@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
-/* "desk": the wide-screen layout, switched on by the component rather than by the browser's width. The History wheel
-   is drawn in vw/vh, so it keeps its look at any size; what it must not do is fall back to the phone list just
-   because a desktop browser is zoomed in (CSS width under 1024) — see HistoryTimeline. */
-@custom-variant desk (@media (min-width: 0px));
+/* The History wheel has two layouts, chosen by the component from the screen's shape and written on the section as
+   data-wheel: "wide" (landscape: desktop, zoomed-in browser, phone on its side) and "tall" (portrait: phone, tablet).
+   `desk:` and `tall:` utilities apply inside the matching one. See HistoryTimeline. */
+@custom-variant desk (&:where([data-wheel="wide"] *));
+@custom-variant tall (&:where([data-wheel="tall"] *));
+/* the wheel's intro paragraph: dropped on a portrait screen unless it is tall enough to spare the room */
+[data-wheel="tall"] .hist-intro { display: none; }
+@media (min-height: 760px) { [data-wheel="tall"] .hist-intro { display: block; } }
+/* ...and on a wide screen that is short (a phone on its side, a heavily zoomed browser), where the heading would otherwise run up under the header */
+@media (max-height: 520px) { [data-wheel="wide"] .hist-intro { display: none; } }
 
 @theme inline {
   --color-ink: #0a0f0c;
