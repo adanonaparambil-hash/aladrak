@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis } from "./SmoothScroll";
-import { INTRO_DONE_EVENT, motionOK } from "@/lib/intro";
+import { INTRO_DONE_EVENT } from "@/lib/intro";
 import { leadership } from "@/lib/content";
 import { asset } from "@/lib/asset";
 import { currentYear, FOUNDED, years } from "@/lib/anniversary";
@@ -191,7 +191,16 @@ export default function IntroLoader() {
 
     const html = document.documentElement;
     const lenis = getLenis();
-    const calm = !motionOK();
+    /**
+     * There was a `calm` branch here that rendered the dial already landed on
+     * the present and dissolved it after a beat. On a machine with "animation
+     * effects" switched off — a great many Windows desktops — the site
+     * therefore opened on 2026 with no count at all, which is what "the loader
+     * is not loading, it shows 2026 from the start" turned out to mean. The
+     * arrival IS the content here, not decoration, so it plays for everyone.
+     * MAX_WAIT below is still the hard ceiling that stops a slow connection
+     * trapping anybody on it.
+     */
 
     const seen = (() => {
       try {
@@ -551,47 +560,6 @@ export default function IntroLoader() {
     let killed = false;
     const timers: number[] = [];
     let raf = 0;
-
-    /* ---------- reduced motion: landed on the present, all content shown ---------- */
-    if (calm) {
-      render(1, 0);
-      setLanded(true);
-      // there is no animation frame here to re-measure in, so take one more
-      // reading once layout has certainly happened
-      timers.push(
-        window.setTimeout(() => {
-          if (killed) return;
-          layout();
-          render(1, 0);
-        }, 80)
-      );
-      timers.push(
-        window.setTimeout(
-          () => {
-            if (killed) return;
-            killed = true;
-            html.classList.remove("is-intro");
-            lenis?.start();
-            ScrollTrigger.refresh();
-            window.dispatchEvent(new Event(INTRO_DONE_EVENT));
-            gsap.to(el, { autoAlpha: 0, duration: 0.5, onComplete: () => setGone(true) });
-          },
-          seen ? 600 : 1900
-        )
-      );
-      const onResizeCalm = () => {
-        layout();
-        render(1, 0);
-      };
-      window.addEventListener("resize", onResizeCalm);
-      return () => {
-        killed = true;
-        timers.forEach(clearTimeout);
-        window.removeEventListener("resize", onResizeCalm);
-        html.classList.remove("is-intro");
-        lenis?.start();
-      };
-    }
 
     /* ---------- the count, paced by the film's readiness ---------- */
     const heroVids = Array.from(

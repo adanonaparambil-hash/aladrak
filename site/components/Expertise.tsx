@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { expertise } from "@/lib/content";
-import { motionOK } from "@/lib/intro";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,8 +25,16 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Expertise() {
   const root = useRef<HTMLElement>(null);
-  /** reduced motion: the stacked layout at every width, nothing to animate or pin */
-  const [reduced, setReduced] = useState(false);
+  /**
+   * Was: "reduced motion gets the stacked layout at every width". That turned a
+   * reduced-motion desktop into a different website from the one next to it —
+   * reported from a colleague's machine as the page being broken — so nothing
+   * sets this any more and every width gets the stage it was designed for.
+   * Kept rather than torn out: `calm` below still drives the CSS layout switch,
+   * and that switch is what keeps the pinned [data-pin] element from ever being
+   * unmounted, which is the one thing that must never happen to it here.
+   */
+  const [reduced] = useState(false);
   /**
    * A screen under 520px tall gets the stacked layout. The pinned stage is a full-screen frame with a
    * heading, a capability card and a facts list laid over a photograph, drawn for a tall screen; on a
@@ -53,10 +60,6 @@ export default function Expertise() {
   }, []);
 
   useEffect(() => {
-    if (!motionOK()) {
-      setReduced(true);
-      return;
-    }
     // pinning is switched on and off by turning the phone; the pin spacers it adds or takes away move
     // every section below, so the page is re-measured when that happens (not on the first run, which
     // the page's own settle pass already covers)

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FOUNDED, years } from "@/lib/anniversary";
-import { motionOK } from "@/lib/intro";
 import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -138,7 +137,6 @@ export default function HistoryTimeline() {
     const canvas = tunnel.current;
     const root = section.current;
     if (!canvas || !root) return;
-    if (!motionOK()) return;
     const ctx2d = canvas.getContext("2d");
     if (!ctx2d) return;
 
@@ -251,11 +249,11 @@ export default function HistoryTimeline() {
     // is on screen and there is nothing to pin yet
     if (!wheel) return;
     /**
-     * Reduced motion keeps the wheel and the rotation the visitor drives by
-     * scrolling, and drops the two movements that run on their own: the settle
-     * tween 1.1s after they stop, and the entrance that scales the stage in.
+     * The settle tween and the entrance scale used to be dropped under reduced
+     * motion. They are not decoration laid over the wheel — the settle is what
+     * leaves a year ON the axis instead of stopped between two, so without it
+     * the wheel reads as mis-stopped. One wheel, the same everywhere.
      */
-    const calm = !motionOK();
     const root = section.current;
     const circle = wheelRef.current;
     if (!root || !circle) return;
@@ -358,7 +356,6 @@ export default function HistoryTimeline() {
             // delay must clear the scrub's own catch-up, or the snap starts from
             // a rotation still in motion and fights it.
             window.clearTimeout(snapTimer);
-            if (calm) return;
             snapTimer = window.setTimeout(() => {
               const idx = Math.min(
                 MILESTONES.length - 1,
@@ -389,12 +386,8 @@ export default function HistoryTimeline() {
         })
         .to({}, { duration: 40 });
 
-      // entrance — the wheel scales in as the section arrives. Left out entirely
-      // under reduced motion rather than given a zero duration: with no tween
-      // the stage simply keeps its natural opacity and scale, so there is no
-      // autoAlpha:0 sitting there waiting to be undone.
-      if (!calm)
-        gsap.fromTo(
+      // entrance — the wheel scales in as the section arrives
+      gsap.fromTo(
         root.querySelector("[data-stage]"),
         { autoAlpha: 0, scale: 0.65 },
         {
