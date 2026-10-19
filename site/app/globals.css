@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* "desk": the wide-screen layout, switched on by the component rather than by the browser's width. The History wheel
+   is drawn in vw/vh, so it keeps its look at any size; what it must not do is fall back to the phone list just
+   because a desktop browser is zoomed in (CSS width under 1024) — see HistoryTimeline. */
+@custom-variant desk (@media (min-width: 0px));
+
 @theme inline {
   --color-ink: #0a0f0c;
   --color-forest: #10271a;

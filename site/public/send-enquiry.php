@@ -183,6 +183,26 @@ if ($replyTo !== '') {
     $headers[] = 'Reply-To: ' . headerSafe($replyTo);
 }
 
+/**
+ * A copy kept on the server, before the mail is attempted.
+ *
+ * mail() answering "true" only means this server accepted the message; whether Gmail then accepts it
+ * depends on the domain's SPF/DMARC, and a rejection happens later, out of this script's sight. So every
+ * submission is also written here, and none can be lost. Open enquiry-log.php in cPanel's File Manager
+ * (Edit) to read them. The file starts with a line that makes PHP stop, so if anyone requests it by URL
+ * it shows nothing; "<?" in a submission is defanged so it cannot be read as code either.
+ * Failure to write is ignored on purpose: the enquiry must still be mailed.
+ */
+$logFile = __DIR__ . '/enquiry-log.php';
+if (!file_exists($logFile)) {
+    @file_put_contents($logFile, "<?php http_response_code(404); exit; ?>\n");
+}
+@file_put_contents(
+    $logFile,
+    '[' . date('Y-m-d H:i:s') . '] ' . str_replace('<?', '< ?', $subject . "\n" . $body) . "\n==========\n",
+    FILE_APPEND | LOCK_EX
+);
+
 /* -f sets the envelope sender, which is what SPF is actually checked against */
 $sent = mail(
     TO,

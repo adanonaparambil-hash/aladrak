@@ -85,13 +85,25 @@ export default function HistoryTimeline() {
        ~400px tall, which passes the width test and leaves a wheel with no room to turn — so a screen
        under 520px tall gets the list too, whatever its width. */
     const short = window.matchMedia("(max-height: 520px)");
-    const sync = () => setWheel(mq.matches && !short.matches && motionOK());
+    /* A desktop browser zoomed in (or on a 125-150% Windows display) shrinks the CSS width: a 1920px screen
+       at 250% is a 770px-wide page, which fails the width test above and used to get the phone list, with
+       none of the scroll effect. The wheel is drawn in vw/vh, so it looks identical there. What tells that
+       screen from a phone is the pointer (a mouse) and the PHYSICAL width (CSS width x pixel ratio), which
+       zoom does not change. A phone has a touch pointer and stays on the list. */
+    const mouse = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => {
+      const desktop = mq.matches && !short.matches;
+      const zoomed = mouse.matches && window.innerWidth >= 560 && window.innerWidth * window.devicePixelRatio >= 1500;
+      setWheel((desktop || zoomed) && motionOK());
+    };
     sync();
     mq.addEventListener("change", sync);
     short.addEventListener("change", sync);
+    window.addEventListener("resize", sync);   // zooming fires resize
     return () => {
       mq.removeEventListener("change", sync);
       short.removeEventListener("change", sync);
+      window.removeEventListener("resize", sync);
     };
   }, []);
 
@@ -414,10 +426,10 @@ export default function HistoryTimeline() {
         />
 
         {/* ===== left column — heading, intro, crossfading image ===== */}
-        <div className="absolute z-10 left-6 right-6 top-[7vh] lg:top-auto lg:bottom-[54vh] lg:left-[11%] lg:right-auto lg:w-[24vw]">
+        <div className="absolute z-10 left-6 right-6 top-[7vh] desk:top-auto desk:bottom-[54vh] desk:left-[11%] desk:right-auto desk:w-[24vw]">
           <p className="label text-gold mb-3">Est. 1986</p>
-          <h2 className="font-display text-4xl lg:text-[3vw] leading-none mb-4">Our History</h2>
-          <p className="text-cream/70 font-light text-sm lg:text-[1.05vw] leading-relaxed max-w-md">
+          <h2 className="font-display text-4xl desk:text-[3vw] leading-none mb-4">Our History</h2>
+          <p className="text-cream/70 font-light text-sm desk:text-[1.05vw] leading-relaxed max-w-md">
             {years()}+ years of building for what’s next. From a modest enterprise in
             Muscat to a leading EPC firm—civil, mechanical, electrical and
             infrastructural engineering across Oman and the region.
@@ -428,7 +440,7 @@ export default function HistoryTimeline() {
             height term) so it grows on wide screens without ever running past
             the bottom of the pinned stage on a short one. Lifted to 47vh to
             make the room for it. */}
-        <div className="hidden lg:block absolute z-10 left-[11%] top-[47vh] w-[min(30vw,52vh)] aspect-[5/4]">
+        <div className="hidden desk:block absolute z-10 left-[11%] top-[47vh] w-[min(30vw,52vh)] aspect-[5/4]">
           {MILESTONES.map((m, i) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -444,7 +456,7 @@ export default function HistoryTimeline() {
         </div>
 
         {/* ===== the wheel ===== */}
-        <div className="absolute top-0 bottom-0 left-[-40%] w-[130vw] translate-y-[6%] lg:translate-y-0 lg:left-[11vw] lg:w-[70vw] flex items-center">
+        <div className="absolute top-0 bottom-0 left-[-40%] w-[130vw] translate-y-[6%] desk:translate-y-0 desk:left-[11vw] desk:w-[70vw] flex items-center">
           <div
             ref={wheelRef}
             className="relative grid w-full will-change-transform select-none [place-items:center_stretch]"
@@ -455,7 +467,7 @@ export default function HistoryTimeline() {
               <div
                 key={r.src}
                 aria-hidden
-                className="absolute right-0 top-1/2 w-[210vw] h-[210vw] lg:w-[140vw] lg:h-[140vw]"
+                className="absolute right-0 top-1/2 w-[210vw] h-[210vw] desk:w-[140vw] desk:h-[140vw]"
                 style={{
                   background: `url(${r.src}) no-repeat center / 100% 100%`,
                   transform: `translateY(-50%) scale(${r.scale})`,
@@ -474,7 +486,7 @@ export default function HistoryTimeline() {
                   style={{ transform: `rotate(${i * STEP}deg)`, transformOrigin: "0% 50%" }}
                 >
                   <div
-                    className={`absolute right-1/2 top-1/2 font-display leading-none text-[7vw] lg:text-[2.4vw] text-right transition-transform duration-500 ${
+                    className={`absolute right-1/2 top-1/2 font-display leading-none text-[7vw] desk:text-[2.4vw] text-right transition-transform duration-500 ${
                       i === active ? "translate-x-0 -translate-y-1/2" : "-translate-x-[20%] -translate-y-1/2"
                     }`}
                   >
@@ -489,12 +501,12 @@ export default function HistoryTimeline() {
                     ref={(el) => {
                       storyEls.current[i] = el;
                     }}
-                    className={`relative font-light text-[3.07vw] lg:text-[1.25vw] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
+                    className={`relative font-light text-[3.07vw] desk:text-[1.25vw] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
                       i === active ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     <span
-                      className={`absolute top-1/2 -translate-y-1/2 right-[103%] w-[2vw] h-[2vw] lg:w-[1vw] lg:h-[1vw] rounded-full bg-brand transition-opacity duration-500 ${
+                      className={`absolute top-1/2 -translate-y-1/2 right-[103%] w-[2vw] h-[2vw] desk:w-[1vw] desk:h-[1vw] rounded-full bg-brand transition-opacity duration-500 ${
                         i === active ? "opacity-100" : "opacity-0"
                       }`}
                     />
