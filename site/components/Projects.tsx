@@ -44,6 +44,8 @@ export default function Projects() {
             end: () => `+=${(el.scrollWidth - window.innerWidth) * PACE}`,
             pin: true,
             scrub: 1,
+            // page order — see Expertise.tsx and the note in SmoothScroll.tsx
+            refreshPriority: 1,
             invalidateOnRefresh: true,
           },
         });
@@ -93,7 +95,15 @@ export default function Projects() {
   return (
     <section id="projects" ref={root} className="relative z-10 bg-pine text-cream">
       {/* ===== Desktop: pinned horizontal ===== */}
-      <div data-hwrap className="hidden md:block h-screen overflow-hidden">
+      {/*
+        bg-pine here as well as on the <section>, and it is load-bearing.
+        Pinning puts this element at position:fixed, which takes it out of the
+        flow; the section's own background stays behind at the spacer, so without
+        a colour of its own the pinned track is a transparent pane and the
+        section above shows through it. Reported as two sections printed on top
+        of each other — both headings at once, cards over the wrong photograph.
+      */}
+      <div data-hwrap className="hidden md:block h-screen overflow-hidden bg-pine">
         <div className="shell pt-28 pb-10 flex items-end justify-between">
           <div>
             <p className="label text-gold mb-4">Portfolio</p>

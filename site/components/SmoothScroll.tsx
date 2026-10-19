@@ -68,7 +68,12 @@ export default function SmoothScroll({
    * warm cache both can fire before the History trigger exists — after which
    * nothing sorted again: GSAP's own queued refresh on pin creation, resize
    * refreshes and the loader's refresh all take the array as it is (GSAP only
-   * sorts by itself if some trigger declares refreshPriority). `refreshInit`
+   * sorts by itself if some trigger declares refreshPriority — every pinned
+   * section now does, in page order: History 3, Expertise 2, Projects 1, the
+   * map 0. That matters because the fallback sort compares each trigger's
+   * measured `start`, which during a refresh is precisely the number being
+   * recomputed; declaring the order outright takes the measurements out of it).
+   * `refreshInit`
    * fires inside every refresh BEFORE the sort/revert step, with the spacers
    * still in place, so sorting there makes every refresh position-ordered no
    * matter when a trigger was created — this one, or a future late one.

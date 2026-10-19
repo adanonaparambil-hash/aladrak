@@ -128,6 +128,10 @@ export default function Expertise() {
             start: "top top",
             end: `+=${n * 100}%`,
             pin: true,
+            // Page order, explicitly. See the note in SmoothScroll.tsx: without a
+            // refreshPriority anywhere, GSAP's sort falls back to comparing measured
+            // starts — the very numbers a refresh is in the middle of recomputing.
+            refreshPriority: 2,
             // no anticipatePin: Lenis applies the pin in the same frame it scrolls,
             // so anticipating only snaps the frame early (see HistoryTimeline.tsx)
             scrub: 0.6,
@@ -191,7 +195,12 @@ export default function Expertise() {
 
       {/* ===== the stage: each discipline is the full frame ===== */}
       {!calm && (
-        <div data-pin className="expertise-stage hidden md:block relative h-screen overflow-hidden">
+        <div
+          data-pin
+          /* bg-ink is not decoration: see the note on backgrounds in Projects.tsx —
+             a pinned inner element leaves the flow and loses the section's colour. */
+          className="expertise-stage hidden md:block relative h-screen overflow-hidden bg-ink"
+        >
           {/* one full-bleed layer per discipline, cross-faded on scroll */}
           {expertise.map((d) => (
             <div key={d.key} data-group className="absolute inset-0" style={{ willChange: "opacity" }}>

@@ -238,6 +238,8 @@ export default function OmanMap() {
           end: `+=${STOPS.length * 80}%`,
           scrub: 0.9,
           pin: true,
+          // last of the four pinned sections down the page — see SmoothScroll.tsx
+          refreshPriority: 0,
           // no anticipatePin: Lenis applies the pin in the same frame it scrolls,
           // so anticipating only snaps the frame early (see HistoryTimeline.tsx)
           onUpdate: (st) => {

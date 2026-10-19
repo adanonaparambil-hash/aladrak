@@ -335,6 +335,8 @@ export default function HistoryTimeline() {
            */
           scrub: 0.25,
           pin: true,
+          // highest on the page, so it refreshes first — see SmoothScroll.tsx
+          refreshPriority: 3,
           // No anticipatePin. It exists to hide the frame of lag between a native
           // scroll and the pin being applied — but Lenis calls ScrollTrigger.update
           // synchronously in the frame it writes the scroll, so there is no lag,
