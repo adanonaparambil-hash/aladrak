@@ -492,6 +492,24 @@ textarea:focus-visible {
   #work-with-us button[type="submit"]:hover { background-image: none; animation: none; }
 }
 
+/**
+ * The open mobile menu covers the page, but the chat launcher is fixed at
+ * z-[95] — above the header and well above the menu panel — so it floated over
+ * the menu and was the one thing still visible on top of it. The panel cannot
+ * simply be raised above it: it sits at z-40 so that the logo and the close
+ * button in the z-50 header stay on top of it, which is how the menu is shut.
+ *
+ * Bounded to below lg because that is the only place the menu exists at all
+ * (the panel is `lg:hidden`); without the bound, widening the window while the
+ * menu is open would hide the launcher with no menu left on screen to explain
+ * why.
+ */
+@media (max-width: 1023px) {
+  html.menu-open [data-assistant] {
+    display: none;
+  }
+}
+
 /* word-reveal target */
 .reveal-word {
   opacity: 0.15;

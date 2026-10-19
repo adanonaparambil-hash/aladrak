@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/content";
 import { asset } from "@/lib/asset";
@@ -18,7 +19,13 @@ import { asset } from "@/lib/asset";
  * From another page there is no such section to jump to, so those links do need
  * a path back to the home page, and that one goes through asset().
  */
-const SECTIONS = ["about", "expertise", "projects", "facilities", "team"] as const;
+const SECTIONS = [
+  "about",
+  "expertise",
+  "projects",
+  "facilities",
+  "team",
+] as const;
 
 type NavLink = { href: string; label: string; note?: string };
 type NavItem = NavLink | { label: string; children: NavLink[] };
@@ -48,8 +55,16 @@ export default function Header() {
     {
       label: "Resources",
       children: [
-        { href: asset("/careers"), label: "Careers", note: "Openings and life at Adrak" },
-        { href: asset("/hse"), label: "HSE", note: "Health, safety & environment" },
+        {
+          href: asset("/careers"),
+          label: "Careers",
+          note: "Openings and life at Adrak",
+        },
+        {
+          href: asset("/hse"),
+          label: "HSE",
+          note: "Health, safety & environment",
+        },
       ],
     },
     /* the forms, not the top of the contact section — that opens on a
@@ -61,18 +76,30 @@ export default function Header() {
   const menuId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  /**
+   * The menu panel is portalled to <body>, and document does not exist while
+   * this page is being prerendered to static HTML, so the portal can only be
+   * created after mount. The markup is identical either way; it is only its
+   * parent that changes, which is what this gates.
+   */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   /* the panel covers the page, so stop the page scrolling behind it */
   useEffect(() => {
     if (!open) return;
     const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
+    // the chat launcher is fixed at z-[95], well above this panel, so it would
+    // otherwise float over the open menu; globals.css takes it out on this flag
+    document.documentElement.classList.add("menu-open");
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.documentElement.style.overflow = prev;
+      document.documentElement.classList.remove("menu-open");
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
@@ -119,8 +146,20 @@ export default function Header() {
                   className="label text-cream/70 group-hover/nav:text-gold group-focus-within/nav:text-gold transition-colors duration-300 flex items-center gap-1.5"
                 >
                   {l.label}
-                  <svg width="8" height="5" viewBox="0 0 8 5" aria-hidden className="opacity-70">
-                    <path d="M0.6 0.6 L4 4 L7.4 0.6" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                  <svg
+                    width="8"
+                    height="5"
+                    viewBox="0 0 8 5"
+                    aria-hidden
+                    className="opacity-70"
+                  >
+                    <path
+                      d="M0.6 0.6 L4 4 L7.4 0.6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
                   </svg>
                 </button>
                 <div
@@ -136,7 +175,9 @@ export default function Header() {
                         href={c.href}
                         className="block rounded-xl px-4 py-3 hover:bg-cream/[0.07] transition-colors duration-200"
                       >
-                        <span className="label text-cream/90 block">{c.label}</span>
+                        <span className="label text-cream/90 block">
+                          {c.label}
+                        </span>
                         {/* Not .label: at 0.3em tracking and uppercase these
                             descriptions wrapped onto two lines and made the
                             panel ragged. Plain sentence case is narrower, and
@@ -159,7 +200,7 @@ export default function Header() {
               >
                 {l.label}
               </a>
-            )
+            ),
           )}
         </nav>
 
@@ -203,58 +244,80 @@ export default function Header() {
         could not be scrolled to either. The hero also showed through beneath it.
         A fixed panel cannot clip, scrolls if a short phone needs it, and hides
         the page behind it.
+
+        PORTALLED TO <body>, and it has to be. As a child of <header> it was
+        caught by the same trap the project modal hit: once the page is scrolled,
+        the header takes `backdrop-blur-xl`, and a backdrop-filter makes an
+        element the containing block for its `position: fixed` descendants. So
+        `inset-0` stopped meaning the viewport and started meaning the header —
+        the panel rendered 64px tall inside the bar, open and fully opaque, with
+        the page showing through underneath it. It worked at the very top of the
+        page, where the header is still transparent and has no filter, which is
+        what made it look intermittent. Desktop never saw it at all: the panel is
+        `lg:hidden` and the wide nav is inline.
+
+        z-40 against the header's z-50 is deliberate and survives the move: the
+        panel covers the page, and the logo and the close button stay above it.
       */}
-      <div
-        id={menuId}
-        className={`lg:hidden fixed inset-0 z-40 bg-ink/[0.97] backdrop-blur-xl transition-opacity duration-400 ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        aria-hidden={!open}
-      >
-        <nav className="h-full overflow-y-auto overscroll-contain px-7 pt-24 pb-10 flex flex-col gap-5">
-          {links.map((l) =>
-            hasChildren(l) ? (
-              /* No dropdown on a phone — a hover panel has nothing to hover.
+      {mounted &&
+        createPortal(
+          <div
+            id={menuId}
+            className={`lg:hidden fixed inset-0 z-40 bg-ink/[0.97] backdrop-blur-xl transition-opacity duration-400 ${
+              open
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+            aria-hidden={!open}
+          >
+            <nav className="h-full overflow-y-auto overscroll-contain px-7 pt-24 pb-10 flex flex-col gap-5">
+              {links.map((l) =>
+                hasChildren(l) ? (
+                  /* No dropdown on a phone — a hover panel has nothing to hover.
                  The group becomes a labelled section with its pages listed
                  under it, which is one tap instead of two. */
-              <div key={l.label} className="mt-2">
-                <span className="label label-xs text-gold/70 block mb-1">{l.label}</span>
-                {l.children.map((c) => (
+                  <div key={l.label} className="mt-2">
+                    <span className="label label-xs text-gold/70 block mb-1">
+                      {l.label}
+                    </span>
+                    {l.children.map((c) => (
+                      <a
+                        key={c.href}
+                        href={c.href}
+                        onClick={() => setOpen(false)}
+                        tabIndex={open ? 0 : -1}
+                        className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors block"
+                      >
+                        {c.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
                   <a
-                    key={c.href}
-                    href={c.href}
+                    key={l.href}
+                    href={l.href}
                     onClick={() => setOpen(false)}
                     tabIndex={open ? 0 : -1}
-                    className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors block"
+                    // py-2.5 is the touch target, not decoration: leading-none left
+                    // these 26px tall, well under the 44px minimum for a thumb
+                    className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
                   >
-                    {c.label}
+                    {l.label}
                   </a>
-                ))}
-              </div>
-            ) : (
+                ),
+              )}
               <a
-                key={l.href}
-                href={l.href}
+                href={`mailto:${site.email}`}
                 onClick={() => setOpen(false)}
                 tabIndex={open ? 0 : -1}
-                // py-2.5 is the touch target, not decoration: leading-none left
-                // these 26px tall, well under the 44px minimum for a thumb
-                className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
+                className="mt-3 self-start px-7 py-3 label text-ink bg-gold rounded-full"
               >
-                {l.label}
+                Enquire
               </a>
-            )
-          )}
-          <a
-            href={`mailto:${site.email}`}
-            onClick={() => setOpen(false)}
-            tabIndex={open ? 0 : -1}
-            className="mt-3 self-start px-7 py-3 label text-ink bg-gold rounded-full"
-          >
-            Enquire
-          </a>
-        </nav>
-      </div>
+            </nav>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
