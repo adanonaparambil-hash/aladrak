@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import CursorFX from "@/components/CursorFX";
 import PremiumFX from "@/components/PremiumFX";
+import Diag from "@/components/Diag";
 import IntroLoader from "@/components/IntroLoader";
 import { years } from "@/lib/anniversary";
 import SiteAssistant from "@/components/SiteAssistant";
@@ -74,6 +75,8 @@ export default function RootLayout({
         <SmoothScroll>{children}</SmoothScroll>
         <CursorFX />
         <PremiumFX />
+        {/* renders nothing unless the address carries ?diag=1 */}
+        <Diag />
         <IntroLoader />
         <SiteAssistant />
       </body>
