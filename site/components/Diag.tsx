@@ -23,6 +23,8 @@ export default function Diag() {
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has("diag")) return;
     setOn(true);
+    // only with the flag: lets a diagnosis call refresh() and read vars directly
+    (window as unknown as { __ST?: unknown }).__ST = ScrollTrigger;
 
     let scrollEvents = 0;
     const countScroll = () => scrollEvents++;
@@ -38,9 +40,17 @@ export default function Diag() {
           "?";
         const pinEl = (t.pin as HTMLElement) || null;
         const pos = pinEl ? getComputedStyle(pinEl).position : "-";
+        // The reserved scroll room. A pin reading pad=0px is holding no space
+        // open at all, which drops every pin below it onto the same stretch of
+        // page — two sections pinning at once, and sections that never pin.
+        const sp =
+          pinEl && pinEl.parentElement && pinEl.parentElement.classList.contains("pin-spacer")
+            ? pinEl.parentElement
+            : null;
+        const pad = sp ? getComputedStyle(sp).paddingBottom : "-";
         return `${id.slice(0, 9).padEnd(9)} ${String(Math.round(t.start)).padStart(6)}-${String(
           Math.round(t.end)
-        ).padEnd(6)} ${t.isActive ? "ACTIVE" : "  --  "} p=${t.progress.toFixed(2)} ${pos}`;
+        ).padEnd(6)} ${t.isActive ? "ACTIVE" : "  --  "} ${pos.padEnd(8)} pad=${pad}`;
       });
 
       const html = document.documentElement;
