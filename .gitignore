@@ -127,3 +127,6 @@ Al-Adrak-HSE-page.docx
 # Build artefacts packaged for upload to the host — 120MB of zip has no
 # business in git, and `npm run build:php` recreates them in a minute.
 /*.zip
+
+# the GoDaddy upload folder, built from site/out
+/public_html/
