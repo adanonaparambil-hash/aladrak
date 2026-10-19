@@ -158,7 +158,35 @@ export default function SmoothScroll({
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    if (reduce) {
+      /**
+       * No Lenis here — but something still has to drive ScrollTrigger.
+       *
+       * `lenis.on("scroll", ScrollTrigger.update)` below is the only place in
+       * this app that calls update, and it lives behind this guard. With motion
+       * reduced the page was therefore relying entirely on ScrollTrigger's own
+       * internal scroll handling, and on at least one reporter's desktop that
+       * was not enough: every pin-spacer was in place, holding the page open to
+       * 44,000px, while the scroll sat *inside* a pin's range with nothing
+       * pinned and nothing revealed — thousands of pixels of empty section.
+       *
+       * Driving update from the native scroll event costs nothing when
+       * ScrollTrigger is already keeping up (it early-outs on an unchanged
+       * scroll position) and is the difference between a working page and a
+       * blank one when it is not. lagSmoothing(0) for the same reason it is set
+       * for Lenis: a stall must not be absorbed into a frame that never lands.
+       */
+      const onScroll = () => ScrollTrigger.update();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      gsap.ticker.lagSmoothing(0);
+      // one update after layout settles, so a page restored mid-document pins
+      // at the position it actually opens at rather than at the next scroll
+      const kick = requestAnimationFrame(() => ScrollTrigger.update());
+      return () => {
+        cancelAnimationFrame(kick);
+        window.removeEventListener("scroll", onScroll);
+      };
+    }
 
     /**
      * Scroll feel.

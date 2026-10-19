@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
- * A read-only diagnostic overlay, shown ONLY when the address ends in ?diag=1.
+ * A read-only diagnostic overlay, shown ONLY when the address carries ?diag=1.
  *
  * It exists because the scroll-pin faults being reported happen on other
- * people's machines and have not reproduced on ours — resizing mid-pin,
- * reloading at depth and a full scroll sweep of the section boundaries all came
- * back clean. Rather than keep changing code on a guess, this prints the few
- * numbers that would actually identify the cause, so one screenshot from the
- * machine that shows the fault settles it.
+ * people's machines and have not reproduced here. The first pass printed the
+ * DOM's own geometry and that was enough to show the real fault — the scroll
+ * sitting inside a pin's range with nothing pinned — so this pass asks GSAP
+ * directly instead: how many triggers it has, what IT thinks each one's range
+ * is, and whether it believes any of them are active.
  *
- * It renders nothing at all without the flag: no listeners, no timers, no cost
- * to an ordinary visit. Delete it once the fault is understood.
+ * Inert without the flag: no overlay, no listeners, no timers. Delete once the
+ * fault is understood.
  */
 export default function Diag() {
   const [on, setOn] = useState(false);
@@ -23,48 +24,38 @@ export default function Diag() {
     if (!new URLSearchParams(window.location.search).has("diag")) return;
     setOn(true);
 
+    let scrollEvents = 0;
+    const countScroll = () => scrollEvents++;
+    window.addEventListener("scroll", countScroll, { passive: true });
+
     const read = () => {
-      const rows: string[] = [];
-      document.querySelectorAll(".pin-spacer").forEach((sp) => {
-        const el = sp.firstElementChild as HTMLElement | null;
-        if (!el) return;
+      const all = ScrollTrigger.getAll();
+      const pinned = all.filter((t) => t.vars && t.vars.pin);
+      const rows = pinned.map((t) => {
+        const el = (t.trigger as HTMLElement) || null;
         const id =
-          el.closest("section[id]")?.id ||
-          (el.className || "").toString().split(" ")[0] ||
+          (el && (el.closest("section[id]")?.id || (el.className || "").toString().split(" ")[0])) ||
           "?";
-        const spBox = sp.getBoundingClientRect();
-        const top = Math.round(spBox.top + window.scrollY);
-        const end = Math.round(top + (spBox.height - el.getBoundingClientRect().height));
-        rows.push(
-          `${id.padEnd(10)} ${String(top).padStart(6)}-${String(end).padEnd(6)} ${getComputedStyle(el).position}`
-        );
+        const pinEl = (t.pin as HTMLElement) || null;
+        const pos = pinEl ? getComputedStyle(pinEl).position : "-";
+        return `${id.slice(0, 9).padEnd(9)} ${String(Math.round(t.start)).padStart(6)}-${String(
+          Math.round(t.end)
+        ).padEnd(6)} ${t.isActive ? "ACTIVE" : "  --  "} p=${t.progress.toFixed(2)} ${pos}`;
       });
 
-      // the fault being hunted: more than one pinned stage fixed at the same time
-      const fixed = [...document.querySelectorAll<HTMLElement>(".pin-spacer")]
-        .map((sp) => sp.firstElementChild as HTMLElement | null)
-        .filter((el): el is HTMLElement => !!el && getComputedStyle(el).position === "fixed")
-        .map((el) => el.closest("section[id]")?.id || "?");
-
-      // Chrome reports zoom as a ratio of outer to inner width; not exact on
-      // every platform but enough to tell 100% from 125%
-      const zoom = Math.round((window.outerWidth / window.innerWidth) * 100);
-
+      const html = document.documentElement;
       setText(
         [
-          `viewport  ${window.innerWidth} x ${window.innerHeight}`,
-          `dpr       ${window.devicePixelRatio}  (zoom ~${zoom}%)`,
+          `viewport  ${window.innerWidth} x ${window.innerHeight}  dpr ${window.devicePixelRatio}`,
           `reduced   ${window.matchMedia("(prefers-reduced-motion: reduce)").matches}`,
-          `scrollY   ${Math.round(window.scrollY)}`,
-          `doc       ${document.body.scrollHeight}`,
-          `pins      ${rows.length}`,
+          `scrollY   ${Math.round(window.scrollY)}   events ${scrollEvents}`,
+          `maxScroll ${Math.round(ScrollTrigger.maxScroll(window))}   doc ${html.scrollHeight}`,
+          `triggers  ${all.length}  (pinned ${pinned.length})`,
+          `htmlOflow ${getComputedStyle(html).overflow}  isIntro ${html.classList.contains("is-intro")}`,
           ...rows,
-          `FIXED NOW ${fixed.length ? fixed.join(" + ") : "none"}`,
-          fixed.length > 1 ? ">>> OVERLAP <<<" : "",
-          `ua        ${navigator.userAgent.slice(0, 64)}`,
-        ]
-          .filter(Boolean)
-          .join("\n")
+          `ACTIVE NOW ${pinned.filter((t) => t.isActive).length}`,
+          `ua ${navigator.userAgent.slice(0, 58)}`,
+        ].join("\n")
       );
     };
 
@@ -74,6 +65,7 @@ export default function Diag() {
     window.addEventListener("resize", read);
     return () => {
       window.clearInterval(t);
+      window.removeEventListener("scroll", countScroll);
       window.removeEventListener("scroll", read);
       window.removeEventListener("resize", read);
     };
@@ -89,7 +81,7 @@ export default function Diag() {
         zIndex: 99999,
         margin: 0,
         padding: "8px 10px",
-        background: "rgba(0,0,0,0.86)",
+        background: "rgba(0,0,0,0.88)",
         color: "#9effa6",
         font: "11px/1.45 ui-monospace,Consolas,monospace",
         whiteSpace: "pre",
