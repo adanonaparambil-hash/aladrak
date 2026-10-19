@@ -115,6 +115,10 @@ Al-Adrak-HSE-page.docx
 # briefing. Only the 16:10 tile and the podium card belong in public/.
 /site/scripts/.src-life/
 
+# Staging for scripts/prep-timeline.mjs — the as-supplied 1990 site photograph, before
+# the man standing in it was cropped out. Only the 5:4 plate belongs in public/.
+/site/scripts/.src-timeline/
+
 # Staging for scripts/prep-it-facility.mjs — the client's data-centre photograph
 # as supplied (a brochure crop with its caption box baked in). Only the 4:3 card
 # tile belongs in public/.

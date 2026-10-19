@@ -89,3 +89,20 @@ await cover("public/images/Thumrait.jpg", "m-2025-thumrait.jpg");
 // swapped from the school render to the actual GEMS/Adrak signing-ceremony
 // photograph — the milestone is the partnership being signed, not the building
 await cover("public/images/blog/gems-adrak-signing-ceremony.jpg", "m-2026-gems.jpg");
+
+/* 1990 is the company's own photograph of a two-storey block going up, with a man
+   standing in front of it. The client asked for the building alone, without him.
+   Painting him out would mean inventing masonry in an archive photograph, so he is
+   cropped out instead: he fills the lower middle of the frame (x 480-880, y 325-779),
+   and the right-hand wing's arcade beyond him is clear of him entirely — his
+   shoulder reaches x ~790 at the foot of this box. The box is 5:4 to match the plate,
+   560x448 of the 1400x779 original, so it is enlarged about 2x; the photograph was
+   soft to begin with and a light unsharp mask keeps it from smearing.
+   The original is staged in scripts/.src-timeline/ (gitignored). */
+await sharp("scripts/.src-timeline/era-1990-site.jpg")
+  .extract({ left: 840, top: 100, width: 560, height: 448 })
+  .resize(W, H, { kernel: "lanczos3" })
+  .sharpen({ sigma: 1.1, m1: 0.6, m2: 2.2 })
+  .jpeg({ quality: 88, mozjpeg: true })
+  .toFile(`${OUT}/era-1990-site.jpg`);
+console.log("region  1400x779 -> era-1990-site.jpg (the building, without the man)");
