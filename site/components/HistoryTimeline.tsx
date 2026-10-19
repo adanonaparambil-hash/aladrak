@@ -77,7 +77,13 @@ export default function HistoryTimeline() {
       wheel's actual angle, which React state (quantized to an index) cannot */
   const storyEls = useRef<(HTMLDivElement | null)[]>([]);
   /**
-   * The wheel is the design, so it is drawn on every screen; only reduced motion gets the plain list.
+   * The wheel is the design, so it is drawn on every screen — reduced motion included. That branch used
+   * to fall back to the plain list, which was wrong: Windows ships "animation effects" off on a great
+   * many machines, so visitors who had asked for nothing of the kind saw a plain list where everyone
+   * beside them saw the wheel, and it read as the page being broken. Reduced motion now suppresses only
+   * the motion nobody asked for (the particle tunnel, the settle tween, the entrance scale) and keeps
+   * the wheel and its scroll-scrubbed rotation, which is the visitor's own scrolling under their hand.
+   * The list below is now purely the pre-hydration / no-JS fallback.
    * Two layouts of the same wheel, chosen by the screen's shape (data-wheel, used by the `desk:` and
    * `tall:` variants in globals.css):
    *   wide  a landscape screen — desktop, laptop, a zoomed-in browser, a phone on its side. Sized in vw/vh,
@@ -90,7 +96,6 @@ export default function HistoryTimeline() {
 
   useEffect(() => {
     const sync = () => {
-      if (!motionOK()) return setWheel(false);
       setWheel(window.innerWidth / window.innerHeight < 1 ? "tall" : "wide");
     };
     sync();
@@ -242,9 +247,15 @@ export default function HistoryTimeline() {
   }, [wheel]);
 
   useEffect(() => {
-    // the wheel only exists on wide screens with motion allowed; without this
-    // guard the section still pinned on a phone and showed a near-empty screen
+    // `wheel` is false only before hydration, when the plain list is still what
+    // is on screen and there is nothing to pin yet
     if (!wheel) return;
+    /**
+     * Reduced motion keeps the wheel and the rotation the visitor drives by
+     * scrolling, and drops the two movements that run on their own: the settle
+     * tween 1.1s after they stop, and the entrance that scales the stage in.
+     */
+    const calm = !motionOK();
     const root = section.current;
     const circle = wheelRef.current;
     if (!root || !circle) return;
@@ -347,6 +358,7 @@ export default function HistoryTimeline() {
             // delay must clear the scrub's own catch-up, or the snap starts from
             // a rotation still in motion and fights it.
             window.clearTimeout(snapTimer);
+            if (calm) return;
             snapTimer = window.setTimeout(() => {
               const idx = Math.min(
                 MILESTONES.length - 1,
@@ -377,8 +389,12 @@ export default function HistoryTimeline() {
         })
         .to({}, { duration: 40 });
 
-      // entrance — the wheel scales in as the section arrives
-      gsap.fromTo(
+      // entrance — the wheel scales in as the section arrives. Left out entirely
+      // under reduced motion rather than given a zero duration: with no tween
+      // the stage simply keeps its natural opacity and scale, so there is no
+      // autoAlpha:0 sitting there waiting to be undone.
+      if (!calm)
+        gsap.fromTo(
         root.querySelector("[data-stage]"),
         { autoAlpha: 0, scale: 0.65 },
         {
@@ -518,7 +534,8 @@ export default function HistoryTimeline() {
       )}
 
       {/*
-        The list — phones and reduced motion.
+        The list — what stands in before hydration, and all a visitor gets if the
+        bundle never arrives.
         The wheel is a wide-screen device: at 390px its geometry put all but one
         or two years off-frame and left a full viewport of empty ground, with no
         story text visible at all. This gives the same milestones as a plain

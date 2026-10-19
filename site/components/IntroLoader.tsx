@@ -168,9 +168,26 @@ export default function IntroLoader() {
     }
     const el = root.current;
     const cv = canvas.current;
-    if (!el || !cv) return;
-    const ctx = cv.getContext("2d");
-    if (!ctx) return;
+    /**
+     * Everything that LIFTS the overlay — the `is-intro` class, setGone, the
+     * INTRO_DONE event the hero waits on — is set up below this point, so a bare
+     * `return` here does not skip the intro, it strands it: a fixed, opaque gold
+     * screen with no way past and a hero film that never starts.
+     *
+     * A missing 2D context is rare but real (canvas blocked by a hardened
+     * browser or an extension, a driver the browser has blacklisted), and it is
+     * exactly the kind of fault that hits a few machines and no others. Treat it
+     * the same way the component already treats "no intro wanted": hand the page
+     * over immediately and let the site render without its arrival.
+     */
+    const ctx = cv?.getContext("2d") ?? null;
+    if (!el || !cv || !ctx) {
+      document.documentElement.classList.remove("is-intro");
+      getLenis()?.start();
+      window.dispatchEvent(new Event(INTRO_DONE_EVENT));
+      setGone(true);
+      return;
+    }
 
     const html = document.documentElement;
     const lenis = getLenis();
