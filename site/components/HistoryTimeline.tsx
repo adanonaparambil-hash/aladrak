@@ -81,10 +81,18 @@ export default function HistoryTimeline() {
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setWheel(mq.matches && motionOK());
+    /* The wheel is drawn for a tall screen. A large phone on its side is 1000px+ wide but only
+       ~400px tall, which passes the width test and leaves a wheel with no room to turn — so a screen
+       under 520px tall gets the list too, whatever its width. */
+    const short = window.matchMedia("(max-height: 520px)");
+    const sync = () => setWheel(mq.matches && !short.matches && motionOK());
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    short.addEventListener("change", sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      short.removeEventListener("change", sync);
+    };
   }, []);
 
   /**

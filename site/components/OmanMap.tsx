@@ -101,6 +101,34 @@ export default function OmanMap() {
     selRef.current = sel;
   }, [sel]);
 
+  /**
+   * A stop card whose list is taller than the card can scroll — but only those.
+   *
+   * The cards used to clip (overflow-hidden at 46% of the screen), so on an ordinary phone the
+   * Muscat card, 17 projects, lost up to 475px of its list with no way to reach it. They scroll now.
+   * That brings two catches this deals with:
+   *  - Lenis owns the mouse wheel for the whole page, and ignores nested scroll areas unless they are
+   *    marked data-lenis-prevent. Marking EVERY card would stop the page scrolling whenever the pointer
+   *    rested over one, even a card with nothing to scroll, so the mark goes on only those that overflow.
+   *  - the card layer is pointer-events-none so the map beneath stays tappable; a card that has to be
+   *    scrolled must receive the pointer, so it alone opts back in.
+   * Cards that fit are left exactly as before. Re-checked on resize and once fonts have settled, since
+   * both change how tall a list is.
+   */
+  useEffect(() => {
+    const sync = () => {
+      section.current?.querySelectorAll<HTMLElement>("[data-stopcard] > div").forEach((card) => {
+        const scrolls = card.scrollHeight > card.clientHeight + 2;
+        card.toggleAttribute("data-lenis-prevent", scrolls);
+        card.style.pointerEvents = scrolls ? "auto" : "";
+      });
+    };
+    sync();
+    window.addEventListener("resize", sync);
+    document.fonts?.ready.then(sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+
   /* keep the callout pinned to its dot, flipping below when it would clip out
      of the top of the map frame */
   useEffect(() => {
@@ -117,9 +145,20 @@ export default function OmanMap() {
       if (!dot) return;
       const dr = dot.getBoundingClientRect();
       const wr = wrap.getBoundingClientRect();
-      const x = dr.left + dr.width / 2 - wr.left;
+      const dotX = dr.left + dr.width / 2;                 // the dot, in viewport coordinates
+      /* The callout is centred on its dot, which is right on a desktop and wrong on a phone: it is
+         278px wide on a 375px screen, so any dot in the outer half of the map pushed it past the
+         screen edge and cut its text off. Its centre is therefore held far enough inside the visible
+         part of the map (the map frame, or the screen where that is narrower) for the whole card to
+         show, and its arrow slides along the card's edge to keep pointing at the dot. */
+      const MARGIN = 12, half = el.offsetWidth / 2;
+      const minC = Math.max(wr.left, 0) + MARGIN + half;
+      const maxC = Math.min(wr.right, window.innerWidth) - MARGIN - half;
+      const centre = minC > maxC ? (minC + maxC) / 2 : Math.min(Math.max(dotX, minC), maxC);
+      const x = centre - wr.left;
       const above = dr.top - wr.top - 14;
       const flip = above - el.offsetHeight < 0;
+      tip.style.left = `${Math.min(Math.max(dotX - centre + half, 18), 2 * half - 18)}px`;
       el.style.left = `${x}px`;
       el.style.top = flip ? `${dr.bottom - wr.top + 14}px` : `${above}px`;
       el.style.transform = flip ? "translate(-50%, 0)" : "translate(-50%, -100%)";
@@ -312,7 +351,7 @@ export default function OmanMap() {
         </div>
 
         {/* map + cards */}
-        <div className="relative flex-1 min-h-0 grid lg:grid-cols-5 gap-0 px-4 md:px-14 pb-6">
+        <div className="map-split relative flex-1 min-h-0 grid lg:grid-cols-5 gap-0 px-4 md:px-14 pb-6">
           <div ref={mapWrap} className="relative lg:col-span-3 min-h-0">
             <svg
               ref={svgRef}
@@ -490,7 +529,7 @@ export default function OmanMap() {
                   data-stopcard
                   className="absolute inset-x-0 bottom-0 lg:inset-0 lg:flex lg:items-center"
                 >
-                  <div className="w-full max-h-[42dvh] lg:max-h-[70dvh] overflow-hidden rounded-2xl border border-cream/12 bg-ink/70 backdrop-blur-xl p-6 md:p-9 shadow-[0_35px_80px_rgba(0,0,0,0.5)]">
+                  <div className="w-full max-h-[46dvh] lg:max-h-[70dvh] overflow-y-auto overflow-x-hidden map-scroll rounded-2xl border border-cream/12 bg-ink/70 backdrop-blur-xl p-6 md:p-9 shadow-[0_35px_80px_rgba(0,0,0,0.5)]">
                     <p className="label text-gold mb-2">{stop.sub}</p>
                     <h4 className="font-display text-2xl md:text-4xl mb-5">{stop.title}</h4>
                     {sites.length > 0 ? (
@@ -500,7 +539,7 @@ export default function OmanMap() {
                         }`}
                       >
                         {sites.map(({ pr, pl }) => (
-                          <li key={pr} className="flex items-start gap-3 py-[7px] break-inside-avoid">
+                          <li key={pr} className="flex items-start gap-3 py-[3px] sm:py-[7px] break-inside-avoid">
                             <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-gold flex-none" />
                             <span className="text-cream/85 font-light text-[clamp(0.84375rem,0.8vw,1.125rem)] leading-snug">
                               {pr}

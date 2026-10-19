@@ -76,6 +76,26 @@ body {
   color: var(--color-ink);
 }
 
+/**
+ * The safety net's other half (the script is in app/layout.tsx).
+ *
+ * Only ever applies when the page's scripts have not started after nine seconds, so
+ * it costs a working page nothing. It removes the loading screen and shows what was
+ * waiting to be revealed. "opacity:0" is how React writes the inline style in the
+ * page's HTML, "opacity: 0" how GSAP writes it afterwards; both are matched.
+ */
+html.js-failed .intro-root {
+  display: none !important;
+}
+html.js-failed [style*="opacity:0"],
+html.js-failed [style*="opacity: 0"],
+html.js-failed [style*="visibility:hidden"],
+html.js-failed [style*="visibility: hidden"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
 /* custom cursor active — hide the native one */
 .has-cursor-fx,
 .has-cursor-fx a,
@@ -207,6 +227,89 @@ body {
   text-shadow:
     0 1px 2px rgba(10, 15, 12, 0.55),
     0 2px 14px rgba(10, 15, 12, 0.45);
+}
+
+/**
+ * The hero on a SHORT screen.
+ *
+ * Everything above was tuned against screen WIDTH, and the hero's text is sized from width
+ * too (17vw / 11vw / 120px). On a phone held sideways the screen is wide and only 320-430px
+ * tall, so the block — company name, two lines of headline, tagline, two buttons — came out
+ * 20 to 90px taller than the screen. It is centred in a frame exactly one screen high, so it
+ * overflowed at BOTH ends: the headline's top slid up under the menu bar and the buttons were
+ * cut off at the bottom. A laptop only 600px tall had the company name under the menu bar.
+ *
+ *   under 760px tall  the headline is also capped by height (13vh), and the block starts below
+ *                     the menu bar rather than behind it, so it centres in what is left.
+ *   under 480px tall  (a phone on its side) the tagline goes and the buttons share a row — the
+ *                     headline and the two ways in are what the screen is for.
+ *
+ * Unlayered, like .hero-eyebrow, so these beat the Tailwind utilities on the same elements.
+ * The three breakpoints repeat the utilities' own (640 and 1024) so the cap only ever
+ * shrinks a size and never replaces it.
+ */
+@media (max-height: 760px) {
+  .hero-content { padding-top: 6rem; }
+  .hero-title { font-size: min(17vw, 13vh); }
+}
+@media (max-height: 760px) and (min-width: 640px) {
+  .hero-title { font-size: min(11vw, 13vh); }
+}
+@media (max-height: 760px) and (min-width: 1024px) {
+  .hero-title { font-size: min(120px, 13vh); }
+}
+/* a small phone upright (320x568, 360x560): the tagline wraps to four lines and the two stacked
+   buttons are tall, which left the block 6-7px over; a little less air between them is enough */
+@media (max-height: 640px) {
+  .hero-sub { margin-top: 1rem; }
+  .hero-cta { margin-top: 1.75rem; }
+}
+@media (max-height: 640px) and (max-width: 639px) {
+  .hero-content { padding-top: 5.25rem; }
+  .hero-sub { font-size: 1rem; }
+}
+@media (max-height: 480px) {
+  .hero-sub { display: none; }
+  .hero-eyebrow { margin-bottom: 0.5rem; }
+  .hero-cta { margin-top: 1rem; flex-direction: row; width: auto; padding-inline: 0; }
+  .hero-cta a { padding-block: 0.75rem; padding-inline: 1.75rem; }
+}
+
+/* Core Expertise on a screen under 520px tall: the pinned stage goes, the stacked list takes its place.
+   !important because the stage's own `hidden md:block` and the list's `md:hidden` are utilities that
+   decide by width; this decides by height. See Expertise.tsx for why this is CSS and not a re-render. */
+@media (max-height: 520px) {
+  .expertise-stage { display: none !important; }
+  .expertise-stacked { display: block !important; }
+}
+
+/* the map's stop cards, when a list is too long for the card: a slim gold bar on the dark glass
+   (the chat panel's bar is dark-on-cream and would vanish here) */
+.map-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 155, 69, 0.55) transparent;
+}
+.map-scroll::-webkit-scrollbar { width: 6px; }
+.map-scroll::-webkit-scrollbar-track { background: transparent; }
+.map-scroll::-webkit-scrollbar-thumb { background: rgba(201, 155, 69, 0.5); border-radius: 99px; }
+
+/**
+ * The map on a phone held sideways.
+ *
+ * The map is laid out for width: from 1024px the map and its card sit side by side, and below
+ * that the card lies over the bottom of the map. Turned on its side a phone is 740-930px wide but
+ * only 320-430px tall, so the stacked arrangement left the card covering most of the screen and the
+ * map a sliver behind it. A phone on its side gets the desktop arrangement instead — map on the left,
+ * card centred on the right — which is the same set of rules the lg: utilities apply, restated here
+ * for short screens. Unlayered, so they beat those utilities.
+ */
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 1023px) {
+  .map-split { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .map-split > :first-child { grid-column: span 3 / span 3; }
+  .map-split > :last-child { grid-column: span 2 / span 2; }
+  .map-split [data-stopcard] { inset: 0; display: flex; align-items: center; }
+  .map-split [data-stopcard] > div { max-height: 64dvh; padding: 1rem 1.25rem; }
+  .map-split [data-stopcard] h4 { font-size: 1.5rem; margin-bottom: 0.5rem; }
 }
 
 /* word-reveal target */

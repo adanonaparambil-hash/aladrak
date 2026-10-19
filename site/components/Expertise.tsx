@@ -26,13 +26,45 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Expertise() {
   const root = useRef<HTMLElement>(null);
-  const [calm, setCalm] = useState(false);
+  /** reduced motion: the stacked layout at every width, nothing to animate or pin */
+  const [reduced, setReduced] = useState(false);
+  /**
+   * A screen under 520px tall gets the stacked layout. The pinned stage is a full-screen frame with a
+   * heading, a capability card and a facts list laid over a photograph, drawn for a tall screen; on a
+   * phone held sideways (844x390) the card sat over the heading and the facts ran off the bottom. Width
+   * alone cannot tell that screen from a tablet, which is why this is its own test.
+   *
+   * The SWITCH is CSS (.expertise-stage / .expertise-stacked in globals.css), and this state only decides
+   * whether the pin is built. Rendering never depends on it, and that is deliberate: ScrollTrigger wraps
+   * the pinned [data-pin] element in a spacer of its own, so if React ever removed that element (as an
+   * earlier version of this did, on `calm`) it could no longer find it in the DOM it had put it in, threw
+   * "removeChild: not a child of this node", and took the whole page down with it.
+   */
+  const [short, setShort] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-height: 520px)").matches);
+  const calm = reduced;
+  const firstRun = useRef(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-height: 520px)");
+    const sync = () => setShort(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (!motionOK()) {
-      // stacked layout at every width — nothing to animate, nothing to pin
-      setCalm(true);
+      setReduced(true);
       return;
+    }
+    // pinning is switched on and off by turning the phone; the pin spacers it adds or takes away move
+    // every section below, so the page is re-measured when that happens (not on the first run, which
+    // the page's own settle pass already covers)
+    const wasFirst = firstRun.current;
+    firstRun.current = false;
+    if (short) {
+      const raf = wasFirst ? 0 : requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => cancelAnimationFrame(raf);
     }
 
     const ctx = gsap.context(() => {
@@ -106,11 +138,15 @@ export default function Expertise() {
         };
       });
     }, root);
-    return () => ctx.revert();
-  }, []);
+    const raf = wasFirst ? 0 : requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
+  }, [short]);
 
   const stacked = (
-    <div className={`${calm ? "" : "md:hidden "}px-6 py-24 space-y-16`}>
+    <div className={`expertise-stacked ${calm ? "" : "md:hidden "}px-6 py-24 space-y-16`}>
       <div>
         <p className="label text-gold mb-4">Core Expertise</p>
         <h2 className="font-display text-4xl">One team. Four disciplines.</h2>
@@ -152,7 +188,7 @@ export default function Expertise() {
 
       {/* ===== the stage: each discipline is the full frame ===== */}
       {!calm && (
-        <div data-pin className="hidden md:block relative h-screen overflow-hidden">
+        <div data-pin className="expertise-stage hidden md:block relative h-screen overflow-hidden">
           {/* one full-bleed layer per discipline, cross-faded on scroll */}
           {expertise.map((d) => (
             <div key={d.key} data-group className="absolute inset-0" style={{ willChange: "opacity" }}>

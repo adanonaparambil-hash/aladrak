@@ -88,6 +88,43 @@ export default function Hero() {
    * simply happens late rather than never. Rewinding an already-playing film is
    * harmless.
    */
+  /**
+   * One film per screen: only the one the screen needs is ever fetched.
+   *
+   * Both <video> elements used to carry their `src` in the page, and a browser fetches a video
+   * that is merely hidden with CSS. Measured on a 375px phone: the 23MB desktop film was downloaded
+   * (23 seconds of it buffered) and played unseen beside the 17MB phone one — about 23MB of
+   * mobile data and a second video decoding for nothing.
+   *
+   * So the page ships both elements with a poster and NO src, and this gives the right one its
+   * source on mount, before the loading screen looks at it (effects run in tree order, and this
+   * component sits ahead of IntroLoader). The breakpoint is the same 640px the loader and the
+   * `sm:` classes use. If the window is later resized across it — a tablet turned, a desktop window
+   * narrowed — the other film is given its source then. Until a film has one, the poster stands.
+   */
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const apply = () => {
+      const kind = mq.matches ? "web" : "mobile";
+      const v = screen.current?.querySelector<HTMLVideoElement>(`video[data-hero-video="${kind}"]`);
+      if (!v || v.getAttribute("src")) return;
+      v.src = asset(kind === "web" ? "/videos/hero-web.mp4" : "/videos/hero-mobile.mp4");
+      v.load();
+      v.play().catch(() => {
+        /* a film that is not allowed to start leaves its poster up; the loader's exit retries */
+      });
+    };
+    apply();
+    mq.addEventListener("change", apply);
+    // a phone turned on its side crosses 640px; the resize event is the second witness to that, in
+    // case a browser is slow to announce the media-query change. apply() is a no-op once a film has its src.
+    window.addEventListener("resize", apply);
+    return () => {
+      mq.removeEventListener("change", apply);
+      window.removeEventListener("resize", apply);
+    };
+  }, []);
+
   useEffect(() => {
     const vids = Array.from(
       screen.current?.querySelectorAll<HTMLVideoElement>("video[data-hero-video]") ?? []
@@ -122,7 +159,6 @@ export default function Hero() {
         {/* Desktop film */}
         <video
           data-hero-video="web"
-          src={asset("/videos/hero-web.mp4")}
           poster={asset("/images/hero-poster.jpg")}
           autoPlay
           loop
@@ -134,7 +170,6 @@ export default function Hero() {
         {/* Mobile (vertical re-frame) */}
         <video
           data-hero-video="mobile"
-          src={asset("/videos/hero-mobile.mp4")}
           poster={asset("/images/hero-poster.jpg")}
           autoPlay
           loop
@@ -152,7 +187,7 @@ export default function Hero() {
         <div
           ref={content}
           data-tilt
-          className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform"
+          className="hero-content relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform"
         >
           {/* .hero-eyebrow, not .label — see globals.css. The caption tier put
               the company's own name at 10px over a sunlit aerial shot. */}
@@ -161,7 +196,7 @@ export default function Hero() {
           </p>
           <h1
             data-hero-stagger
-            className="font-display text-cream text-[17vw] sm:text-[11vw] lg:text-[120px] leading-[0.95] tracking-wide drop-shadow-2xl"
+            className="hero-title font-display text-cream text-[17vw] sm:text-[11vw] lg:text-[120px] leading-[0.95] tracking-wide drop-shadow-2xl"
           >
             Legacy of
             <br />
@@ -169,11 +204,11 @@ export default function Hero() {
           </h1>
           <p
             data-hero-stagger
-            className="font-serifit italic text-cream/90 text-lg md:text-2xl max-w-xl mt-8 leading-relaxed"
+            className="hero-sub font-serifit italic text-cream/90 text-lg md:text-2xl max-w-xl mt-8 leading-relaxed"
           >
             {site.heroSub}
           </p>
-          <div data-hero-stagger className="flex flex-col sm:flex-row gap-4 mt-12 w-full sm:w-auto px-4 sm:px-0">
+          <div data-hero-stagger className="hero-cta flex flex-col sm:flex-row gap-4 mt-12 w-full sm:w-auto px-4 sm:px-0">
             <a
               href="#projects"
               className="px-10 py-5 bg-gold text-ink rounded-full label font-bold text-center shadow-xl hover:shadow-[0_0_36px_rgba(201,155,69,0.45)] transition-shadow duration-500"

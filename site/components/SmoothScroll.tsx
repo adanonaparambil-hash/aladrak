@@ -19,6 +19,12 @@ export default function SmoothScroll({
 }: {
   children: React.ReactNode;
 }) {
+  /* tell the safety net in app/layout.tsx that scripts are running here */
+  useEffect(() => {
+    (window as unknown as { __adrakBooted?: boolean }).__adrakBooted = true;
+    document.documentElement.classList.remove("js-failed");
+  }, []);
+
   /**
    * Re-measure every ScrollTrigger once the page has actually settled.
    *

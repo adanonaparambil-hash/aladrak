@@ -35,7 +35,9 @@ Options -Indexes
   # a changed file is a different URL. These can never go stale.
   <FilesMatch "\.(js|css|woff2?)$">
     ExpiresDefault "access plus 1 year"
-    Header set Cache-Control "public, immutable"
+    <IfModule mod_headers.c>
+      Header set Cache-Control "public, immutable"
+    </IfModule>
   </FilesMatch>
 
   # Media keeps its own name across deploys, so cache it for a week rather
@@ -48,10 +50,22 @@ Options -Indexes
   # HTML must always be rechecked, or a content change never reaches anyone.
   <FilesMatch "\.html$">
     ExpiresDefault "access plus 0 seconds"
-    Header set Cache-Control "no-cache, must-revalidate"
+    <IfModule mod_headers.c>
+      Header set Cache-Control "no-cache, must-revalidate"
+    </IfModule>
   </FilesMatch>
 </IfModule>
 
+
+# Say what the media are, rather than trusting the host's list: an older Apache
+# has no entry for .woff2 and sends fonts as an anonymous download, and a missing
+# video type is the difference between a film that plays and one that is offered
+# for download.
+<IfModule mod_mime.c>
+  AddType video/mp4 .mp4
+  AddType font/woff2 .woff2
+  AddType image/svg+xml .svg
+</IfModule>
 # The enquiry handler is the one executable file here; everything else is
 # static. Make sure it is never served as plain text if PHP is misconfigured.
 <Files "send-enquiry.php">
