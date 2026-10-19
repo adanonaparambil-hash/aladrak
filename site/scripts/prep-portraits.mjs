@@ -202,22 +202,25 @@ await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, 
 await roster("amani-al-ofi.jpg", "amani-al-ofi", { top: 0.0, bottom: 0.80, cx: 0.513 }, "roster"); // head 5.4%, chin 53% of the original
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
-   Replaced 15 Oct 2026 with a new studio portrait, supplied at 1462x2000.
-   It is already framed close — head to about mid-thigh on an olive ground —
-   where the previous source was a 3376x6000 full-length frame that had to
-   lose most of its height.
+   Replaced 19 Oct 2026 with another new studio portrait, supplied as a 1071x1469
+   WebP: head to the waist on an olive ground, the red patterned massar.
+   (The 15 Oct source, thomas-alexander-2026.jpg, stays staged beside it.)
 
-   0.731 against the card's 4:5, so 172px comes off, and it comes off the
-   BOTTOM. Taking it from the top instead crowds the massar against the edge;
-   leaving it at the bottom also keeps body under his name and title, which
-   are laid over that corner of the card on a dark gradient.
+   0.729 against the card's 4:5, so 130px comes off, and it comes off the
+   BOTTOM: his massar sits 10% from the top and needs that room, and the card
+   lays his name and title over a dark gradient at the bottom edge, which wants
+   body behind it. 1339/1469 = 0.9115.
+
+   Written at the source's own 1071px width rather than the 1400 the last one
+   used: that was a 1462px source, and stretching this one to 1400 would only
+   soften it. The card is at most 540px wide, so 1071 still holds at 2x.
    --------------------------------------------------------------------- */
 await cut(
-  `${SRC}/thomas-alexander-2026.jpg`,
+  `${SRC}/thomas-alexander-2026-10-19.webp`,
   "public/images/team/founder.jpg",
-  { top: 0, bottom: 0.914 },
-  1400,
-  1750,
+  { top: 0, bottom: 1339 / 1469 },
+  1071,
+  1339,
   "founder"
 );
 
