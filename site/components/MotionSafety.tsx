@@ -17,7 +17,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * full 44,000px of height, shows nothing in it, and cannot be scrolled out of.
  * `__adrakBooted` was true the whole time.
  *
- * This watches for both of those states and repairs them. It is deliberately
+ * This reveals overdue blocks and refreshes suspect pin measurements. It never
+ * destroys a component's timeline: the map needs it to reveal its cards.
+ * It is deliberately
  * quiet: it only acts on a block that SHOULD be visible by now and is not, and
  * on a pin that reserves no room while claiming a duration. On a page where the
  * animation is working it finds nothing and does nothing, so the full
@@ -94,31 +96,18 @@ export default function MotionSafety() {
       });
 
     const repairPins = () => {
-      let broken = brokenPins();
+      const broken = brokenPins();
       if (!broken.length) return;
       // first ask for an honest re-measure; late images and fonts are the usual
       // reason a pin was sized against a page that had not finished growing
       ScrollTrigger.refresh();
-      window.setTimeout(() => {
-        if (stopped) return;
-        broken = brokenPins();
-        if (!broken.length) return;
-        /**
-         * Still wrong after a refresh, so the measurement is not going to come
-         * good. Unpinning returns the section to normal document flow: it stops
-         * holding open scroll room it is not using, the content sits where it
-         * would have anyway, and the page reads top to bottom. A section that
-         * does not pin is a small loss; thousands of pixels of empty black is
-         * not survivable.
-         */
-        broken.forEach((t) => t.kill(true));
-        ScrollTrigger.refresh();
-        sweepReveals();
-      }, 400);
+      // Never kill a component's timeline here. The map and horizontal stages
+      // need those timelines to reveal their cards; removing only the pin does
+      // not produce a static fallback, it strands content in its initial state.
     };
 
     const sweep = () => {
-      if (stopped) return;
+      if (stopped || document.documentElement.classList.contains("is-intro")) return;
       sweepReveals();
       repairPins();
     };
@@ -132,10 +121,14 @@ export default function MotionSafety() {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
-        if (!stopped) sweepReveals();
+        if (!stopped && !document.documentElement.classList.contains("is-intro")) sweepReveals();
       });
     };
-    const onResize = () => window.setTimeout(sweep, 500);
+    let resizeTimer = 0;
+    const onResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(sweep, 500);
+    };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
@@ -144,6 +137,7 @@ export default function MotionSafety() {
     return () => {
       stopped = true;
       window.clearTimeout(first);
+      window.clearTimeout(resizeTimer);
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);

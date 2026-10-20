@@ -551,7 +551,7 @@ export default function OmanMap() {
                         ))}
                       </ul>
                     ) : (
-                      <div className="flex gap-10 mt-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-6 mt-2 [&>div]:min-w-0 [&>div:last-child]:col-span-2 sm:[&>div:last-child]:col-span-1 [&_.label]:tracking-[0.12em]">
                         <div>
                           <p className="font-display text-4xl md:text-5xl text-gold">{MAP_PINS.length}</p>
                           <p className="label label-xs text-cream/75 mt-2">Pinned Locations</p>

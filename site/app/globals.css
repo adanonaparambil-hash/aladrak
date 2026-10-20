@@ -7,7 +7,28 @@
 @custom-variant tall (&:where([data-wheel="tall"] *));
 /* the wheel's intro paragraph: dropped on a portrait screen unless it is tall enough to spare the room */
 [data-wheel="tall"] .hist-intro { display: none; }
-@media (min-height: 760px) { [data-wheel="tall"] .hist-intro { display: block; } }
+@media (min-height: 1100px) { [data-wheel="tall"] .hist-intro { display: block; } }
+/* Reserve the lower half of portrait screens for the active year and story.
+   A photo sized to 35vh used to extend into that same space on small phones. */
+[data-wheel="tall"] [data-history-photo] {
+  width: min(calc(100vw - 3rem), 28dvh);
+}
+[data-wheel="tall"] .history-wheel {
+  top: 43dvh;
+  bottom: auto;
+  height: 22dvh;
+}
+[data-wheel="tall"] .history-wheel-copy { visibility: hidden; }
+[data-wheel="tall"] .history-portrait-copy {
+  position: absolute;
+  inset: 65dvh 1.5rem max(5rem, calc(env(safe-area-inset-bottom) + 4rem));
+  overflow-y: auto;
+  font-size: clamp(14px, 3.9vw, 21px);
+  line-height: 1.4;
+}
+@media (max-height: 700px) {
+  [data-wheel="tall"] [data-history-photo] { width: min(calc(100vw - 3rem), 22dvh); }
+}
 /* ...and on a wide screen that is short (a phone on its side, a heavily zoomed browser), where the heading would otherwise run up under the header */
 @media (max-height: 520px) { [data-wheel="wide"] .hist-intro { display: none; } }
 
@@ -510,6 +531,25 @@ textarea:focus-visible {
   }
 }
 
+/* The desktop chat pill sat over the history paragraph and map cards on phones.
+   Keep its accessible name, with a compact launcher below the reading area. */
+@media (max-width: 1023px), (orientation: portrait), (max-height: 520px) {
+  button[data-assistant] {
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+    padding: 14px;
+  }
+  button[data-assistant] > .label { display: none; }
+  [role="dialog"][data-assistant] {
+    right: 1rem;
+    bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4rem);
+    width: min(25rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 7rem - env(safe-area-inset-bottom));
+  }
+}
+
 /* word-reveal target */
 .reveal-word {
   opacity: 0.15;
@@ -518,8 +558,16 @@ textarea:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    /* Do not shorten repeating animations: a 48-second marquee would become
+       a 100,000-cycles-per-second ticker. Individual decorative effects opt
+       out in their own reduced-motion rules below/above. */
+    /* A non-zero global duration transitions even GSAP's pin-spacer height and
+       padding (the default transition-property is "all"). ScrollTrigger then
+       measures the previous layout during refresh, corrupting every later pin.
+       It also makes the loader's per-frame year styles chase CSS transitions.
+       Apply changes synchronously; JS timelines keep their own timing. */
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
   }
 }
 

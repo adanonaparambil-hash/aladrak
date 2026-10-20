@@ -442,7 +442,7 @@ export default function HistoryTimeline() {
             Wide: the wrapper has no box, so the heading and the plate are each placed on the stage, as
             they always were. Tall: they stack in one column from the top, so they can never overlap each
             other or the wheel below, whatever the height of the screen. */}
-        <div className="desk:contents tall:absolute tall:z-10 tall:left-6 tall:right-6 tall:top-[max(76px,9vh)] tall:flex tall:flex-col tall:gap-3">
+        <div className="history-summary desk:contents tall:absolute tall:z-10 tall:left-6 tall:right-6 tall:top-[max(76px,9vh)] tall:flex tall:flex-col tall:gap-3">
         <div className="desk:absolute desk:z-10 desk:bottom-[54vh] desk:left-[11%] desk:w-[24vw]">
           <p className="label text-gold mb-3">Est. 1986</p>
           <h2 className="font-display text-4xl desk:text-[3vw] leading-none mb-4">Our History</h2>
@@ -452,12 +452,10 @@ export default function HistoryTimeline() {
             infrastructural engineering across Oman and the region.
           </p>
         </div>
-        {/* The plate was a flat 17vw — about 435px on a 2560 display, which read
-            as a thumbnail. Sized off BOTH axes now (`min` of a width and a
-            height term) so it grows on wide screens without ever running past
-            the bottom of the pinned stage on a short one. Lifted to 47vh to
-            make the room for it. */}
-        <div className="tall:relative desk:absolute desk:z-10 desk:left-[11%] desk:top-[47vh] desk:w-[min(30vw,52vh)] tall:w-[min(calc(100vw-3rem),35vh)] aspect-[5/4]">
+        {/* Keep the photo inside the heading's column. The wheel's active year
+            begins around 39vw; the former 30vw plate ended at 41vw and covered
+            the year on ordinary laptop screens. */}
+        <div data-history-photo className="tall:relative desk:absolute desk:z-10 desk:left-[11%] desk:top-[47vh] desk:w-[min(24vw,52vh)] tall:w-[min(calc(100vw-3rem),35vh)] aspect-[5/4]">
           {MILESTONES.map((m, i) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -474,7 +472,7 @@ export default function HistoryTimeline() {
         </div>
 
         {/* ===== the wheel ===== */}
-        <div className="absolute desk:top-0 desk:bottom-0 desk:left-[11vw] desk:w-[70vw] tall:left-[-42vw] tall:w-[140vw] tall:bottom-[14dvh] tall:h-[34dvh] flex items-center">
+        <div className="history-wheel absolute desk:top-0 desk:bottom-0 desk:left-[11vw] desk:w-[70vw] tall:left-[-42vw] tall:w-[140vw] tall:bottom-[14dvh] tall:h-[34dvh] flex items-center">
           <div
             ref={wheelRef}
             className="relative grid w-full will-change-transform select-none [place-items:center_stretch]"
@@ -504,6 +502,8 @@ export default function HistoryTimeline() {
                   style={{ transform: `rotate(${i * STEP}deg)`, transformOrigin: "0% 50%" }}
                 >
                   <div
+                    data-history-year={m.year}
+                    data-active={i === active}
                     className={`absolute right-1/2 top-1/2 font-display leading-none desk:text-[2.4vw] tall:text-[clamp(26px,8vw,48px)] text-right transition-transform duration-500 ${
                       i === active ? "translate-x-0 -translate-y-1/2" : "-translate-x-[20%] -translate-y-1/2"
                     }`}
@@ -516,10 +516,13 @@ export default function HistoryTimeline() {
                       as a rendering glitch, not as depth. The tilted YEAR gives
                       the wheel its depth; the paragraph appears only upright. */}
                   <div
+                    data-history-copy={m.year}
+                    data-active={i === active}
+                    aria-hidden={wheel === "tall" || i !== active}
                     ref={(el) => {
                       storyEls.current[i] = el;
                     }}
-                    className={`relative font-light desk:text-[max(12px,1.25vw)] tall:text-[clamp(14px,3.9vw,21px)] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
+                    className={`history-wheel-copy relative font-light desk:text-[max(12px,1.25vw)] tall:text-[clamp(14px,3.9vw,21px)] leading-[1.35] pr-[4vw] transition-opacity duration-500 ${
                       i === active ? "opacity-100" : "opacity-0"
                     }`}
                   >
@@ -536,6 +539,12 @@ export default function HistoryTimeline() {
           </div>
         </div>
 
+        {/* Portrait stories get their own full-width reading area. Keeping the
+            longest paragraph inside the wheel's narrow right column made it
+            grow upwards into the photograph on phones. */}
+        <div data-history-portrait-copy data-lenis-prevent className="history-portrait-copy desk:hidden font-light text-cream/85">
+          {MILESTONES[active].text}
+        </div>
       </div>
       )}
 

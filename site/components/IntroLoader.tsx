@@ -163,11 +163,34 @@ export default function IntroLoader() {
     )?.type;
     if (window.location.hash && navType !== "reload") {
       window.dispatchEvent(new Event(INTRO_DONE_EVENT));
-      setGone(true);
-      return;
+      const skip = window.setTimeout(() => setGone(true), 0);
+      return () => window.clearTimeout(skip);
     }
     const el = root.current;
     const cv = canvas.current;
+    let killed = false;
+    let raf = 0;
+    let announced = false;
+    let finished = false;
+    const announce = () => {
+      if (announced) return;
+      announced = true;
+      window.dispatchEvent(new Event(INTRO_DONE_EVENT));
+    };
+    // Independent of canvas, video readiness and GSAP's ticker. The animated
+    // exit alone cannot be a watchdog: if its ticker stalls, its callbacks never
+    // unlock scrolling or remove the overlay.
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      killed = true;
+      cancelAnimationFrame(raf);
+      document.documentElement.classList.remove("is-intro");
+      getLenis()?.start();
+      announce();
+      setGone(true);
+    };
+    const hardStop = window.setTimeout(finish, MAX_WAIT + 1200);
     /**
      * Everything that LIFTS the overlay — the `is-intro` class, setGone, the
      * INTRO_DONE event the hero waits on — is set up below this point, so a bare
@@ -180,12 +203,15 @@ export default function IntroLoader() {
      * the same way the component already treats "no intro wanted": hand the page
      * over immediately and let the site render without its arrival.
      */
-    const ctx = cv?.getContext("2d") ?? null;
+    let ctx: CanvasRenderingContext2D | null = null;
+    try {
+      ctx = cv?.getContext("2d") ?? null;
+    } catch {
+      // Some privacy configurations throw instead of returning null.
+    }
     if (!el || !cv || !ctx) {
-      document.documentElement.classList.remove("is-intro");
-      getLenis()?.start();
-      window.dispatchEvent(new Event(INTRO_DONE_EVENT));
-      setGone(true);
+      window.clearTimeout(hardStop);
+      finish();
       return;
     }
 
@@ -225,8 +251,6 @@ export default function IntroLoader() {
     let fontPx = 0;
     /** spacing of the first step above the centre line */
     let gap = 0;
-    /** how far the medallions reach beyond the ring at this width */
-    let medSpace = 0;
     let stars: Star[] = [];
 
     const layout = () => {
@@ -270,7 +294,6 @@ export default function IntroLoader() {
       const bare = radiusFor(0);
       const withMed = radiusFor(MED_SPACE);
       const showMed = vw >= MED_MIN_VW && withMed >= bare * MED_WORTH_IT;
-      medSpace = showMed ? MED_SPACE : 0;
       R = showMed ? withMed : bare;
       fontPx = clamp(R * 0.28, 24, 92);
       // the stack converges to gap/(1-DECAY); keep that inside the ring
@@ -557,9 +580,7 @@ export default function IntroLoader() {
       if (claim.current) claim.current.textContent = String(Math.round(pos));
     };
 
-    let killed = false;
     const timers: number[] = [];
-    let raf = 0;
 
     /* ---------- the count, paced by the film's readiness ---------- */
     const heroVids = Array.from(
@@ -570,15 +591,13 @@ export default function IntroLoader() {
       heroVids.find((v) => v.dataset.heroVideo === (wide ? "web" : "mobile")) ?? heroVids[0];
 
     let filmReady = !heroActive;
+    const onFilmReady = () => { filmReady = true; };
     if (heroActive) {
       if (heroActive.readyState >= 3) filmReady = true;
       else {
-        const ok = () => {
-          filmReady = true;
-        };
-        heroActive.addEventListener("canplay", ok, { once: true });
-        heroActive.addEventListener("canplaythrough", ok, { once: true });
-        heroActive.addEventListener("error", ok, { once: true }); // never strand
+        heroActive.addEventListener("canplay", onFilmReady, { once: true });
+        heroActive.addEventListener("canplaythrough", onFilmReady, { once: true });
+        heroActive.addEventListener("error", onFilmReady, { once: true });
       }
     }
 
@@ -604,7 +623,13 @@ export default function IntroLoader() {
       if (next > target) target = next;
       shown += (target - shown) * 0.1;
       if (target - shown < 0.0015) shown = target;
-      render(shown, elapsed / 1000);
+      try {
+        render(shown, elapsed / 1000);
+      } catch {
+        // A canvas failure must not leave only the quote over an inaccessible page.
+        finish();
+        return;
+      }
 
       if (!landedFlag && shown >= 1 && elapsed >= sweepMs + ENTER_MS) {
         landedFlag = true;
@@ -644,6 +669,7 @@ export default function IntroLoader() {
     timers.push(window.setTimeout(() => exit(), MAX_WAIT));
 
     /* ---------- exit: dissolve onto the hero, already running beneath ---------- */
+    let exitTimeline: gsap.core.Timeline | undefined;
     const exit = () => {
       if (killed) return;
       killed = true;
@@ -652,13 +678,12 @@ export default function IntroLoader() {
       } catch {
         /* private mode */
       }
-      gsap
-        .timeline()
+      exitTimeline = gsap.timeline()
         // announce the reveal FIRST, at position 0, while the overlay is still
         // fully opaque — the hero rewinds its film to frame one on this event,
         // and firing it any later would let a mid-film frame show through the
         // dissolve before the jump back to the start
-        .add(() => window.dispatchEvent(new Event(INTRO_DONE_EVENT)), 0)
+        .add(announce, 0)
         .to(
           el.querySelectorAll("[data-intro-fade]"),
           { autoAlpha: 0, duration: 0.3, ease: "power2.in" },
@@ -668,7 +693,7 @@ export default function IntroLoader() {
         .to([cv, dial.current], { scale: 1.06, duration: 0.9, ease: "power2.in" }, 0)
         .add(() => {
           html.classList.remove("is-intro");
-          lenis?.start();
+          getLenis()?.start();
           ScrollTrigger.refresh();
           /**
            * Reloading /#about now plays the intro, which begins by scrolling to
@@ -686,8 +711,8 @@ export default function IntroLoader() {
         }, 0.25)
         .to(el, { autoAlpha: 0, duration: 0.62, ease: "power2.inOut" }, 0.18)
         .add(() => {
-          cancelAnimationFrame(raf);
-          setGone(true);
+          window.clearTimeout(hardStop);
+          finish();
         }, 0.95);
     };
 
@@ -700,15 +725,20 @@ export default function IntroLoader() {
 
     return () => {
       killed = true;
+      window.clearTimeout(hardStop);
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
+      exitTimeline?.kill();
+      exitRef.current = null;
       enterCtx.revert();
+      heroActive?.removeEventListener("canplay", onFilmReady);
+      heroActive?.removeEventListener("canplaythrough", onFilmReady);
+      heroActive?.removeEventListener("error", onFilmReady);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("keydown", onKey);
       html.classList.remove("is-intro");
-      lenis?.start();
+      getLenis()?.start();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onHome]);
 
   if (!onHome || gone) return null;
