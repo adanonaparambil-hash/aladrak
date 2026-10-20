@@ -270,34 +270,50 @@ await cut(
    is the CED on a site safety walk in full PPE, watching a machine being
    demonstrated — the claim and its evidence in one frame.
 
-   1600x899 upscaled 1.2x to the hero's 1920x780 band. The crop keeps every
-   head in the group: 35% of the vertical overflow comes off the top, which
-   leaves the roof structure above them and trims floor from the bottom. Its
-   left third is an out-of-focus back rather than a face, which is where the
-   heading and lead paragraph sit.
+   The client asked on 20 Oct for the man who filled the left of the frame to
+   go — the one standing closest to camera, in the white shirt and hi-vis, seen
+   from behind. He cannot be painted out (that would mean inventing a workshop
+   behind him), so the frame starts to the right of him instead: x=640 of the
+   1600px original, which clears his shoulder, his arm and the hand he had on
+   the machine.
+
+   That costs sharpness and there is no way around it. The old crop used the
+   full width and only trimmed vertically, so it enlarged 1.2x; starting at 640
+   leaves 960px to fill a 1920px band, which is 2x. The source is a sharp modern
+   photograph rather than a film print, so it carries the enlargement, but it is
+   the reason the sharpen is a touch stronger here than it was.
+
+   It also changes what sits under the heading. The old left third was that
+   man's out-of-focus back — dark, no detail, ideal to set type over. It is now
+   the worker in yellow coveralls, who is both bright and busy, so the scrim in
+   app/hse/page.tsx was re-measured against this crop rather than assumed.
    --------------------------------------------------------------------- */
 {
   const src = `${SRC}/ced-hse-walk.jpeg`;
   const HW = 1920, HH = 780;
+  const LEFT = 640;
   const m = await sharp(src).metadata();
-  const sc = Math.max(HW / m.width, HH / m.height);
-  const sw = Math.round(m.width * sc), sh = Math.round(m.height * sc);
+  const cw = m.width - LEFT;
+  const ch = Math.round(cw / (HW / HH));
   await sharp(src)
-    .resize(sw, sh, { kernel: "lanczos3" })
     .extract({
-      left: Math.round((sw - HW) / 2),
-      top: Math.max(0, Math.min(sh - HH, Math.round((sh - HH) * 0.35))),
-      width: HW,
-      height: HH,
+      left: LEFT,
+      // 200px down keeps the roof structure above the group and every head in
+      // shot; the band is only 390px tall, so there is little room either way
+      top: Math.max(0, Math.min(m.height - ch, 200)),
+      width: cw,
+      height: ch,
     })
+    .resize(HW, HH, { kernel: "lanczos3" })
     // The frame is underexposed as delivered — median luma 101 of 255, with
     // the whole left half in shadow — which is why the hero read as dark even
     // before the scrim went over it. Lifting the photograph is the honest fix:
     // veiling it less would have bought brightness out of the text contrast,
     // and there was none to spare.
     .modulate({ brightness: 1.18 })
-    // a 1.2x upscale; light unsharp keeps the hi-vis edges crisp
-    .sharpen({ sigma: 0.8, m1: 0.4, m2: 1.6 })
+    // a 2x upscale now (see the note above), so a little more unsharp than
+    // before to hold the hi-vis edges and the CED's glasses together
+    .sharpen({ sigma: 0.9, m1: 0.5, m2: 1.8 })
     .jpeg({ quality: 86, mozjpeg: true })
     .toFile("public/images/hse/hse-hero-ced-walk.jpg");
   console.log(`hse-hero  ${m.width}x${m.height} -> public/images/hse/hse-hero-ced-walk.jpg  (${HW}x${HH})`);

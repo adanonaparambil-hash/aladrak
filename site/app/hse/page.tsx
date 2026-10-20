@@ -88,7 +88,14 @@ export default function HsePage() {
               Holding 62% flat across the text band and clearing between it
               and him does both jobs: 4.88:1 at the worst pixel, and 5% ink
               over the CED himself — he is the reason for the picture, so he
-              stays unveiled. */}
+              stays unveiled.
+
+              Re-measured on 20 Oct after the photograph was re-cropped to drop
+              the man who used to fill the left of the frame. The text now sits
+              over the worker in yellow rather than that man's unlit back, so
+              the figure above no longer describes this image — the worst pixel
+              under the heading is 5.46:1, comfortably past AA, and the scrim
+              itself needed no change. */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,15,12,0.62)_0%,rgba(10,15,12,0.62)_56%,rgba(10,15,12,0)_82%)]" />
           {/* Vertical: a dark top for the fixed header's cream nav to read
               against, and a cream foot so the hero dissolves into the page
