@@ -24,7 +24,7 @@
  * Run from site/:  node scripts/prep-portraits.mjs
  */
 import sharp from "sharp";
-import { existsSync } from "node:fs";
+import { existsSync, renameSync } from "node:fs";
 
 const SRC = "scripts/.src-portraits";
 if (!existsSync(SRC)) {
@@ -200,6 +200,29 @@ await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, 
    Zadjali and Nauf. cx is 0.513, not 0.50 — she stands a shade right of
    centre, measured off the hijab's span rather than guessed. */
 await roster("amani-al-ofi.jpg", "amani-al-ofi", { top: 0.0, bottom: 0.80, cx: 0.513 }, "roster"); // head 5.4%, chin 53% of the original
+/* Kausthubh Rai — replaced 20 Oct. His original portrait was the only one on
+   the grid in a white pinstripe jacket over a patterned shirt, which stood out
+   badly beside two rows of dark suits; the client had it retouched to a black
+   jacket, white shirt and dark tie, face and pose untouched.
+
+   The replacement arrives at 1145x1374, which is EXACTLY the grid's 5:6, so it
+   takes no crop at all — resizing the whole frame is both the simplest and the
+   highest-quality route, and it is why this one does not go through roster().
+   Head sits at 4.9% against the grid's ~6%; a trim would square that up but
+   would also break the exact aspect for a difference nobody can see.
+
+   Note the file arrived as a PNG named .jpg and 1.5MB, straight into
+   public/. It is restaged here and written as a real JPEG: 24KB, which is what
+   belongs in a 500px tile that ships in the static export. */
+{
+  const out = "public/images/team/roster/kausthubh.jpg";
+  await sharp(`${SRC}/kausthubh-rai-v2.png`)
+    .resize(500, 600, { kernel: "lanczos3" })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile(`${out}.tmp`);
+  renameSync(`${out}.tmp`, out);
+  console.log(`roster    1145x1374 -> ${out}  (500x600, no crop — already 5:6)`);
+}
 
 /* ---- Dr. Thomas Alexander, founder feature ------------------------------
    Replaced 19 Oct 2026 with another new studio portrait, supplied as a 1071x1469
