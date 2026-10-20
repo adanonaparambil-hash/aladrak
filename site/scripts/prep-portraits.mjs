@@ -200,6 +200,13 @@ await roster("amani-al-zadjali.png", "amani-zadjali", { top: 0.0, bottom: 0.75, 
    Zadjali and Nauf. cx is 0.513, not 0.50 — she stands a shade right of
    centre, measured off the hijab's span rather than guessed. */
 await roster("amani-al-ofi.jpg", "amani-al-ofi", { top: 0.0, bottom: 0.80, cx: 0.513 }, "roster"); // head 5.4%, chin 53% of the original
+/* Gnanasekaran Thangavelu — added 20 Oct. A 1125x2000 full-length studio frame,
+   so the head is only 14% down it and a straight resize would have left him a
+   distant figure in a 250px tile. 0.105-0.56 takes the top half, which puts his
+   head at 8% of the tile — the same read as Anoop and Kausthubh beside him.
+   Two looser spans were tried first and both dropped the head too small to hold
+   the row; this is the point where he matches rather than merely fits. */
+await roster("gnanasekaran-thangavelu.jpg", "gnanasekaran", { top: 0.105, bottom: 0.56, cx: 0.504 }, "roster"); // head 14.3% of the original
 /* Kausthubh Rai — replaced 20 Oct. His original portrait was the only one on
    the grid in a white pinstripe jacket over a patterned shirt, which stood out
    badly beside two rows of dark suits; the client had it retouched to a black
