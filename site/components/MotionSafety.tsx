@@ -50,7 +50,26 @@ export default function MotionSafety() {
       return fixed;
     };
 
-    /* ---- pins holding the page open without reserving any room ------- */
+    /**
+     * A pin is broken in one of two ways, and the fault shows up as either
+     * depending on the viewport and how the load happened to race:
+     *
+     *   NO ROOM — the spacer reserves nothing (padding 0) while the trigger
+     *     claims a duration, so the section holds no scroll space at all.
+     *
+     *   WRONG PLACE — the spacer reserves the right amount, but the trigger
+     *     thinks the section begins somewhere it does not. Measured on the live
+     *     site: Expertise's start came out 4,224px above where the element
+     *     actually sits, which is exactly the length of History's pin — it was
+     *     measured while History's spacer was not in the document. The section
+     *     then pins while History is still pinned and the two paint over each
+     *     other, which is the overlap that was reported first.
+     *
+     * The second one is why the earlier version of this file missed the fault
+     * on a 1920px screen: it only checked the reserved room, and the room was
+     * correct. Comparing the trigger's own start against where the element
+     * really is catches both.
+     */
     const brokenPins = () =>
       ScrollTrigger.getAll().filter((t) => {
         if (!t.vars || !t.vars.pin) return false;
@@ -62,9 +81,16 @@ export default function MotionSafety() {
             ? pinEl.parentElement
             : null;
         if (!spacer) return false;
+
         const reserved = parseFloat(getComputedStyle(spacer).paddingBottom) || 0;
-        // half is generous — a healthy pin reserves its whole duration
-        return reserved < duration * 0.5;
+        if (reserved < duration * 0.5) return true; // NO ROOM
+
+        // WRONG PLACE. Only trustworthy while this pin is not currently applied:
+        // a pinned element is position:fixed, so its rect is viewport-relative
+        // and adding scrollY to it would be meaningless.
+        if (t.isActive) return false;
+        const domTop = spacer.getBoundingClientRect().top + window.scrollY;
+        return Math.abs(t.start - domTop) > 40;
       });
 
     const repairPins = () => {
