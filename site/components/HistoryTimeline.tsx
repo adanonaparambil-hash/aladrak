@@ -25,8 +25,19 @@ const MILESTONES = [
      as rephotographed film prints (rotated and cropped in preparation). A
      modern villa or a drone shot standing in for the nineties read as filler;
      a faded print of blockwork going up IS the era. The 1995 frame even
-     carries its film datestamp — 11.12.95 — burned in by the camera. */
-  { year: "1990", img: asset("/images/timeline/era-1990-site.jpg"), text: "Early growth: from minor contracts and maintenance to broader civil and building works across the Sultanate." },
+     carries its film datestamp — 11.12.95 — burned in by the camera.
+
+     1990 was dropped on 20 Oct at the client's request. Its only archive
+     photograph has a man standing in front of the building, and the client had
+     asked for the building alone — which forced a 560px slice of a 1400px
+     print, a 2x enlargement that read as a grey smear on the plate. Correcting
+     the fade helped the tone but could not put back detail that the
+     enlargement had never had, and the one framing that IS sharp (the full
+     frame, 1.13x) is the one with him in it. With no other 1990-era frame in
+     the archive, the client chose to drop the year rather than carry a blurred
+     plate. The wheel derives its geometry and its scroll length from
+     MILESTONES.length, so nothing else needs adjusting; the original is still
+     staged in scripts/.src-timeline/ if a decision is ever made about him. */
   { year: "1995", img: asset("/images/timeline/era-1995-infrastructure.jpg"), text: "Diversification into mechanical, electrical and infrastructural engineering—laying the foundation for full EPC capabilities." },
   { year: "2000", img: asset("/images/projects/rop.jpg"), text: "Recognized as an established Omani contractor with a growing portfolio of government and institutional projects." },
   { year: "2003", img: asset("/images/awards/cert-iso-9001.jpg"), text: "Commitment to quality and HSE: ISO 9001, and later ISO 14001 and OHSAS 18001, become part of the Adrak way of life." },
