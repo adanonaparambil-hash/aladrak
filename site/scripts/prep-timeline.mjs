@@ -98,11 +98,28 @@ await cover("public/images/blog/gems-adrak-signing-ceremony.jpg", "m-2026-gems.j
    shoulder reaches x ~790 at the foot of this box. The box is 5:4 to match the plate,
    560x448 of the 1400x779 original, so it is enlarged about 2x; the photograph was
    soft to begin with and a light unsharp mask keeps it from smearing.
-   The original is staged in scripts/.src-timeline/ (gitignored). */
+   The original is staged in scripts/.src-timeline/ (gitignored).
+
+   Reported 20 Oct as unclear on the wheel, and it was: the print is faded as well
+   as soft, and at this size the plate was a flat repeated facade with almost no
+   tonal separation — pale blockwork against a pale sky. The framing is unchanged
+   (the client's "without him" still stands); what is corrected is the fade. The
+   linear pass pulls the black point down and the modulate restores the colour the
+   print lost, which is what makes the arcade and the window reveals read at all.
+   Sharpening eases off slightly at the same time: on a soft 2x enlargement the
+   old 2.2 was biting into grain rather than detail.
+
+   NOTE, if a sharper plate is ever wanted: it cannot come from this crop. Keeping
+   the man out of frame forces a 560px region out of a 1400px original — the 2x
+   enlargement IS the blur, and no amount of sharpening recovers it. The whole
+   frame at 974x779 (he stands centre-right) enlarges only 1.13x and is visibly
+   sharper. That is a decision about the photograph, not the code. */
 await sharp("scripts/.src-timeline/era-1990-site.jpg")
   .extract({ left: 840, top: 100, width: 560, height: 448 })
   .resize(W, H, { kernel: "lanczos3" })
-  .sharpen({ sigma: 1.1, m1: 0.6, m2: 2.2 })
-  .jpeg({ quality: 88, mozjpeg: true })
+  .linear(1.18, -14)
+  .modulate({ saturation: 1.22 })
+  .sharpen({ sigma: 1.1, m1: 0.5, m2: 1.9 })
+  .jpeg({ quality: 90, mozjpeg: true })
   .toFile(`${OUT}/era-1990-site.jpg`);
 console.log("region  1400x779 -> era-1990-site.jpg (the building, without the man)");
