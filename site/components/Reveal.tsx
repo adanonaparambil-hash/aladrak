@@ -46,7 +46,15 @@ export default function Reveal({
   }, [delay, y, tilt]);
 
   return (
-    <div ref={ref} className={className} style={{ visibility: "hidden" }}>
+    <div
+      ref={ref}
+      /* the watchdog in MotionSafety.tsx looks for this: the hidden state below is
+         cleared by a ScrollTrigger, and if that trigger never runs the block would
+         stay invisible for ever */
+      data-reveal
+      className={className}
+      style={{ visibility: "hidden" }}
+    >
       {children}
     </div>
   );

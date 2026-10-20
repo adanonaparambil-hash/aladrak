@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import CursorFX from "@/components/CursorFX";
 import PremiumFX from "@/components/PremiumFX";
 import Diag from "@/components/Diag";
+import MotionSafety from "@/components/MotionSafety";
 import IntroLoader from "@/components/IntroLoader";
 import { years } from "@/lib/anniversary";
 import SiteAssistant from "@/components/SiteAssistant";
@@ -73,6 +74,8 @@ export default function RootLayout({
         className={`${marcellus.variable} ${cormorant.variable} ${space.variable} antialiased`}
       >
         <SmoothScroll>{children}</SmoothScroll>
+        {/* repairs a page whose animation booted but never ran */}
+        <MotionSafety />
         <CursorFX />
         <PremiumFX />
         {/* renders nothing unless the address carries ?diag=1 */}
