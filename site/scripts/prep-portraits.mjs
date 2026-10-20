@@ -318,3 +318,40 @@ await cut(
     .toFile("public/images/hse/hse-hero-ced-walk.jpg");
   console.log(`hse-hero  ${m.width}x${m.height} -> public/images/hse/hse-hero-ced-walk.jpg  (${HW}x${HH})`);
 }
+
+/* ---- the HSE page hero, second version ----------------------------------
+   Asked for on 20 Oct: a clearer picture, still unmistakably about safety.
+
+   This is the safety induction — an instructor presenting to a full room of
+   the workforce, with the safety noticeboard behind him. It earns the slot on
+   three counts the CED walk could not: it is sharp (1600px into a 1920 band is
+   a 1.2x enlargement, where the re-cropped walk was 2x); it says what the page
+   says, since an induction IS the claim that every site incident is
+   preventable; and the left third, where the heading and lead paragraph sit,
+   is the instructor against that board rather than a face or a bright coverall.
+
+   Sourced from the already-prepared public/images/hse/hse-induction.jpg rather
+   than the corporate archive, so this step is reproducible from the repository
+   alone. 35% of the vertical overflow comes off the top, which keeps the board
+   and the ceiling above the group and trims floor.
+   --------------------------------------------------------------------- */
+{
+  const src = "public/images/hse/hse-induction.jpg";
+  const HW = 1920, HH = 780;
+  const m = await sharp(src).metadata();
+  let cw = m.width;
+  let ch = Math.round(cw / (HW / HH));
+  if (ch > m.height) { ch = m.height; cw = Math.round(ch * (HW / HH)); }
+  await sharp(src)
+    .extract({
+      left: Math.round((m.width - cw) / 2),
+      top: Math.round((m.height - ch) * 0.35),
+      width: cw,
+      height: ch,
+    })
+    .resize(HW, HH, { kernel: "lanczos3" })
+    .sharpen({ sigma: 0.8, m1: 0.4, m2: 1.6 })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile("public/images/hse/hse-hero-induction.jpg");
+  console.log(`hse-hero2 ${m.width}x${m.height} -> public/images/hse/hse-hero-induction.jpg  (${HW}x${HH})`);
+}

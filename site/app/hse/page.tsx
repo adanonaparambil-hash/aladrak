@@ -74,8 +74,8 @@ export default function HsePage() {
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={asset("/images/hse/hse-hero-ced-walk.jpg")}
-            alt="Al Adrak’s Chief Executive Director on a site safety walk in full protective equipment, watching a machine being demonstrated"
+            src={asset("/images/hse/hse-hero-induction.jpg")}
+            alt="A safety induction at Al Adrak: an instructor presenting to a full room of the workforce in protective clothing, with the site safety noticeboard behind him"
             className="w-full h-full object-cover"
           />
           {/* Horizontal, with explicit stops rather than from/via/to.
@@ -90,8 +90,9 @@ export default function HsePage() {
               over the CED himself — he is the reason for the picture, so he
               stays unveiled.
 
-              Re-measured on 20 Oct after the photograph was re-cropped to drop
-              the man who used to fill the left of the frame. The text now sits
+              Re-measured twice on 20 Oct: once after the CED walk was re-cropped
+              to drop the man who filled its left edge, and again when that
+              photograph was replaced with the safety induction. The text now sits
               over the worker in yellow rather than that man's unlit back, so
               the figure above no longer describes this image — the worst pixel
               under the heading is 5.46:1, comfortably past AA, and the scrim

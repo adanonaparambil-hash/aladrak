@@ -1,0 +1,65 @@
+AL ADRAK WEBSITE - HOW TO PUT IT ON GODADDY
+============================================
+
+You have two files (in the same folder as this one):
+
+   1-aladrak-site.zip      49 MB   the website: pages, images, the brochure, the enquiry mailer
+   2-aladrak-videos.zip    78 MB   the three big films (hero + our-story) and the small facility clips
+
+They are two files because one 130 MB upload can time out in GoDaddy's file manager.
+Both go into the same folder: public_html
+
+
+BEFORE YOU START
+----------------
+1. Log in to GoDaddy > My Products > Web Hosting > Manage > cPanel > File Manager.
+2. Open  public_html .
+3. Make a backup of what is there now:
+   select everything (Select All), choose Compress, pick "Zip Archive", name it
+   old-site-backup.zip, and download it. If anything goes wrong, this puts the old site back.
+
+
+UPLOAD
+------
+4. In public_html press Upload. Choose 1-aladrak-site.zip. Wait for it to reach 100%.
+5. Back in File Manager, right-click 1-aladrak-site.zip > Extract.
+   Extract into  /public_html  (the default). If it asks about overwriting, say yes.
+6. Press Upload again and do the same with 2-aladrak-videos.zip. Extract into /public_html.
+   This creates a  videos  folder.
+7. Delete the two zip files from public_html (right-click > Delete). They are not needed any more.
+
+You should now see, inside public_html:
+   index.html   404.html   .htaccess   send-enquiry.php   al-adrak-brochure.pdf
+   and folders:  images  videos  docs  _next  careers  hse  news  404
+(.htaccess starts with a dot, so File Manager hides it until you open Settings at the top right
+and tick "Show Hidden Files (dotfiles)". It must be there.)
+
+
+CHECK IT WORKS  (5 minutes)
+---------------------------
+8.  Open https://aladrak.com  and press Ctrl+F5.
+    The loading screen counts up, then the film plays.
+9.  Open /careers , /hse and /news from the menu. Click the "Brochure" link in the footer.
+10. Contact form (the important one): scroll to the enquiry form, fill it in with a real
+    name and YOUR email, send it. You should see "Thank you - we have your details".
+    Then check info@aladrak.com - and its SPAM folder. It should arrive within a minute or two.
+    If it does not arrive, tell me: the form is fine, but the mail setup on the host needs a look
+    (this is the one thing I could not test from here - there is no PHP on my machine).
+11. Open the site on your phone, and turn the phone sideways once.
+
+
+IF YOU USE CLOUDFLARE
+---------------------
+The domain sits behind Cloudflare, which keeps its own copy of the old pages. After uploading:
+Cloudflare dashboard > Caching > Configuration > Purge Everything.
+If you skip this, some people will keep seeing the old site for a few hours.
+
+
+GOOD TO KNOW
+------------
+* Pages from the OLD site that are not part of the new one (for example contact.php) stay where
+  they are and still open if someone has the link. Delete them from public_html only if you want
+  them gone.
+* If anything looks wrong: delete the new files, then Extract old-site-backup.zip into public_html.
+* Whenever the site is rebuilt (for example on 1 January so the "years" count rolls over), you
+  will get two new zip files and repeat these steps.
