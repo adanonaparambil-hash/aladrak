@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import HseKpi from "@/components/HseKpi";
 import { hse, site } from "@/lib/content";
 import { asset } from "@/lib/asset";
 
@@ -133,6 +134,10 @@ export default function HsePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== the HSE record — the certificates say the system exists, these
+           figures say it works, so it sits straight after them ===== */}
+      <HseKpi />
 
       {/* ===== leadership & culture ===== */}
       <section className={LIGHT}>

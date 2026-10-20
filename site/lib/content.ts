@@ -733,6 +733,37 @@ export const offices: Office[] = [
  */
 export const hse = {
   kicker: "Health, Safety & Environment",
+  /**
+   * The HSE record, from the company's own KPI sheet.
+   *
+   * Ordered by what it actually proves rather than by the sheet's row numbers.
+   * The two running totals come first because they are the scale of the claim;
+   * the two zeros come next because on a site that has worked seventeen million
+   * hours they are the whole point of the page — "everyone goes home the way
+   * they arrived" is either true or it is not, and these are the figures that
+   * say which. The remaining six are the honest small print: they are not
+   * zero, they are recorded, and showing them is what makes the zeros credible.
+   */
+  kpi: {
+    lead: "More than 17 million safe man hours, across three completed and five ongoing projects.",
+    asAt: "Cumulative as at 31 December 2024",
+    headline: [
+      { label: "Safe man hours", value: 17211243 },
+      { label: "Safe kilometres", value: 10924157 },
+    ],
+    zero: [
+      { label: "Lost time injuries", value: 0 },
+      { label: "Fatalities", value: 0 },
+    ],
+    incidents: [
+      { label: "Near miss", value: 3 },
+      { label: "First aid case", value: 1 },
+      { label: "Medical treatment case", value: 3 },
+      { label: "Road traffic accident", value: 3, note: "minor" },
+      { label: "Asset damage", value: 2, note: "minor" },
+      { label: "Environmental incident", value: 1 },
+    ],
+  },
   title: "Everyone goes home the way they arrived",
   lead: "Safety is an absolute core value at Al Adrak — integrated into every phase of the construction lifecycle, from mobilization to handover. We safeguard our workforce, trade contractors, project partners and surrounding communities on one uncompromising principle: all site incidents are preventable.",
   /** verbatim from the corporate profile's Training & Development section */
