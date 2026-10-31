@@ -654,7 +654,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         </div>
       </section>
 
-      <Footer />
+      <Footer lang={lang} />
     </main>
   );
 }

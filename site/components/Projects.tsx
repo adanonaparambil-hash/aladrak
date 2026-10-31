@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { projects } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import Reveal from "./Reveal";
 import { openProject } from "./ProjectModal";
 
@@ -14,6 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
  * Mobile: native snap carousel.
  */
 export default function Projects() {
+  const { projects } = useContentFor();
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
 

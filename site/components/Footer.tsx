@@ -1,8 +1,9 @@
-import { site } from "@/lib/content";
+import { getContent, type Locale } from "@/lib/i18n";
 import Reveal from "./Reveal";
 import { asset } from "@/lib/asset";
 
-export default function Footer() {
+export default function Footer({ lang = "en" }: { lang?: Locale }) {
+  const { site } = getContent(lang);
   return (
     <footer className="relative z-20 bg-forest text-cream/85 overflow-hidden">
       {/* Big CTA */}

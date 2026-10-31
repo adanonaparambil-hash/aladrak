@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { expertise } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +24,7 @@ gsap.registerPlugin(ScrollTrigger);
  */
 
 export default function Expertise() {
+  const { expertise } = useContentFor();
   const root = useRef<HTMLElement>(null);
   /**
    * Was: "reduced motion gets the stacked layout at every width". That turned a

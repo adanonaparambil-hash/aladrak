@@ -1,4 +1,4 @@
-import { clients, clientele } from "@/lib/content";
+import { getContent, type Locale } from "@/lib/i18n";
 import Reveal from "./Reveal";
 import { years } from "@/lib/anniversary";
 
@@ -30,7 +30,8 @@ function Row({
   );
 }
 
-export default function Clients() {
+export default function Clients({ lang = "en" }: { lang?: Locale }) {
+  const { clients, clientele } = getContent(lang);
   const half = Math.ceil(clients.length / 2);
   const total = clientele.reduce((n, g) => n + g.names.length, 0);
   return (

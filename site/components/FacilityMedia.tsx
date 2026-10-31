@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { facilities, facilityGallery, shopFloor, type ShopFloorMedia } from "@/lib/content";
+import { type ShopFloorMedia } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
+
+/** the slice of the site copy this viewer reads, in whichever language it is in */
+type Copy = Pick<
+  ReturnType<typeof useContentFor>,
+  "facilities" | "facilityGallery" | "shopFloor"
+>;
 
 /**
  * Open the facility viewer.
@@ -27,7 +34,10 @@ type Playlist = { list: ShopFloorMedia[]; pos: number };
  * strip media at all still opens onto its own cover photograph rather than
  * nothing.
  */
-function playlistFor(target: number | string): Playlist | null {
+function playlistFor(target: number | string, copy: Copy): Playlist | null {
+  /* the copy is passed in rather than imported, so the viewer speaks whichever
+     language the page around it is in */
+  const { facilities, facilityGallery, shopFloor } = copy;
   const dedupe = (list: ShopFloorMedia[]) => {
     const seen = new Set<string>();
     return list.filter((m) => (seen.has(m.src) ? false : (seen.add(m.src), true)));
@@ -79,6 +89,7 @@ function playlistFor(target: number | string): Playlist | null {
  * anywhere in it directly.
  */
 export default function FacilityMedia() {
+  const copy = useContentFor();
   const [pl, setPl] = useState<Playlist | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -87,12 +98,12 @@ export default function FacilityMedia() {
 
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const next = playlistFor((e as CustomEvent<number | string>).detail);
+      const next = playlistFor((e as CustomEvent<number | string>).detail, copy);
       if (next) setPl(next);
     };
     window.addEventListener("openFacilityMedia", onOpen);
     return () => window.removeEventListener("openFacilityMedia", onOpen);
-  }, []);
+  }, [copy]);
 
   const close = useCallback(() => {
     const t = gsap.timeline({
@@ -188,7 +199,9 @@ export default function FacilityMedia() {
 
   if (!pl) return null;
   const item = pl.list[pl.pos];
-  const fac = item.facility ? facilities.find((f) => f.name === item.facility) : undefined;
+  const fac = item.facility
+    ? copy.facilities.find((f) => f.name === item.facility)
+    : undefined;
   const many = pl.list.length > 1;
 
   return (

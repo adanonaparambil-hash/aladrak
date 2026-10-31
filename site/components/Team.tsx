@@ -3,7 +3,8 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { leadership, lifeAtAdrak, type Person } from "@/lib/content";
+import { type Person } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import Reveal from "./Reveal";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -69,6 +70,7 @@ function LeaderCard({ person }: { person: Person }) {
 
 /** Team Adrak — founder feature, executive directors, and the full roster. */
 export default function Team() {
+  const { leadership, lifeAtAdrak } = useContentFor();
   const root = useRef<HTMLElement>(null);
   const { founder, directors, officers, roster } = leadership;
 

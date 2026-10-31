@@ -1,10 +1,11 @@
-import { future, offices, site, sustainability } from "@/lib/content";
+import { getContent, type Locale } from "@/lib/i18n";
 import Reveal from "./Reveal";
 import GroupCompanies from "./GroupCompanies";
 import ContactForms from "./ContactForms";
 import { asset } from "@/lib/asset";
 
-export default function Future() {
+export default function Future({ lang = "en" }: { lang?: Locale }) {
+  const { future, offices, site, sustainability } = getContent(lang);
   return (
     <>
     <section id="contact" className="relative z-20 bg-ink text-cream overflow-hidden">

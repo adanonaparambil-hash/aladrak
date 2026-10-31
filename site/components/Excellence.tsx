@@ -1,7 +1,8 @@
-import { excellence, certifications } from "@/lib/content";
+import { getContent, type Locale } from "@/lib/i18n";
 import Reveal from "./Reveal";
 
-export default function Excellence() {
+export default function Excellence({ lang = "en" }: { lang?: Locale }) {
+  const { excellence, certifications } = getContent(lang);
   return (
     <section className="bg-cream text-ink relative z-20">
       <div className="shell py-24 md:py-32">

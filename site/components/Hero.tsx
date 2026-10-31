@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { site } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import { ARRIVAL_ORIGIN, ARRIVAL_SCALE, INTRO_DONE_EVENT, motionOK } from "@/lib/intro";
 import { asset } from "@/lib/asset";
 
@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
  * like a rising curtain — the ojas-style scroll-layering effect.
  */
 export default function Hero() {
+  const { site } = useContentFor();
   const screen = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
 

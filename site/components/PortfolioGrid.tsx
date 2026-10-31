@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { moreProjects, projectNames, type Project } from "@/lib/content";
+import { type Project } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import { currentPortfolio } from "@/lib/register";
 import Reveal from "./Reveal";
 import { openProject } from "./ProjectModal";
@@ -19,35 +20,46 @@ type WallCard = Project & {
   detail?: string
 };
 
-/**
- * The delivered selection and the live register render as ONE grid: the
- * register cards were first their own headed section, then a labelled
- * sub-grid, and both read as a seam the section didn't need. Order: the
- * nineteen delivered cards, then the sixteen in delivery — led by the Public
- * Prosecution Authority Building, the rest in register order.
- */
-const WALL: WallCard[] = [
-  ...moreProjects,
-  ...[...currentPortfolio].sort((a, b) =>
-    (b.code.includes("PPM") ? 1 : 0) - (a.code.includes("PPM") ? 1 : 0)
-  ).map((r) => ({
-    sector: r.sector,
-    name: r.name,
-    place: r.place ? `${r.code} · ${r.place}` : r.code,
-    img: r.img,
-    desc: r.blurb,
-    detail: r.desc,
-    specs: r.specs,
-    code: r.code,
-    wide: r.wide,
-  })),
-];
-
 /** the card shows the blurb; the modal shows the full register description */
 const open = (p: WallCard): Project => (p.detail ? { ...p, desc: p.detail } : p);
 
 export default function PortfolioGrid() {
+  const { moreProjects, projectNames } = useContentFor();
   const root = useRef<HTMLElement>(null);
+
+  /**
+   * The delivered selection and the live register render as ONE grid: the
+   * register cards were first their own headed section, then a labelled
+   * sub-grid, and both read as a seam the section didn't need. Order: the
+   * nineteen delivered cards, then the sixteen in delivery — led by the Public
+   * Prosecution Authority Building, the rest in register order.
+   *
+   * This was a module constant, which meant it was built once from whichever
+   * copy the module imported. It has to be rebuilt per language now, so it
+   * lives in the component and memoises on the copy it came from.
+   */
+  const WALL: WallCard[] = useMemo(
+    () => [
+      ...moreProjects,
+      ...[...currentPortfolio]
+        .sort(
+          (a, b) =>
+            (b.code.includes("PPM") ? 1 : 0) - (a.code.includes("PPM") ? 1 : 0)
+        )
+        .map((r) => ({
+          sector: r.sector,
+          name: r.name,
+          place: r.place ? `${r.code} · ${r.place}` : r.code,
+          img: r.img,
+          desc: r.blurb,
+          detail: r.desc,
+          specs: r.specs,
+          code: r.code,
+          wide: r.wide,
+        })),
+    ],
+    [moreProjects]
+  );
 
   useEffect(() => {
     const ctx = gsap.context(() => {

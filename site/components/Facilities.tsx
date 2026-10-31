@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { facilities, shopFloor } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import { openFacilityMedia } from "./FacilityMedia";
 import StripNav from "./StripNav";
 import Reveal from "./Reveal";
@@ -13,6 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 /** In-house production facilities — photo cards with glass badges,
  *  revealed with a staggered 3D flip-up. */
 export default function Facilities() {
+  const { facilities, shopFloor } = useContentFor();
   const root = useRef<HTMLElement>(null);
   const reel = useRef<HTMLDivElement>(null);
 

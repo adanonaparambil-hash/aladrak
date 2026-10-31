@@ -3,12 +3,13 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { headOffice, introStatement, stats, vision, mission } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Intro() {
+  const { headOffice, introStatement, stats, vision, mission } = useContentFor();
   const root = useRef<HTMLElement>(null);
 
   useEffect(() => {

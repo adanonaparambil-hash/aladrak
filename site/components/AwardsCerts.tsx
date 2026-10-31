@@ -2,13 +2,16 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { certificates, awards, awardMentions } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import Reveal from "./Reveal";
 
-type Cert = (typeof certificates)[number];
+/* the shape is the same in both languages, so it is taken from the English
+   module as a type rather than from a value this component no longer imports */
+type Cert = (typeof import("@/lib/content"))["certificates"][number];
 
 /** Certificates & Awards — ISO certificate scans open in a GSAP lightbox. */
 export default function AwardsCerts() {
+  const { certificates, awards, awardMentions } = useContentFor();
   const [cert, setCert] = useState<Cert | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
