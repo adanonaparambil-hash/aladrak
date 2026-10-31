@@ -1,3 +1,5 @@
+"use client";
+import { useText } from "@/lib/translate-client";
 import Reveal from "./Reveal";
 
 /**
@@ -54,11 +56,12 @@ export default function PageHero({
   scrim?: keyof typeof SCRIM;
   children?: React.ReactNode;
 }) {
+  const textForLocale = useText();
   return (
     <section className="relative pt-40 pb-20 md:pt-52 md:pb-28 overflow-hidden">
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={img} alt={alt} className="w-full h-full object-cover" />
+        <img src={img} alt={textForLocale(alt)} className="w-full h-full object-cover" />
         {/*
           Much lighter than the first attempt, which was opaque at the left edge
           and lost the PPE wall entirely. Contrast for the type is bought by the
@@ -74,11 +77,11 @@ export default function PageHero({
           a busy background. This is what pays for the lighter scrim above. */}
       <div className="relative shell [text-shadow:0_1px_2px_rgba(10,15,12,0.98),0_2px_8px_rgba(10,15,12,0.92),0_4px_26px_rgba(10,15,12,0.85)]">
         <Reveal>
-          <p className="label text-gold mb-6">{kicker}</p>
+          <p className="label text-gold mb-6">{textForLocale(kicker)}</p>
           <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
-            {title}
+            {textForLocale(title)}
           </h1>
-          {children}
+          {textForLocale(children)}
         </Reveal>
       </div>
     </section>

@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
@@ -18,6 +18,7 @@ import {
  * anywhere. Aloft Muscat has its own tile — see the note in content.ts.
  */
 export default function GroupCompanies() {
+  const textForLocale = useText();
   const [chooser, setChooser] = useState<GroupCompany | null>(null);
 
   return (
@@ -29,7 +30,7 @@ export default function GroupCompanies() {
       </div>
       {chooser?.choose && (
         <HotelChooser
-          title={chooser.name}
+          title={textForLocale(chooser.name)}
           properties={chooser.choose}
           onClose={() => setChooser(null)}
         />
@@ -39,38 +40,37 @@ export default function GroupCompanies() {
 }
 
 function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
+  const textForLocale = useText();
   const face = (
     <div className="group h-full rounded-2xl bg-cream border border-white/20 overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
       {g.img ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={g.img}
-          alt={`${g.name} logo`}
+          alt={textForLocale(`${g.name} logo`)}
           loading="lazy"
           className="w-full aspect-[2/1] object-contain bg-white p-4"
         />
       ) : (
         <div className="w-full aspect-[2/1] bg-white flex items-center justify-center p-4">
           <span className="font-display text-xl text-forest text-center leading-snug">
-            {g.name}
+            {textForLocale(g.name)}
           </span>
         </div>
       )}
       <div className="px-4 py-3 bg-cream border-t border-ink/10 flex items-center justify-between gap-2">
         <span className="label label-xs text-ink/70 leading-snug sm:truncate">
-          {g.name}
+          {textForLocale(g.name)}
         </span>
-        {g.choose ? (
+        {textForLocale(g.choose ? (
           <span className="label label-xs text-brand group-hover:text-gold transition-colors flex-none">
-            {g.choose.length} resorts ↗
-          </span>
+            {g.choose.length} {textForLocale(" resorts ↗")}</span>
         ) : (
           g.url && (
             <span className="label label-xs text-brand group-hover:text-gold transition-colors flex-none">
-              Visit ↗
-            </span>
+              {textForLocale("Visit ↗")}</span>
           )
-        )}
+        ))}
       </div>
     </div>
   );
@@ -81,7 +81,7 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
         type="button"
         onClick={onChoose}
         aria-haspopup="dialog"
-        aria-label={`Choose a property from ${g.name}`}
+        aria-label={textForLocale(`Choose a property from ${g.name}`)}
         className="text-left"
       >
         {face}
@@ -94,7 +94,7 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
         href={g.url}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Visit ${g.name}`}
+        aria-label={textForLocale(`Visit ${g.name}`)}
       >
         {face}
       </a>
@@ -112,6 +112,7 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
  * sit soft under the stills, and nothing is fetched until someone picks one.
  */
 function UnlinkedProperty({ p }: { p: HotelProperty }) {
+  const textForLocale = useText();
   const slides = [
     { kind: "still" as const, src: p.img, alt: p.name },
     ...(p.gallery ?? []).map((src, i) => ({ kind: "still" as const, src, alt: `${p.name} — photograph ${i + 2}` })),
@@ -146,7 +147,7 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
                 muted
                 loop
                 playsInline
-                aria-label={cur.alt}
+                aria-label={textForLocale(cur.alt)}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             ) : (
@@ -154,19 +155,19 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
               <img
                 key={cur.src}
                 src={cur.src}
-                alt={cur.alt}
+                alt={textForLocale(cur.alt)}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             )}
           </div>
-          <div className="flex gap-1.5 p-1.5" role="tablist" aria-label={`${p.name} — photographs`}>
+          <div className="flex gap-1.5 p-1.5" role="tablist" aria-label={textForLocale(`${p.name} — photographs`)}>
             {slides.map((sl, i) => (
               <button
                 key={sl.src}
                 type="button"
                 role="tab"
                 aria-selected={i === at}
-                aria-label={sl.alt}
+                aria-label={textForLocale(sl.alt)}
                 onClick={() => setAt(i)}
                 className={`relative flex-1 aspect-[3/2] overflow-hidden rounded-md border transition-opacity duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
                   i === at ? "border-gold opacity-100" : "border-transparent opacity-60 hover:opacity-100"
@@ -179,7 +180,7 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={sl.kind === "film" ? sl.poster : sl.src}
-                  alt=""
+                  alt={textForLocale("")}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 {sl.kind === "film" && (
@@ -198,41 +199,40 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
 
         {/* words: what and where; the address stands where a link would */}
         <div className="p-5 md:p-6 flex flex-col">
-          <p className="label label-xs text-gold">{p.kind}</p>
-          <h4 className="font-display text-xl md:text-[26px] leading-tight text-cream mt-1.5">{p.name}</h4>
-          <p className="text-cream/75 font-light text-sm mt-1">{p.place}</p>
-          {p.address && (
+          <p className="label label-xs text-gold">{textForLocale(p.kind)}</p>
+          <h4 className="font-display text-xl md:text-[26px] leading-tight text-cream mt-1.5">{textForLocale(p.name)}</h4>
+          <p className="text-cream/75 font-light text-sm mt-1">{textForLocale(p.place)}</p>
+          {textForLocale(p.address && (
             <p className="text-cream/60 font-light text-sm leading-relaxed mt-4 pl-3 border-l border-gold/50">
-              {p.address}
+              {textForLocale(p.address)}
             </p>
-          )}
+          ))}
           {/* A name and a number, on the same rule as the address: with no
               website to visit, calling someone is the whole enquiry path, so
               the number is a tel: link rather than text to copy out by hand. */}
           {p.contact && (
             <p className="text-cream/60 font-light text-sm leading-relaxed mt-3 pl-3 border-l border-gold/50">
-              Contact: {p.contact.name}
+              {textForLocale("Contact: ")}{textForLocale(p.contact.name)}
               <a
                 href={`tel:${p.contact.phone.replace(/\s/g, "")}`}
                 className="block text-cream/90 hover:text-gold transition-colors py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-sm"
               >
-                {p.contact.phone}
+                {textForLocale(p.contact.phone)}
               </a>
             </p>
           )}
           <p className="text-cream/45 font-light text-xs leading-relaxed mt-3">
-            No website yet — the photographs and the short film are the tour for now.
-          </p>
-          {maps && (
+            {textForLocale("No website yet — the photographs and the short film are the tour for now.")}</p>
+          {textForLocale(maps && (
             <a
               href={maps}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 self-start label label-xs text-cream/90 mt-auto pt-5 hover:text-gold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-sm"
             >
-              <span className="border-b border-gold/60 pb-1">Open in Maps ↗</span>
+              <span className="border-b border-gold/60 pb-1">{textForLocale("Open in Maps ↗")}</span>
             </a>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -253,6 +253,7 @@ function HotelChooser({
   properties: HotelProperty[];
   onClose: () => void;
 }) {
+  const textForLocale = useText();
   const backdrop = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const first = useRef<HTMLAnchorElement>(null);
@@ -344,18 +345,16 @@ function HotelChooser({
         ref={panel}
         role="dialog"
         aria-modal="true"
-        aria-label={`${title} — choose a property`}
+        aria-label={textForLocale(`${title} — choose a property`)}
         className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-5 md:p-[clamp(18px,3.4dvh,36px)]"
       >
-        <p className="label text-gold">{title}</p>
+        <p className="label text-gold">{textForLocale(title)}</p>
         <h3 className="font-display text-2xl md:text-[32px] leading-tight text-cream mt-2">
-          Which of our resorts?
-        </h3>
+          {textForLocale("Which of our resorts?")}</h3>
         <p className="text-cream/65 font-light text-sm md:text-base mt-2">
-          {properties.length} resorts in Kerala
-          {unlinked.length
+          {properties.length} {textForLocale(" resorts in Kerala")}{textForLocale(unlinked.length
             ? ` — ${linked.length} with their own sites, and the newest below.`
-            : ", each with its own site."}
+            : ", each with its own site.")}
         </p>
 
         {/* the two with sites: a pair of link cards, as before */}
@@ -373,21 +372,20 @@ function HotelChooser({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={p.img}
-                alt={p.name}
+                alt={textForLocale(p.name)}
                 loading="lazy"
                 className="w-full h-[clamp(110px,20dvh,220px)] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               {/* the type sits on the photograph, so it needs its own ground */}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/92 via-ink/35 to-ink/5" />
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="label label-xs text-gold">{p.kind}</p>
+                <p className="label label-xs text-gold">{textForLocale(p.kind)}</p>
                 <h4 className="font-display text-xl md:text-[26px] leading-tight text-cream mt-1.5">
-                  {p.name}
+                  {textForLocale(p.name)}
                 </h4>
-                <p className="text-cream/75 font-light text-sm mt-1">{p.place}</p>
+                <p className="text-cream/75 font-light text-sm mt-1">{textForLocale(p.place)}</p>
                 <span className="inline-flex items-center gap-2 label label-xs text-cream/90 mt-4 border-b border-gold/60 pb-1 group-hover:text-gold transition-colors">
-                  Visit site ↗
-                </span>
+                  {textForLocale("Visit site ↗")}</span>
               </div>
             </a>
           ))}
@@ -401,7 +399,7 @@ function HotelChooser({
 
         <button
           onClick={close}
-          aria-label="Close"
+          aria-label={textForLocale("Close")}
           className="absolute top-4 right-4 w-11 h-11 rounded-full bg-ink/50 backdrop-blur-md border border-white/25 text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400 z-10"
         >
           <svg width="14" height="14" viewBox="0 0 14 14">

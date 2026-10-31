@@ -103,48 +103,10 @@ export function localePath(locale: Locale, path: string) {
   return clean === "/" ? "/ar/" : `/ar${clean}`;
 }
 
-/**
- * Which pages exist in Arabic.
- *
- * The header is global, so the language switch renders on every page — but the
- * Arabic side is being built one route at a time, and a switch that points at a
- * route which has not been written yet is a 404 with the site's own branding on
- * it. This list is the gate: the switch only appears where there is something
- * on the other side. Add a path here in the same commit that adds its /ar page,
- * never before.
- */
-export const AR_ROUTES = new Set(["/hse/"]);
-
-/**
- * Is the Arabic side ready to be offered to visitors?
- *
- * The translation in content.ar.ts is a draft and has not been read by a native
- * speaker yet. The /ar pages are built and reachable, so a reviewer can be sent
- * straight to them, but until that review comes back the switch stays dark and
- * no visitor is handed unchecked Arabic. Flip this to true in the same commit
- * that records the sign-off — it is the only thing standing between the draft
- * translation and the public.
- */
-export const AR_PUBLIC = false;
-
-/** Does this path have an Arabic counterpart built yet? */
+/** All public routes have matching Arabic pages. */
+export const AR_ROUTES = new Set(["/", "/news/", "/careers/", "/hse/"]);
 export function hasArabic(pathname: string) {
-  const en = pathname.replace(/^\/ar(?=\/|$)/, "") || "/";
-  const withSlash = en.endsWith("/") ? en : `${en}/`;
-  return AR_ROUTES.has(withSlash);
+ const en = pathname.replace(/^\/ar(?=\/|$)/, "") || "/";
+ return AR_ROUTES.has(en.endsWith("/") ? en : en + "/");
 }
-
-/**
- * Should the header offer the language switch on this page?
- *
- * The two directions are not symmetrical. Going into Arabic is an offer the
- * site makes, and it is withheld until the translation has been reviewed and
- * the page actually exists in Arabic. Coming back out is an escape hatch: a
- * reader who has landed on an Arabic page — a reviewer following a link, or
- * anyone who finds one another way — must always be able to get back to
- * English, so the Arabic side shows the switch unconditionally. Every Arabic
- * route is built from an English one, so the way back is never missing.
- */
-export function showSwitch(locale: Locale, pathname: string) {
-  return locale === "ar" || (AR_PUBLIC && hasArabic(pathname));
-}
+export function showSwitch(locale: Locale, pathname: string) { return locale === "ar" || hasArabic(pathname); }

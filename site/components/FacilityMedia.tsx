@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { type ShopFloorMedia } from "@/lib/content";
@@ -89,6 +89,7 @@ function playlistFor(target: number | string, copy: Copy): Playlist | null {
  * anywhere in it directly.
  */
 export default function FacilityMedia() {
+  const textForLocale = useText();
   const copy = useContentFor();
   const [pl, setPl] = useState<Playlist | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
@@ -229,7 +230,7 @@ export default function FacilityMedia() {
         ref={panel}
         role="dialog"
         aria-modal="true"
-        aria-label={item.label}
+        aria-label={textForLocale(item.label)}
         className="relative w-full max-w-[min(1500px,92vw)] max-h-[90dvh] flex flex-col rounded-2xl border border-cream/12 bg-forest/95 shadow-[0_40px_120px_rgba(0,0,0,0.7)]"
       >
         <div
@@ -256,7 +257,7 @@ export default function FacilityMedia() {
                 <img
                   key={`${item.src}-bg`}
                   src={item.src}
-                  alt=""
+                  alt={textForLocale("")}
                   aria-hidden
                   className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl brightness-50"
                 />
@@ -265,7 +266,7 @@ export default function FacilityMedia() {
               <img
                 key={item.src}
                 src={item.src}
-                alt={item.label}
+                alt={textForLocale(item.label)}
                 className={`absolute inset-0 w-full h-full ${
                   item.fit === "contain" ? "object-contain" : "object-cover"
                 }`}
@@ -285,7 +286,7 @@ export default function FacilityMedia() {
             <>
               <button
                 onClick={() => step(-1)}
-                aria-label="Previous"
+                aria-label={textForLocale("Previous")}
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md border border-cream/25 text-cream/90 hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 flex items-center justify-center"
               >
                 <svg width="9" height="14" viewBox="0 0 9 14" aria-hidden>
@@ -294,7 +295,7 @@ export default function FacilityMedia() {
               </button>
               <button
                 onClick={() => step(1)}
-                aria-label="Next"
+                aria-label={textForLocale("Next")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md border border-cream/25 text-cream/90 hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 flex items-center justify-center"
               >
                 <svg width="9" height="14" viewBox="0 0 9 14" aria-hidden>
@@ -317,7 +318,7 @@ export default function FacilityMedia() {
               <button
                 key={m.src}
                 onClick={() => jump(i)}
-                aria-label={m.label}
+                aria-label={textForLocale(m.label)}
                 aria-current={i === pl.pos}
                 className={`relative flex-none w-24 aspect-video rounded-lg overflow-hidden border transition-all duration-300 ${
                   i === pl.pos
@@ -333,7 +334,7 @@ export default function FacilityMedia() {
                   </span>
                 ) : (
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={m.src} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={m.src} alt={textForLocale("")} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                 )}
               </button>
             ))}
@@ -343,25 +344,25 @@ export default function FacilityMedia() {
         <div className="p-6 md:px-9 md:py-6 overflow-y-auto no-scrollbar">
           {fac && (
             <p data-fm-stagger className="label text-gold mb-2.5">
-              {fac.name}
+              {textForLocale(fac.name)}
             </p>
           )}
           <h4 data-fm-stagger className="font-display text-xl md:text-2xl text-cream mb-2.5">
-            {item.label}
+            {textForLocale(item.label)}
           </h4>
           {fac && (
             <p
               data-fm-stagger
               className="text-cream/80 font-light leading-relaxed max-w-2xl text-[14px] md:text-[15px]"
             >
-              {fac.desc}
+              {textForLocale(fac.desc)}
             </p>
           )}
         </div>
 
         <button
           onClick={close}
-          aria-label="Close"
+          aria-label={textForLocale("Close")}
           className="absolute top-4 right-4 w-11 h-11 rounded-full bg-ink/70 border border-cream/20 text-cream/80 hover:text-ink hover:bg-sand hover:border-sand transition-colors duration-300 flex items-center justify-center text-xl leading-none"
         >
           &times;

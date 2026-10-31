@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -21,12 +21,13 @@ gsap.registerPlugin(ScrollTrigger);
  * becomes a path — with nothing to alter here.
  */
 function Portrait({ person }: { person: Person }) {
+  const textForLocale = useText();
   if (person.img) {
     return (
       /* eslint-disable-next-line @next/next/no-img-element */
       <img
         src={person.img}
-        alt={person.name}
+        alt={textForLocale(person.name)}
         loading="lazy"
         className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
       />
@@ -41,12 +42,12 @@ function Portrait({ person }: { person: Person }) {
     .join("");
   return (
     <div
-      aria-label={person.name}
+      aria-label={textForLocale(person.name)}
       role="img"
       className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-forest to-ink border border-cream/10"
     >
       <span className="font-display text-[clamp(1.75rem,3.2vw,3rem)] text-gold/70 tracking-wide">
-        {initials}
+        {textForLocale(initials)}
       </span>
     </div>
   );
@@ -57,19 +58,21 @@ function Portrait({ person }: { person: Person }) {
  * two group officers below them, so the two rows cannot drift apart.
  */
 function LeaderCard({ person }: { person: Person }) {
+  const textForLocale = useText();
   return (
     <div className="group">
       <div className="relative rounded-2xl overflow-hidden aspect-[5/6] mb-4">
         <Portrait person={person} />
       </div>
-      <p className="font-display text-base md:text-lg leading-snug">{person.name}</p>
-      <p className="label text-cream/50 mt-2">{person.role}</p>
+      <p className="font-display text-base md:text-lg leading-snug">{textForLocale(person.name)}</p>
+      <p className="label text-cream/50 mt-2">{textForLocale(person.role)}</p>
     </div>
   );
 }
 
 /** Team Adrak — founder feature, executive directors, and the full roster. */
 export default function Team() {
+  const textForLocale = useText();
   const { leadership, lifeAtAdrak } = useContentFor();
   const root = useRef<HTMLElement>(null);
   const { founder, directors, officers, roster } = leadership;
@@ -98,10 +101,9 @@ export default function Team() {
 
       <div className="shell py-24 md:py-36">
         <Reveal className="text-center mb-16 md:mb-24">
-          <p className="label text-gold mb-4">Team Adrak</p>
+          <p className="label text-gold mb-4">{textForLocale("Team Adrak")}</p>
           <h2 className="font-display h-section">
-            The people behind the landmarks
-          </h2>
+            {textForLocale("The people behind the landmarks")}</h2>
         </Reveal>
 
         {/* ===== Founder feature ===== */}
@@ -120,23 +122,23 @@ export default function Team() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={founder.img}
-                alt={founder.name}
+                alt={textForLocale(founder.name)}
                 className="absolute inset-0 w-full h-full object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 inset-x-0 p-7">
-                <p className="font-display text-2xl">{founder.name}</p>
-                <p className="label text-gold mt-2">{founder.role}</p>
+                <p className="font-display text-2xl">{textForLocale(founder.name)}</p>
+                <p className="label text-gold mt-2">{textForLocale(founder.role)}</p>
               </div>
             </div>
           </Reveal>
           <div className="flex-1 min-w-0">
             <Reveal delay={0.1}>
               <blockquote className="font-serifit italic text-3xl md:text-4xl leading-snug text-cream/95">
-                “{founder.quote}”
+                “{textForLocale(founder.quote)}”
               </blockquote>
               <p className="font-light text-cream/70 leading-relaxed mt-8">
-                {founder.bio}
+                {textForLocale(founder.bio)}
               </p>
               {/* No measure caps on the prose. They were max-w-xl and max-w-2xl,
                   which left every line breaking at the same point a third of the
@@ -148,7 +150,7 @@ export default function Team() {
                   key={para.slice(0, 32)}
                   className="font-light text-cream/70 leading-relaxed mt-5"
                 >
-                  {para}
+                  {textForLocale(para)}
                 </p>
               ))}
               <div className="flex flex-wrap gap-3 mt-8">
@@ -157,7 +159,7 @@ export default function Team() {
                     key={h}
                     className="px-6 py-2.5 border border-gold/40 text-gold rounded-full label"
                   >
-                    {h}
+                    {textForLocale(h)}
                   </span>
                 ))}
               </div>
@@ -194,7 +196,7 @@ export default function Team() {
             belong under this heading too rather than being annexed to the
             directors' block. */}
         <Reveal>
-          <p className="label text-gold text-center mb-12">Key Personnel</p>
+          <p className="label text-gold text-center mb-12">{textForLocale("Key Personnel")}</p>
         </Reveal>
         <Reveal className="mb-12 md:mb-16">
           {/* The officers keep the directors' four-column grid so their tiles
@@ -232,9 +234,9 @@ export default function Team() {
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <p className="font-display text-[clamp(0.9375rem,0.9vw,1.375rem)] leading-snug mt-3.5">
-                {m.name}
+                {textForLocale(m.name)}
               </p>
-              <p className="label label-xs text-cream/70 mt-1.5">{m.role}</p>
+              <p className="label label-xs text-cream/70 mt-1.5">{textForLocale(m.role)}</p>
             </div>
           ))}
         </div>
@@ -243,14 +245,12 @@ export default function Team() {
         <Reveal className="mt-24 md:mt-32">
           <div className="grid lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-4">
-              <p className="label text-gold mb-5">Life at Adrak</p>
+              <p className="label text-gold mb-5">{textForLocale("Life at Adrak")}</p>
               <h3 className="font-display text-3xl md:text-4xl leading-tight">
-                People first,
-                <br />
-                landmarks follow
-              </h3>
+                {textForLocale("People first,")}<br />
+                {textForLocale("landmarks follow")}</h3>
               <p className="font-light text-cream/70 leading-relaxed mt-6">
-                {lifeAtAdrak.statement}
+                {textForLocale(lifeAtAdrak.statement)}
               </p>
             </div>
             {/* One column on a phone, where a half-width 16:10 tile is barely
@@ -264,13 +264,13 @@ export default function Team() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ph.src}
-                    alt={ph.label}
+                    alt={textForLocale(ph.label)}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-105"
                   />
                   <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink/85 to-transparent px-5 pt-10 pb-4">
                     <span className="label label-xs text-cream/85">
-                      {ph.label}
+                      {textForLocale(ph.label)}
                     </span>
                   </figcaption>
                 </figure>

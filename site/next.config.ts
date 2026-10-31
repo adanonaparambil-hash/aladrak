@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
    * canvas intro, the modals — is client-side already, so nothing is lost.
    */
   output: "export",
+  // Keep static export within the memory budget of local and CI builders.
+  experimental: { cpus: 2 },
   basePath,
   assetPrefix: basePath || undefined,
   /**

@@ -1,3 +1,6 @@
+import { translatePassage, translateText } from "./translate";
+import { localePath, type Locale } from "./i18n";
+import { BASE_PATH } from "./asset";
 import {
   awards,
   careers,
@@ -268,19 +271,20 @@ const stem = (w: string) =>
 const norm = (s: string) =>
   s
     .toLowerCase()
-    .replace(/[^a-z0-9\s.+&-]/g, " ")
+    .replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه").replace(/[\u064B-\u065F\u0640]/g, "")
+    .replace(/[^a-z0-9\u0600-\u06ff\s.+&-]/g, " ")
     .split(/\s+/)
     .filter(Boolean);
 
 const terms = (s: string) =>
   norm(s)
     .filter((w) => !STOP.has(w) && w.length > 1)
-    .map(stem)
+    .map(w => /[\u0600-\u06ff]/.test(w) ? w.replace(/^ال/, "") : stem(w))
     // stemming can shorten a word below the threshold it just passed
     .filter((w) => w.length > 1);
 
 /** pre-tokenised once at module load, not per keystroke */
-const INDEX = KNOWLEDGE.map((e) => {
+const makeIndex = (source: Entry[]) => source.map((e) => {
   const t = new Map<string, number>();
   const bump = (w: string, n: number) => t.set(w, (t.get(w) ?? 0) + n);
   for (const w of terms(e.title)) bump(w, 4);
@@ -288,6 +292,21 @@ const INDEX = KNOWLEDGE.map((e) => {
   for (const w of terms(e.body)) bump(w, 1);
   return { entry: e, t, hay: `${e.title} ${e.tags?.join(" ") ?? ""} ${e.body}`.toLowerCase() };
 });
+
+const INDEX = makeIndex(KNOWLEDGE);
+const arabicTags: Record<string, string[]> = {
+ contact: ["تواصل", "اتصال", "هاتف", "بريد", "عنوان"], vendor: ["مورد", "كمورد", "تسجيل", "توريد", "مقاول"],
+ certifications: ["شهادات", "شهاده", "اعتماد", "جوده"], careers: ["وظائف", "وظيفه", "توظيف", "عمل"],
+ company: ["شركه", "الادرك", "مشاريع", "بناء"], hse: ["سلامه", "صحه", "بيئه"], leadership: ["اداره", "رئيس", "مؤسس"]
+};
+const AR_INDEX = makeIndex(KNOWLEDGE.map(e => {
+ const article = newsItems.find(n => e.id === "news-" + n.slug);
+ let body = article ? [article.date, ...article.body].map(s => translateText(s, "ar")).join(" ") : translatePassage(e.body, "ar");
+ if (e.id === "contact") body = `اتصل على ${site.phone} أو راسل ${site.email}. يقع المكتب الرئيسي في حلبان، بركاء، الباطنة. يمكنك إرسال استفسار أو التسجيل كمورد عبر النماذج في قسم التواصل.`;
+ return { ...e, title: e.id === "company" ? `الأدرك — ${years()} عاماً من بناء عُمان` : translatePassage(e.title, "ar"), body,
+ href: asset(localePath("ar", BASE_PATH && e.href.startsWith(BASE_PATH) ? e.href.slice(BASE_PATH.length) : e.href)),
+ tags: [...(e.tags ?? []), ...(arabicTags[e.id] ?? [])] };
+}));
 
 export type Hit = { entry: Entry; score: number };
 
@@ -298,13 +317,13 @@ export type Hit = { entry: Entry; score: number };
  * mostly produces confident wrong answers ("crusher" for "career"), and a
  * wrong answer with a citation is worse than "I don't know".
  */
-export function search(query: string, limit = 3): Hit[] {
+export function search(query: string, limit = 3, locale: Locale = "en"): Hit[] {
   const q = terms(query);
   if (!q.length) return [];
   const phrase = query.trim().toLowerCase();
 
   const hits: Hit[] = [];
-  for (const { entry, t, hay } of INDEX) {
+  for (const { entry, t, hay } of (locale === "ar" ? AR_INDEX : INDEX)) {
     let score = 0;
     let matched = 0;
     for (const w of q) {

@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -24,6 +24,7 @@ gsap.registerPlugin(ScrollTrigger);
  */
 
 export default function Expertise() {
+  const textForLocale = useText();
   const { expertise } = useContentFor();
   const root = useRef<HTMLElement>(null);
   /**
@@ -156,20 +157,20 @@ export default function Expertise() {
   const stacked = (
     <div className={`expertise-stacked ${calm ? "" : "md:hidden "}px-6 py-24 space-y-16`}>
       <div>
-        <p className="label text-gold mb-4">Core Expertise</p>
-        <h2 className="font-display text-4xl">One team. Four disciplines.</h2>
+        <p className="label text-gold mb-4">{textForLocale("Core Expertise")}</p>
+        <h2 className="font-display text-4xl">{textForLocale("One team. Four disciplines.")}</h2>
       </div>
       {expertise.map((d) => (
         <div key={d.key} className="border-t border-white/10 pt-10">
           <div className="font-display text-7xl text-transparent [-webkit-text-stroke:1px_var(--color-gold)]">
-            {d.no}
+            {textForLocale(d.no)}
           </div>
-          <h3 className="font-display text-3xl mt-3">{d.title}</h3>
-          <p className="font-serifit italic text-xl text-cream/70 mt-2">{d.lead}</p>
+          <h3 className="font-display text-3xl mt-3">{textForLocale(d.title)}</h3>
+          <p className="font-serifit italic text-xl text-cream/70 mt-2">{textForLocale(d.lead)}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={d.img}
-            alt={d.title}
+            alt={textForLocale(d.title)}
             loading="lazy"
             style={{ objectPosition: d.imgPos }}
             className="mt-5 rounded-xl w-full aspect-video object-cover border border-white/10"
@@ -178,9 +179,9 @@ export default function Expertise() {
             {d.points.map((p, i) => (
               <li key={i} className="flex gap-4 text-cream/85 font-light">
                 <span className="label text-gold mt-1">
-                  {String(i + 1).padStart(2, "0")}
+                  {textForLocale(String(i + 1).padStart(2, "0"))}
                 </span>
-                {p}
+                {textForLocale(p)}
               </li>
             ))}
           </ul>
@@ -209,7 +210,7 @@ export default function Expertise() {
               <img
                 data-shot
                 src={d.img}
-                alt={d.title}
+                alt={textForLocale(d.title)}
                 loading="lazy"
                 style={{ objectPosition: d.imgPos }}
                 className="absolute inset-0 w-full h-full object-cover"
@@ -226,14 +227,12 @@ export default function Expertise() {
           {/* header */}
           <div className="absolute top-0 inset-x-0 z-20 shell pt-20 flex items-end justify-between">
             <div>
-              <p className="label text-gold mb-4">Core Expertise</p>
+              <p className="label text-gold mb-4">{textForLocale("Core Expertise")}</p>
               <h2 className="font-display text-4xl lg:text-5xl">
-                One team. Four disciplines.
-              </h2>
+                {textForLocale("One team. Four disciplines.")}</h2>
             </div>
             <p className="label text-cream/60 max-w-xs text-right leading-loose">
-              Turnkey solutions with 100% in-house facilities
-            </p>
+              {textForLocale("Turnkey solutions with 100% in-house facilities")}</p>
           </div>
 
           {/* the content, laid straight on the image — no card, no glass */}
@@ -248,27 +247,27 @@ export default function Expertise() {
                   <div className="col-span-6">
                     <div className="inline-block rounded-3xl bg-ink/45 backdrop-blur-lg border border-white/25 shadow-[0_24px_60px_rgba(0,0,0,0.4)] px-9 py-8">
                       <div className="font-display text-[clamp(5rem,9vw,13rem)] leading-none text-transparent [-webkit-text-stroke:1.5px_var(--color-gold)] opacity-90">
-                        {d.no}
+                        {textForLocale(d.no)}
                       </div>
                       <h3 className="font-display text-[clamp(2rem,3.4vw,5rem)] leading-[1.05] mt-3">
-                        {d.title}
+                        {textForLocale(d.title)}
                       </h3>
                       <p className="font-serifit italic text-cream/85 text-[clamp(1.125rem,1.5vw,2rem)] mt-4">
-                        {d.lead}
+                        {textForLocale(d.lead)}
                       </p>
                     </div>
                   </div>
 
                   <div className="col-span-5 col-start-8 rounded-3xl bg-ink/45 backdrop-blur-lg border border-white/25 shadow-[0_24px_60px_rgba(0,0,0,0.4)] px-8 py-7">
-                    <p className="label text-gold mb-5">Capability</p>
+                    <p className="label text-gold mb-5">{textForLocale("Capability")}</p>
                     <ul className="divide-y divide-cream/15">
                       {d.points.map((pt, i) => (
                         <li key={i} className="flex items-start gap-5 py-3.5">
                           <span className="label label-xs text-gold/80 mt-1.5">
-                            {String(i + 1).padStart(2, "0")}
+                            {textForLocale(String(i + 1).padStart(2, "0"))}
                           </span>
                           <span className="text-[clamp(0.9375rem,0.95vw,1.375rem)] leading-snug text-cream/90 font-light">
-                            {pt}
+                            {textForLocale(pt)}
                           </span>
                         </li>
                       ))}

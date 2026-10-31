@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { motionOK } from "@/lib/intro";
@@ -84,6 +84,7 @@ type Spark = {
 };
 
 export default function CursorFX() {
+  const textForLocale = useText();
   const canvas = useRef<HTMLCanvasElement>(null);
   const progress = useRef<SVGCircleElement>(null);
   const pctText = useRef<HTMLSpanElement>(null);
@@ -444,7 +445,7 @@ export default function CursorFX() {
       <button
         ref={wrap}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Back to top"
+        aria-label={textForLocale("Back to top")}
         className="fixed bottom-6 right-6 z-[90] w-14 h-14 rounded-full bg-ink/60 backdrop-blur-md border border-white/15 flex items-center justify-center transition-opacity duration-500 opacity-0 hover:border-gold"
       >
         <svg width="48" height="48" viewBox="0 0 48 48" className="-rotate-90 absolute">

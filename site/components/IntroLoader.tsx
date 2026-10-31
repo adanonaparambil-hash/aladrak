@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
@@ -127,6 +127,7 @@ const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi 
 type Star = { x: number; y: number; r: number; a: number; tw: number };
 
 export default function IntroLoader() {
+  const textForLocale = useText();
   const pathname = usePathname();
   const onHome = pathname === "/";
 
@@ -788,7 +789,7 @@ export default function IntroLoader() {
 
         {/* what the count is of, directly under the year being read */}
         <div className="absolute inset-x-0 top-1/2 mt-[clamp(1.6rem,3.4vw,3rem)] text-center">
-          <p className="label label-xs text-gold/85">{n} Years of Excellence</p>
+          <p className="label label-xs text-gold/85">{n} {textForLocale(" Years of Excellence")}</p>
         </div>
 
         {/* the standing claim, lower in the dial */}
@@ -801,9 +802,9 @@ export default function IntroLoader() {
             <span ref={claim} className="tabular-nums">
               {n}
             </span>
-            <span className="label label-xs text-cream/70 ml-2 align-middle">Years</span>
+            <span className="label label-xs text-cream/70 ml-2 align-middle">{textForLocale("Years")}</span>
           </p>
-          <p className="label label-xs text-cream/45 mt-2">of trust &amp; growth</p>
+          <p className="label label-xs text-cream/45 mt-2">{textForLocale("of trust & growth")}</p>
         </div>
 
         {/* The two ends of the story, hung off the ring itself. Being children
@@ -813,14 +814,14 @@ export default function IntroLoader() {
         <Medallion
           side="left"
           year={START_YEAR}
-          kicker="Our beginning"
-          line="A vision was born"
+          kicker={textForLocale("Our beginning")}
+          line={textForLocale("A vision was born")}
         />
         <Medallion
           side="right"
           year={END_YEAR}
-          kicker="Our future"
-          line="A legacy continues"
+          kicker={textForLocale("Our future")}
+          line={textForLocale("A legacy continues")}
         />
       </div>
 
@@ -829,7 +830,7 @@ export default function IntroLoader() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={asset("/images/logo.png")}
-          alt="Al Adrak"
+          alt={textForLocale("Al Adrak")}
           className="w-[150px] sm:w-[min(20vw,300px)] h-auto drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]"
         />
       </div>
@@ -846,11 +847,11 @@ export default function IntroLoader() {
           &rdquo;
         </span>
         <blockquote className="font-serifit italic text-cream/80 text-[clamp(1rem,1.1vw,1.6rem)] leading-snug sm:-mt-3">
-          {leadership.founder.quote}
+          {textForLocale(leadership.founder.quote)}
         </blockquote>
         <figcaption className="label label-xs text-sand/65 mt-4 sm:mt-6">
-          {leadership.founder.name}
-          <span className="hidden sm:inline"> &middot; Founder</span>
+          {textForLocale(leadership.founder.name)}
+          <span className="hidden sm:inline"> {textForLocale(" · Founder")}</span>
         </figcaption>
       </figure>
 
@@ -865,8 +866,7 @@ export default function IntroLoader() {
             landed ? "opacity-100" : "opacity-60"
           }`}
         >
-          {n} Years Journey
-        </p>
+          {n} {textForLocale(" Years Journey")}</p>
         <div className="w-full max-w-[300px] sm:max-w-md">
           <div className="relative h-px w-full bg-cream/12">
             <div ref={bar} className="absolute inset-y-0 left-0 bg-gold" style={{ width: "0%" }} />
@@ -887,8 +887,7 @@ export default function IntroLoader() {
         onClick={() => exitRef.current?.()}
         className="absolute top-6 right-6 px-5 py-2.5 rounded-full border border-cream/20 label label-xs text-cream/60 hover:text-ink hover:bg-sand hover:border-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sand transition-colors duration-300"
       >
-        Skip
-      </button>
+        {textForLocale("Skip")}</button>
     </div>
   );
 }
@@ -912,6 +911,7 @@ function Medallion({
   kicker: string;
   line: string;
 }) {
+  const textForLocale = useText();
   const isLeft = side === "left";
   return (
     <div
@@ -929,9 +929,9 @@ function Medallion({
       <span className="flex items-center justify-center rounded-full border border-gold/45 text-gold font-display w-[clamp(52px,4.2vw,72px)] h-[clamp(52px,4.2vw,72px)] text-[clamp(0.95rem,1.1vw,1.35rem)] tabular-nums">
         {year}
       </span>
-      <span className="label label-xs text-cream/55 mt-3 whitespace-nowrap">{kicker}</span>
+      <span className="label label-xs text-cream/55 mt-3 whitespace-nowrap">{textForLocale(kicker)}</span>
       <span className="font-serifit italic text-cream/40 text-[clamp(0.8rem,0.85vw,1rem)] mt-1 whitespace-nowrap">
-        {line}
+        {textForLocale(line)}
       </span>
     </div>
   );

@@ -1,13 +1,16 @@
 "use client";
-
+import { useLocale } from "@/lib/i18n-client";
+import { useText } from "@/lib/translate-client";
 import { useRef, useState } from "react";
 import Reveal from "./Reveal";
 import { asset } from "@/lib/asset";
 
-import { yearsWord } from "@/lib/anniversary";
+import { years, yearsWord } from "@/lib/anniversary";
 
 /** Our Story — Al Adrak's own corporate film, click-to-play. */
 export default function Story() {
+  const textForLocale = useText();
+  const locale = useLocale();
   const vid = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -27,13 +30,11 @@ export default function Story() {
           the room without visibly softening. */}
       <div className="relative mx-auto max-w-[88rem] px-6 py-24 md:py-32">
         <Reveal className="text-center mb-12 md:mb-16">
-          <p className="label text-gold mb-4">Our Story</p>
+          <p className="label text-gold mb-4">{textForLocale("Our Story")}</p>
           <h2 className="font-display text-4xl md:text-6xl">
-            {yearsWord()} years, two minutes
-          </h2>
+            {locale === "ar" ? years() : yearsWord()} {textForLocale(" years, two minutes")}</h2>
           <p className="font-serifit italic text-xl md:text-2xl text-cream/70 mt-5">
-            The official Al Adrak corporate film
-          </p>
+            {textForLocale("The official Al Adrak corporate film")}</p>
         </Reveal>
 
         <Reveal tilt>
@@ -51,7 +52,7 @@ export default function Story() {
             {!playing && (
               <button
                 onClick={start}
-                aria-label="Play the Al Adrak corporate film"
+                aria-label={textForLocale("Play the Al Adrak corporate film")}
                 className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-ink/40 hover:bg-ink/25 transition-colors duration-500 cursor-pointer"
               >
                 <span className="relative flex items-center justify-center w-24 h-24 rounded-full bg-white/10 backdrop-blur-md border border-white/40 shadow-[0_0_40px_rgba(201,155,69,0.35)] transition-transform duration-500 hover:scale-110">
@@ -60,7 +61,7 @@ export default function Story() {
                     <path d="M0 0 L26 15 L0 30 Z" fill="var(--color-gold)" />
                   </svg>
                 </span>
-                <span className="label text-cream/90">Watch the film</span>
+                <span className="label text-cream/90">{textForLocale("Watch the film")}</span>
               </button>
             )}
           </div>

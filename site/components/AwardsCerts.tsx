@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useContentFor } from "@/lib/i18n-client";
@@ -11,6 +11,7 @@ type Cert = (typeof import("@/lib/content"))["certificates"][number];
 
 /** Certificates & Awards — ISO certificate scans open in a GSAP lightbox. */
 export default function AwardsCerts() {
+  const textForLocale = useText();
   const { certificates, awards, awardMentions } = useContentFor();
   const [cert, setCert] = useState<Cert | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
@@ -52,10 +53,9 @@ export default function AwardsCerts() {
     <section id="awards" className="relative z-20 bg-parchment text-ink border-t border-ink/10">
       <div className="shell py-24 md:py-32">
         <Reveal className="text-center mb-16 md:mb-20">
-          <p className="label text-brand mb-4">Certificates & Awards</p>
+          <p className="label text-brand mb-4">{textForLocale("Certificates & Awards")}</p>
           <h2 className="font-display h-section">
-            Recognised. Certified. Trusted.
-          </h2>
+            {textForLocale("Recognised. Certified. Trusted.")}</h2>
         </Reveal>
 
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
@@ -63,33 +63,31 @@ export default function AwardsCerts() {
           <div className="lg:col-span-5">
             <Reveal>
               <p className="label text-taupe mb-8">
-                TÜV NORD Certified — click to view
-              </p>
+                {textForLocale("TÜV NORD Certified — click to view")}</p>
             </Reveal>
             <div className="grid grid-cols-3 gap-4 [perspective:1200px]">
               {certificates.map((c, i) => (
                 <Reveal key={c.name} delay={i * 0.08} tilt>
                   <button
                     onClick={() => setCert(c)}
-                    aria-label={`View ${c.name} certificate`}
+                    aria-label={textForLocale(`View ${c.name} certificate`)}
                     className="group block w-full text-left cursor-pointer"
                   >
                     <div className="relative rounded-xl overflow-hidden border border-ink/15 shadow-[0_14px_34px_rgba(16,39,26,0.14)] bg-white transform-gpu transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_26px_50px_rgba(16,39,26,0.22)]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={c.img}
-                        alt={`${c.name} certificate`}
+                        alt={textForLocale(`${c.name} certificate`)}
                         loading="lazy"
                         className="w-full h-auto"
                       />
                       <div className="absolute inset-0 bg-forest/0 group-hover:bg-forest/25 transition-colors duration-500 flex items-center justify-center">
                         <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 px-5 py-2.5 bg-gold text-ink rounded-full label label-xs font-bold">
-                          View
-                        </span>
+                          {textForLocale("View")}</span>
                       </div>
                     </div>
-                    <p className="font-display text-[clamp(1rem,0.9vw,1.375rem)] mt-3.5">{c.name}</p>
-                    <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{c.scope}</p>
+                    <p className="font-display text-[clamp(1rem,0.9vw,1.375rem)] mt-3.5">{textForLocale(c.name)}</p>
+                    <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{textForLocale(c.scope)}</p>
                   </button>
                 </Reveal>
               ))}
@@ -99,7 +97,7 @@ export default function AwardsCerts() {
           {/* ===== Awards ===== */}
           <div className="lg:col-span-7">
             <Reveal>
-              <p className="label text-taupe mb-8">International Recognition</p>
+              <p className="label text-taupe mb-8">{textForLocale("International Recognition")}</p>
             </Reveal>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {awards.map((a, i) => (
@@ -108,13 +106,13 @@ export default function AwardsCerts() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={a.img}
-                      alt={a.name}
+                      alt={textForLocale(a.name)}
                       loading="lazy"
                       className="w-full aspect-[2/1.1] object-contain bg-white p-3"
                     />
                     <div className="px-4 py-3 border-t border-ink/10">
-                      <p className="font-display text-[clamp(0.9375rem,0.9vw,1.375rem)] leading-snug">{a.name}</p>
-                      <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{a.detail}</p>
+                      <p className="font-display text-[clamp(0.9375rem,0.9vw,1.375rem)] leading-snug">{textForLocale(a.name)}</p>
+                      <p className="label label-xs text-taupe mt-1.5 break-words max-[520px]:tracking-[0.12em]!">{textForLocale(a.detail)}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -126,7 +124,7 @@ export default function AwardsCerts() {
                   key={m}
                   className="px-5 py-2.5 border border-ink/15 rounded-full label label-xs text-ink/70 hover:border-gold hover:text-brand transition-colors duration-300"
                 >
-                  {m}
+                  {textForLocale(m)}
                 </span>
               ))}
             </Reveal>
@@ -146,21 +144,20 @@ export default function AwardsCerts() {
             ref={sheet}
             role="dialog"
             aria-modal="true"
-            aria-label={`${cert.name} certificate`}
+            aria-label={textForLocale(`${cert.name} certificate`)}
             className="relative max-h-[92dvh] overflow-y-auto no-scrollbar rounded-2xl bg-white shadow-[0_60px_140px_rgba(0,0,0,0.7)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={cert.img}
-              alt={`${cert.name} certificate — full view`}
+              alt={textForLocale(`${cert.name} certificate — full view`)}
               className="block max-h-[82dvh] w-auto"
             />
             <div className="px-6 py-4 border-t border-ink/10 flex items-center justify-between gap-6">
               <div>
-                <p className="font-display text-lg text-ink">{cert.name}</p>
+                <p className="font-display text-lg text-ink">{textForLocale(cert.name)}</p>
                 <p className="label label-xs text-taupe mt-1">
-                  {cert.scope} · TÜV NORD
-                </p>
+                  {textForLocale(cert.scope)} {textForLocale(" · TÜV NORD")}</p>
               </div>
               <a
                 href={cert.img}
@@ -168,12 +165,11 @@ export default function AwardsCerts() {
                 rel="noopener noreferrer"
                 className="label label-xs text-brand hover:text-gold transition-colors flex-none"
               >
-                Open Full Size ↗
-              </a>
+                {textForLocale("Open Full Size ↗")}</a>
             </div>
             <button
               onClick={close}
-              aria-label="Close"
+              aria-label={textForLocale("Close")}
               className="absolute top-3 right-3 w-10 h-10 rounded-full bg-ink/70 backdrop-blur-md text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400"
             >
               <svg width="13" height="13" viewBox="0 0 14 14">

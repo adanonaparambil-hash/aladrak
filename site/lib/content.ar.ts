@@ -1,36 +1,6 @@
-/**
- * Arabic copy, as an OVERLAY on lib/content.ts rather than a second full copy.
- *
- * Only the keys that are translated appear here; everything else falls through
- * to the English. That is deliberate for two reasons. A half-finished
- * translation then shows English in the gaps rather than blanks, so the site is
- * never broken mid-way through the work. And when the English copy changes, the
- * Arabic cannot silently drift out of step — the untranslated key simply shows
- * the new English until someone revisits it.
- *
- * ---------------------------------------------------------------------------
- * DRAFT — NOT YET REVIEWED BY A NATIVE SPEAKER.
- *
- * This is a first pass written by Claude. It must be read by a native Arabic
- * speaker before the language switch is shown to the public, for three reasons
- * in particular:
- *
- *   PROPER NOUNS. The company's registered Arabic name is not guessed at here
- *   — `name` and `legalName` are deliberately left in English. Omani place and
- *   client names (Al Khuwair, Mazoon, Duqm, the ministries) should be checked
- *   against how the company itself writes them.
- *
- *   TECHNICAL TERMS. EPC, post-tension, lost-time injury, near miss and the ISO
- *   standards have settled Arabic forms in the Gulf construction trade; the
- *   renderings below are reasonable but a working engineer should confirm them.
- *
- *   THE SAFETY FIGURES. These are a public claim about people not being hurt.
- *   A mistranslated label on the HSE record is not a typo.
- *
- * Numerals are Western (1986, 17 million) rather than Eastern Arabic (١٩٨٦),
- * which is the usual register for corporate material in Oman and matches the
- * figures the page counts up. Worth confirming as a house preference.
- * ---------------------------------------------------------------------------
+/** Arabic overlay retained for the existing content hooks.
+ * The full display-text catalog lives in translations.ar.json.
+ * Translations have not received an independent native-speaker review.
  */
 
 export const ar = {

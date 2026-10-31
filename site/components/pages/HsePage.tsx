@@ -1,3 +1,5 @@
+"use client";
+import { useText } from "@/lib/translate-client";
 /**
  * The HSE page itself, lifted out of app/hse/page.tsx so that the English route
  * and the Arabic one render the same markup rather than two copies that drift.
@@ -43,7 +45,8 @@ const TINT = "relative bg-parchment border-y border-ink/10";
 const DARK = "relative bg-forest text-cream";
 
 function Kicker({ children, onDark = false }: { children: React.ReactNode; onDark?: boolean }) {
-  return <p className={`label mb-5 ${onDark ? "text-gold" : "text-brand"}`}>{children}</p>;
+  const textForLocale = useText();
+  return <p className={`label mb-5 ${onDark ? "text-gold" : "text-brand"}`}>{textForLocale(children)}</p>;
 }
 
 function H2({
@@ -55,18 +58,20 @@ function H2({
   onDark?: boolean;
   className?: string;
 }) {
+  const textForLocale = useText();
   return (
     <h2
       className={`font-display text-3xl md:text-5xl leading-tight ${
         onDark ? "text-cream" : "text-forest"
       } ${className}`}
     >
-      {children}
+      {textForLocale(children)}
     </h2>
   );
 }
 
 export default function HsePage({ lang = "en" }: { lang?: Locale }) {
+  const textForLocale = useText();
   const { hse, site } = getContent(lang);
   return (
     <main className="bg-cream min-h-screen text-ink">
@@ -78,7 +83,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/hse/hse-hero-induction.jpg")}
-            alt="A safety induction at Al Adrak: an instructor presenting to a full room of the workforce in protective clothing, with the site safety noticeboard behind him"
+            alt={textForLocale("A safety induction at Al Adrak: an instructor presenting to a full room of the workforce in protective clothing, with the site safety noticeboard behind him")}
             className="w-full h-full object-cover"
           />
           {/* Horizontal, with explicit stops rather than from/via/to.
@@ -112,12 +117,12 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         </div>
         <div className="relative shell [text-shadow:0_1px_2px_rgba(10,15,12,0.98),0_2px_8px_rgba(10,15,12,0.92),0_4px_26px_rgba(10,15,12,0.85)]">
           <Reveal>
-            <p className="label text-gold mb-6">{hse.kicker}</p>
+            <p className="label text-gold mb-6">{textForLocale(hse.kicker)}</p>
             <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
-              {hse.title}
+              {textForLocale(hse.title)}
             </h1>
             <p className="text-cream font-light text-lg md:text-xl leading-relaxed mt-8 max-w-2xl">
-              {hse.lead}
+              {textForLocale(hse.lead)}
             </p>
           </Reveal>
         </div>
@@ -129,8 +134,8 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
           <div className="grid sm:grid-cols-3 gap-8 md:gap-12">
             {hse.certs.map((c) => (
               <Reveal key={c.code}>
-                <p className="font-display text-2xl md:text-3xl text-brand">{c.code}</p>
-                <p className="label label-xs text-ink/60 mt-2.5 leading-relaxed">{c.desc}</p>
+                <p className="font-display text-2xl md:text-3xl text-brand">{textForLocale(c.code)}</p>
+                <p className="label label-xs text-ink/60 mt-2.5 leading-relaxed">{textForLocale(c.desc)}</p>
               </Reveal>
             ))}
           </div>
@@ -146,13 +151,13 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         <div className="shell py-24 md:py-32">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-8">
-              <Kicker>Leadership &amp; culture</Kicker>
-              <H2>Safety is led in person, not delegated</H2>
+              <Kicker>{textForLocale("Leadership & culture")}</Kicker>
+              <H2>{textForLocale("Safety is led in person, not delegated")}</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
-                {hse.culture.intro}
+                {textForLocale(hse.culture.intro)}
               </p>
               <p className="text-ink/70 font-light leading-relaxed mt-4 text-[15px] md:text-base">
-                {hse.culture.note}
+                {textForLocale(hse.culture.note)}
               </p>
               {/* The four structures move up beside the photograph. They used to
                   sit in a band underneath, which left this column holding two
@@ -164,10 +169,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                     className="h-full rounded-2xl bg-white border border-ink/10 shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-5 md:p-6"
                   >
                     <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
-                      {it.title}
+                      {textForLocale(it.title)}
                     </h3>
                     <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
-                      {it.desc}
+                      {textForLocale(it.desc)}
                     </p>
                   </div>
                 ))}
@@ -182,7 +187,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.culture.img}
-                  alt={hse.culture.imgAlt}
+                  alt={textForLocale(hse.culture.imgAlt)}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -200,10 +205,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               drifting away from the title; under the heading it runs left to
               right as one long line, the way the other sections open. */}
           <Reveal>
-            <Kicker onDark>Non-negotiable</Kicker>
-            <H2 onDark>The 9 Life-Saving Rules</H2>
+            <Kicker onDark>{textForLocale("Non-negotiable")}</Kicker>
+            <H2 onDark>{textForLocale("The 9 Life-Saving Rules")}</H2>
             <p className="text-cream/75 font-light leading-relaxed mt-6 text-[15px] md:text-base max-w-4xl">
-              {hse.lifeSavingRules.intro}
+              {textForLocale(hse.lifeSavingRules.intro)}
             </p>
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mt-14">
@@ -214,7 +219,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                     {i + 1}
                   </span>
                   <p className="text-cream/90 font-light leading-relaxed text-[15px] md:text-base pt-1">
-                    {r}
+                    {textForLocale(r)}
                   </p>
                 </div>
               </Reveal>
@@ -227,8 +232,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               rel="noopener noreferrer"
               className="label label-xs inline-flex items-center gap-2 text-gold border-b border-gold/50 pb-1 hover:text-cream transition-colors"
             >
-              Download the Life-Saving Rules poster ↗
-            </a>
+              {textForLocale("Download the Life-Saving Rules poster ↗")}</a>
           </Reveal>
         </div>
       </section>
@@ -242,10 +246,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               column now sets the line length. */}
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-8">
-              <Kicker>On site</Kicker>
-              <H2>Controls built into the work, not around it</H2>
+              <Kicker>{textForLocale("On site")}</Kicker>
+              <H2>{textForLocale("Controls built into the work, not around it")}</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
-                {hse.operations.intro}
+                {textForLocale(hse.operations.intro)}
               </p>
               {/* The seven high-risk activities used to sit in a band under this
                   row, which left the column beside the photograph holding two
@@ -258,7 +262,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                     key={h}
                     className="px-5 py-2.5 bg-white border border-ink/15 rounded-full label label-xs text-ink/75"
                   >
-                    {h}
+                    {textForLocale(h)}
                   </li>
                 ))}
               </ul>
@@ -268,10 +272,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {hse.operations.items.map((it) => (
                   <div key={it.title} className="h-full border-t border-ink/15 pt-5">
                     <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
-                      {it.title}
+                      {textForLocale(it.title)}
                     </h3>
                     <p className="text-ink/70 font-light leading-relaxed mt-3 text-[15px]">
-                      {it.desc}
+                      {textForLocale(it.desc)}
                     </p>
                   </div>
                 ))}
@@ -286,7 +290,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.operations.img}
-                  alt={hse.operations.imgAlt}
+                  alt={textForLocale(hse.operations.imgAlt)}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -307,18 +311,18 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.centre.img}
-                  alt={hse.centre.title}
+                  alt={textForLocale(hse.centre.title)}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-7">
-              <H2>{hse.centre.title}</H2>
+              <H2>{textForLocale(hse.centre.title)}</H2>
               <p className="text-ink/75 font-light leading-relaxed mt-6 text-[15px] md:text-base">
-                {hse.centre.body}
+                {textForLocale(hse.centre.body)}
               </p>
               <blockquote className="font-serifit italic text-ink/70 text-lg md:text-xl leading-snug mt-8 pl-5 border-l-2 border-gold">
-                {hse.trainingQuote}
+                {textForLocale(hse.trainingQuote)}
               </blockquote>
               {/* How the teaching actually reaches the workforce — moved up out
                   of a band underneath, where it left this column short. */}
@@ -326,10 +330,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {hse.trainingExtras.map((it) => (
                   <div key={it.title} className="border-t border-ink/15 pt-5">
                     <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
-                      {it.title}
+                      {textForLocale(it.title)}
                     </h3>
                     <p className="text-ink/70 font-light leading-relaxed mt-2.5 text-[15px]">
-                      {it.desc}
+                      {textForLocale(it.desc)}
                     </p>
                   </div>
                 ))}
@@ -344,10 +348,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         <div className="shell py-24 md:py-32">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
             <Reveal className="lg:col-span-8">
-              <Kicker>In practice</Kicker>
-              <H2>Six things that happen on every project</H2>
+              <Kicker>{textForLocale("In practice")}</Kicker>
+              <H2>{textForLocale("Six things that happen on every project")}</H2>
               <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base">
-                {hse.practice.intro}
+                {textForLocale(hse.practice.intro)}
               </p>
               {/* All six move up beside the picture. A kicker and a heading
                   against a photograph this size was the emptiest row on the
@@ -356,12 +360,12 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-9 mt-10">
                 {hse.pillars.map((p) => (
                   <div key={p.no} className="border-t border-ink/15 pt-5">
-                    <span className="label label-xs text-brand">{p.no}</span>
+                    <span className="label label-xs text-brand">{textForLocale(p.no)}</span>
                     <h3 className="font-display text-lg md:text-xl text-forest mt-2.5 leading-snug">
-                      {p.title}
+                      {textForLocale(p.title)}
                     </h3>
                     <p className="text-ink/70 font-light leading-relaxed mt-2.5 text-[15px]">
-                      {p.desc}
+                      {textForLocale(p.desc)}
                     </p>
                   </div>
                 ))}
@@ -376,7 +380,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={hse.practice.img}
-                  alt={hse.practice.imgAlt}
+                  alt={textForLocale(hse.practice.imgAlt)}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -400,16 +404,16 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={hse.subcontractors.img}
-                alt={hse.subcontractors.imgAlt}
+                alt={textForLocale(hse.subcontractors.imgAlt)}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/92 via-ink/60 to-ink/10" />
               <div className="relative p-7 md:p-12 max-w-3xl">
-                <Kicker onDark>{hse.subcontractors.bandKicker}</Kicker>
-                <H2 onDark>{hse.subcontractors.bandTitle}</H2>
+                <Kicker onDark>{textForLocale(hse.subcontractors.bandKicker)}</Kicker>
+                <H2 onDark>{textForLocale(hse.subcontractors.bandTitle)}</H2>
                 <p className="text-cream/80 font-light leading-relaxed mt-5 text-[15px] md:text-base">
-                  {hse.subcontractors.bandLine}
+                  {textForLocale(hse.subcontractors.bandLine)}
                 </p>
               </div>
             </div>
@@ -431,12 +435,12 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
             ].map((col) => (
               <div key={col.kicker}>
                 <Reveal>
-                  <Kicker>{col.kicker}</Kicker>
+                  <Kicker>{textForLocale(col.kicker)}</Kicker>
                   <h2 className="font-display text-2xl md:text-4xl leading-tight text-forest">
-                    {col.title}
+                    {textForLocale(col.title)}
                   </h2>
                   <p className="text-ink/70 font-light leading-relaxed mt-5 text-[15px]">
-                    {col.intro}
+                    {textForLocale(col.intro)}
                   </p>
                 </Reveal>
                 <div className="mt-10 space-y-8">
@@ -444,10 +448,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                     <Reveal key={it.title} delay={i * 0.06}>
                       <div className="border-t border-ink/15 pt-5">
                         <h3 className="font-display text-lg md:text-xl text-forest leading-snug">
-                          {it.title}
+                          {textForLocale(it.title)}
                         </h3>
                         <p className="text-ink/70 font-light leading-relaxed mt-2.5 text-[15px]">
-                          {it.desc}
+                          {textForLocale(it.desc)}
                         </p>
                       </div>
                     </Reveal>
@@ -463,10 +467,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
           <Reveal>
-            <Kicker>{hse.wellness.kicker}</Kicker>
-            <H2 className="max-w-3xl">{hse.wellness.title}</H2>
+            <Kicker>{textForLocale(hse.wellness.kicker)}</Kicker>
+            <H2 className="max-w-3xl">{textForLocale(hse.wellness.title)}</H2>
             <p className="text-ink/75 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16">
-              {hse.wellness.body}
+              {textForLocale(hse.wellness.body)}
             </p>
           </Reveal>
           <Reveal delay={0.1} className="mt-12 md:mt-14">
@@ -477,13 +481,13 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={ph.src}
-                        alt={ph.label}
+                        alt={textForLocale(ph.label)}
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     <figcaption className="text-ink/60 font-light text-[13px] leading-relaxed mt-2.5">
-                      {ph.label}
+                      {textForLocale(ph.label)}
                     </figcaption>
                   </figure>
                 ))}
@@ -496,10 +500,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
           <Reveal>
-            <Kicker>Inside the training centre</Kicker>
-            <H2 className="max-w-2xl">Where it is taught before it is done</H2>
+            <Kicker>{textForLocale("Inside the training centre")}</Kicker>
+            <H2 className="max-w-2xl">{textForLocale("Where it is taught before it is done")}</H2>
             <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16 mb-14">
-              {hse.galleryIntro}
+              {textForLocale(hse.galleryIntro)}
             </p>
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
@@ -510,13 +514,13 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={g.src}
-                      alt={g.label}
+                      alt={textForLocale(g.label)}
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                   <figcaption className="text-ink/65 font-light text-[14px] leading-relaxed mt-3.5">
-                    {g.label}
+                    {textForLocale(g.label)}
                   </figcaption>
                 </figure>
               </Reveal>
@@ -529,10 +533,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
       <section className={LIGHT}>
         <div className="shell py-24 md:py-32">
           <Reveal>
-            <Kicker>Objectives &amp; targets, {hse.objectives.year}</Kicker>
-            <H2 className="max-w-3xl">Measured, reviewed, signed at the top</H2>
+            <Kicker>{textForLocale("Objectives & targets, ")}{textForLocale(hse.objectives.year)}</Kicker>
+            <H2 className="max-w-3xl">{textForLocale("Measured, reviewed, signed at the top")}</H2>
             <p className="text-ink/70 font-light leading-relaxed mt-6 text-[15px] md:text-base md:columns-2 xl:columns-3 gap-x-10 lg:gap-x-16">
-              {hse.objectives.intro}
+              {textForLocale(hse.objectives.intro)}
             </p>
           </Reveal>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mt-14">
@@ -540,10 +544,10 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               <Reveal key={k.label} delay={(i % 3) * 0.06}>
                 <div className="h-full rounded-2xl bg-forest text-cream p-7 md:p-8">
                   <p className="font-display text-4xl md:text-5xl text-gold leading-none">
-                    {k.value}
+                    {textForLocale(k.value)}
                   </p>
                   <p className="text-cream/80 font-light leading-relaxed mt-4 text-[14px] md:text-[15px]">
-                    {k.label}
+                    {textForLocale(k.label)}
                   </p>
                 </div>
               </Reveal>
@@ -556,8 +560,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               rel="noopener noreferrer"
               className="label label-xs inline-flex items-center gap-2 text-brand border-b border-brand/50 pb-1 hover:text-gold hover:border-gold transition-colors"
             >
-              Read the full 2026 Objectives, Targets &amp; KPI document ↗
-            </a>
+              {textForLocale("Read the full 2026 Objectives, Targets & KPI document ↗")}</a>
           </Reveal>
         </div>
       </section>
@@ -566,22 +569,13 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
       <section className={TINT}>
         <div className="shell py-24 md:py-32">
           <Reveal>
-            <Kicker>The paperwork behind the claim</Kicker>
-            <H2 className="max-w-3xl">Certificates &amp; policies</H2>
+            <Kicker>{textForLocale("The paperwork behind the claim")}</Kicker>
+            <H2 className="max-w-3xl">{textForLocale("Certificates & policies")}</H2>
             <div className="grid md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-4 mt-6">
             <p className="text-ink/70 font-light leading-relaxed text-[15px]">
-              {hse.certsNote}. Every document below is the current original —
-              click to read it.
-            </p>
+              {textForLocale(hse.certsNote)}{textForLocale(". Every document below is the current original — click to read it.")}</p>
             <p className="text-ink/70 font-light leading-relaxed text-[15px]">
-              The three standards cover different ground and are held together:
-              45001 for occupational health and safety, 14001 for environmental
-              management, 9001 for quality. The policies listed beneath them are
-              the documents those systems are actually run on — the life-saving
-              rules every person on site is evaluated against, and the road
-              safety, drug and alcohol, and smoke-free policies that apply to
-              Al Adrak staff and trade contractors alike.
-            </p>
+              {textForLocale("The three standards cover different ground and are held together: 45001 for occupational health and safety, 14001 for environmental management, 9001 for quality. The policies listed beneath them are the documents those systems are actually run on — the life-saving rules every person on site is evaluated against, and the road safety, drug and alcohol, and smoke-free policies that apply to Al Adrak staff and trade contractors alike.")}</p>
             </div>
           </Reveal>
 
@@ -593,21 +587,21 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group block"
-                  aria-label={`Open the ${c.code} certificate`}
+                  aria-label={textForLocale(`Open the ${c.code} certificate`)}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-ink/15 bg-white aspect-[210/297] shadow-[0_8px_30px_rgba(10,15,12,0.12)]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={c.img}
-                      alt={`${c.code} certificate issued to ${site.legalName}`}
+                      alt={textForLocale(`${c.code} certificate issued to ${site.legalName}`)}
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   </div>
                   <p className="font-display text-lg md:text-xl text-forest mt-4 group-hover:text-brand transition-colors">
-                    {c.code}
+                    {textForLocale(c.code)}
                   </p>
-                  <p className="label label-xs text-ink/50 mt-1.5">{c.reg}</p>
+                  <p className="label label-xs text-ink/50 mt-1.5">{textForLocale(c.reg)}</p>
                 </a>
               </Reveal>
             ))}
@@ -622,10 +616,9 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
                   rel="noopener noreferrer"
                   className="group flex items-center justify-between gap-4 rounded-xl border border-ink/15 bg-white px-6 py-4 hover:border-gold hover:shadow-[0_6px_20px_rgba(10,15,12,0.10)] transition-all duration-300"
                 >
-                  <span className="text-ink/85 font-light text-[15px]">{pol.name}</span>
+                  <span className="text-ink/85 font-light text-[15px]">{textForLocale(pol.name)}</span>
                   <span className="label label-xs text-brand flex-none group-hover:text-gold transition-colors">
-                    PDF ↗
-                  </span>
+                    {textForLocale("PDF ↗")}</span>
                 </a>
               </Reveal>
             ))}
@@ -638,18 +631,14 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         <div className="shell py-20 md:py-24 text-center">
           <Reveal>
             <h2 className="font-display text-3xl md:text-4xl text-cream leading-tight">
-              Questions about our HSE standards?
-            </h2>
+              {textForLocale("Questions about our HSE standards?")}</h2>
             <p className="text-cream/75 font-light mt-5 max-w-xl mx-auto leading-relaxed">
-              Clients and consultants are welcome to review our policies, method
-              statements and training records.
-            </p>
+              {textForLocale("Clients and consultants are welcome to review our policies, method statements and training records.")}</p>
             <a
               href={`mailto:${site.email}?subject=HSE enquiry`}
               className="inline-flex mt-9 px-9 py-4 bg-gold text-ink rounded-full label font-bold hover:bg-cream transition-colors duration-300"
             >
-              Contact our HSE team
-            </a>
+              {textForLocale("Contact our HSE team")}</a>
           </Reveal>
         </div>
       </section>

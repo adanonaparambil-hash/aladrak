@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import type { Project } from "@/lib/content";
@@ -12,6 +12,7 @@ export function openProject(p: Project) {
 /** GSAP-animated project detail overlay — glass backdrop, cinematic image,
  *  staggered content. Close: ×, ESC, or backdrop click. */
 export default function ProjectModal() {
+  const textForLocale = useText();
   const [proj, setProj] = useState<Project | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -101,7 +102,7 @@ export default function ProjectModal() {
         ref={panel}
         role="dialog"
         aria-modal="true"
-        aria-label={proj.name}
+        aria-label={textForLocale(proj.name)}
         className="relative w-full max-w-5xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] grid md:grid-cols-2"
       >
         {/* Image side */}
@@ -110,7 +111,7 @@ export default function ProjectModal() {
           <img
             ref={img}
             src={proj.img}
-            alt={proj.name}
+            alt={textForLocale(proj.name)}
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-forest/70 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-forest/60" />
@@ -122,22 +123,22 @@ export default function ProjectModal() {
             data-modal-stagger
             className="inline-block bg-white/10 backdrop-blur-md border border-white/25 px-5 py-2 rounded-full label label-xs"
           >
-            {proj.sector}
+            {textForLocale(proj.sector)}
           </span>
           <h3
             data-modal-stagger
             className="font-display text-3xl md:text-[42px] leading-[1.08] mt-6"
           >
-            {proj.name}
+            {textForLocale(proj.name)}
           </h3>
           <p data-modal-stagger className="label text-gold mt-4">
-            {proj.place}
+            {textForLocale(proj.place)}
           </p>
           <p
             data-modal-stagger
             className="font-light text-cream/80 leading-relaxed mt-6"
           >
-            {proj.desc}
+            {textForLocale(proj.desc)}
           </p>
 
           {proj.specs && (
@@ -145,10 +146,10 @@ export default function ProjectModal() {
               {proj.specs.map((s, i) => (
                 <li key={i} className="flex items-start gap-4 py-3.5">
                   <span className="label text-gold mt-0.5">
-                    {String(i + 1).padStart(2, "0")}
+                    {textForLocale(String(i + 1).padStart(2, "0"))}
                   </span>
                   <span className="text-[clamp(0.90625rem,0.85vw,1.1875rem)] text-cream/85 font-light leading-relaxed">
-                    {s}
+                    {textForLocale(s)}
                   </span>
                 </li>
               ))}
@@ -159,7 +160,7 @@ export default function ProjectModal() {
         {/* Close */}
         <button
           onClick={close}
-          aria-label="Close"
+          aria-label={textForLocale("Close")}
           className="absolute top-4 right-4 w-11 h-11 rounded-full bg-ink/50 backdrop-blur-md border border-white/25 text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400 z-10"
         >
           <svg width="14" height="14" viewBox="0 0 14 14">

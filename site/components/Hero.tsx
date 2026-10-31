@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
  * like a rising curtain — the ojas-style scroll-layering effect.
  */
 export default function Hero() {
+  const textForLocale = useText();
   const { site } = useContentFor();
   const screen = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -193,41 +194,37 @@ export default function Hero() {
           {/* .hero-eyebrow, not .label — see globals.css. The caption tier put
               the company's own name at 10px over a sunlit aerial shot. */}
           <p data-hero-stagger className="hero-eyebrow text-gold mb-6">
-            {site.legalName}
+            {textForLocale(site.legalName)}
           </p>
           <h1
             data-hero-stagger
             className="hero-title font-display text-cream text-[17vw] sm:text-[11vw] lg:text-[120px] leading-[0.95] tracking-wide drop-shadow-2xl"
           >
-            Legacy of
-            <br />
-            Landmarks
-          </h1>
+            {textForLocale("Legacy of")}<br />
+            {textForLocale("Landmarks")}</h1>
           <p
             data-hero-stagger
             className="hero-sub font-serifit italic text-cream/90 text-lg md:text-2xl max-w-xl mt-8 leading-relaxed"
           >
-            {site.heroSub}
+            {textForLocale(site.heroSub)}
           </p>
           <div data-hero-stagger className="hero-cta flex flex-col sm:flex-row gap-4 mt-12 w-full sm:w-auto px-4 sm:px-0">
             <a
               href="#projects"
               className="px-10 py-5 bg-gold text-ink rounded-full label font-bold text-center shadow-xl hover:shadow-[0_0_36px_rgba(201,155,69,0.45)] transition-shadow duration-500"
             >
-              Explore Our Work
-            </a>
+              {textForLocale("Explore Our Work")}</a>
             <a
               href="#contact"
               className="px-10 py-5 bg-white/5 backdrop-blur-md border border-white/30 text-cream rounded-full label font-bold text-center hover:bg-white/10 hover:border-gold hover:text-gold transition-all duration-500"
             >
-              Get in Touch
-            </a>
+              {textForLocale("Get in Touch")}</a>
           </div>
         </div>
 
         {/* Scroll cue */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
-          <span className="label text-cream/60">Scroll</span>
+          <span className="label text-cream/60">{textForLocale("Scroll")}</span>
           <span className="block w-px h-12 bg-gradient-to-b from-cream/70 to-transparent" />
         </div>
       </div>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Marcellus, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
-import "./globals.css";
+import { Marcellus, Cormorant_Garamond, Space_Grotesk, IBM_Plex_Sans_Arabic } from "next/font/google";
+import "@/app/globals.css";
+import { LocaleProvider } from "@/lib/i18n-client";
+import type { Locale } from "@/lib/i18n";
 import SmoothScroll from "@/components/SmoothScroll";
 import CursorFX from "@/components/CursorFX";
 import PremiumFX from "@/components/PremiumFX";
@@ -9,6 +11,8 @@ import MotionSafety from "@/components/MotionSafety";
 import IntroLoader from "@/components/IntroLoader";
 import { years } from "@/lib/anniversary";
 import SiteAssistant from "@/components/SiteAssistant";
+
+const arabic = IBM_Plex_Sans_Arabic({ subsets: ["arabic"], weight: ["300", "400", "500", "600", "700"], variable: "--font-arabic", display: "swap" });
 
 const marcellus = Marcellus({
   weight: "400",
@@ -32,17 +36,17 @@ const space = Space_Grotesk({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+export const siteMetadata: Metadata = {
   title: "Al Adrak — Legacy of Landmarks",
   description:
     `Al Adrak Trading & Contracting — Oman's most established engineering & construction contractor. ${years()} years, 450+ landmark projects, 100% in-house capability.`,
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+  children, locale = "en",
+}: Readonly<{ children: React.ReactNode; locale?: Locale }>) {
   return (
-    <html lang="en">
+    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <head>
         {/*
           A safety net for a browser that cannot run this site's scripts.
@@ -71,8 +75,9 @@ export default function RootLayout({
         </noscript>
       </head>
       <body
-        className={`${marcellus.variable} ${cormorant.variable} ${space.variable} antialiased`}
+        className={`${marcellus.variable} ${cormorant.variable} ${space.variable} ${arabic.variable} ${locale === "ar" ? "font-arabic" : ""} antialiased`}
       >
+        <LocaleProvider locale={locale}>
         <SmoothScroll>{children}</SmoothScroll>
         {/* repairs a page whose animation booted but never ran */}
         <MotionSafety />
@@ -82,6 +87,7 @@ export default function RootLayout({
         <Diag />
         <IntroLoader />
         <SiteAssistant />
+        </LocaleProvider>
       </body>
     </html>
   );

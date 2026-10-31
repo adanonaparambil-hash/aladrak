@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -79,6 +79,7 @@ const RINGS = [
 ];
 
 export default function HistoryTimeline() {
+  const textForLocale = useText();
   const section = useRef<HTMLDivElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
   const tunnel = useRef<HTMLCanvasElement>(null);
@@ -444,13 +445,10 @@ export default function HistoryTimeline() {
             other or the wheel below, whatever the height of the screen. */}
         <div className="history-summary desk:contents tall:absolute tall:z-10 tall:left-6 tall:right-6 tall:top-[max(76px,9vh)] tall:flex tall:flex-col tall:gap-3">
         <div className="desk:absolute desk:z-10 desk:bottom-[54vh] desk:left-[11%] desk:w-[24vw]">
-          <p className="label text-gold mb-3">Est. 1986</p>
-          <h2 className="font-display text-4xl desk:text-[3vw] leading-none mb-4">Our History</h2>
+          <p className="label text-gold mb-3">{textForLocale("Est. 1986")}</p>
+          <h2 className="font-display text-4xl desk:text-[3vw] leading-none mb-4">{textForLocale("Our History")}</h2>
           <p className="hist-intro text-cream/70 font-light text-sm desk:text-[max(11px,1.05vw)] leading-relaxed max-w-md">
-            {years()}+ years of building for what’s next. From a modest enterprise in
-            Muscat to a leading EPC firm—civil, mechanical, electrical and
-            infrastructural engineering across Oman and the region.
-          </p>
+            {years()}{textForLocale("+ years of building for what’s next. From a modest enterprise in Muscat to a leading EPC firm—civil, mechanical, electrical and infrastructural engineering across Oman and the region.")}</p>
         </div>
         {/* Keep the photo inside the heading's column. The wheel's active year
             begins around 39vw; the former 30vw plate ended at 41vw and covered
@@ -461,7 +459,7 @@ export default function HistoryTimeline() {
             <img
               key={m.year}
               src={m.img}
-              alt={`Al Adrak in ${m.year}`}
+              alt={textForLocale(`Al Adrak in ${m.year}`)}
               loading="lazy"
               className={`absolute inset-0 w-full h-full object-cover object-top rounded-xl border border-cream/10 transition-opacity duration-500 ${
                 i === active ? "opacity-100" : "opacity-0"
@@ -508,7 +506,7 @@ export default function HistoryTimeline() {
                       i === active ? "translate-x-0 -translate-y-1/2" : "-translate-x-[20%] -translate-y-1/2"
                     }`}
                   >
-                    {m.year}
+                    {textForLocale(m.year)}
                   </div>
                   {/* The story belongs to the axis alone. Off-axis rows used to
                       show their whole paragraph rotated with the wheel at 20%
@@ -531,7 +529,7 @@ export default function HistoryTimeline() {
                         i === active ? "opacity-100" : "opacity-0"
                       }`}
                     />
-                    {m.text}
+                    {textForLocale(m.text)}
                   </div>
                 </div>
               );
@@ -543,7 +541,7 @@ export default function HistoryTimeline() {
             longest paragraph inside the wheel's narrow right column made it
             grow upwards into the photograph on phones. */}
         <div data-history-portrait-copy data-lenis-prevent className="history-portrait-copy desk:hidden font-light text-cream/85">
-          {MILESTONES[active].text}
+          {textForLocale(MILESTONES[active].text)}
         </div>
       </div>
       )}
@@ -558,12 +556,10 @@ export default function HistoryTimeline() {
       */}
       {!wheel && (
         <div className="px-6 py-20">
-          <p className="label text-gold mb-3">Est. {FOUNDED}</p>
-          <h2 className="font-display text-4xl mb-4">Our History</h2>
+          <p className="label text-gold mb-3">{textForLocale("Est. ")}{FOUNDED}</p>
+          <h2 className="font-display text-4xl mb-4">{textForLocale("Our History")}</h2>
           <p className="text-cream/70 font-light leading-relaxed mb-14">
-            {years()}+ years of building for what&rsquo;s next. From a modest
-            enterprise in Muscat to a leading EPC firm across Oman and the region.
-          </p>
+            {years()}{textForLocale("+ years of building for what’s next. From a modest enterprise in Muscat to a leading EPC firm across Oman and the region.")}</p>
           <ol className="relative border-l border-cream/15 pl-6 space-y-12">
             {MILESTONES.map((m) => (
               <li key={m.year} className="relative">
@@ -571,16 +567,16 @@ export default function HistoryTimeline() {
                   aria-hidden
                   className="absolute -left-[1.6rem] top-2 w-2.5 h-2.5 rounded-full bg-gold"
                 />
-                <p className="font-display text-3xl text-cream mb-3">{m.year}</p>
+                <p className="font-display text-3xl text-cream mb-3">{textForLocale(m.year)}</p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={m.img}
-                  alt={`Al Adrak in ${m.year}`}
+                  alt={textForLocale(`Al Adrak in ${m.year}`)}
                   loading="lazy"
                   className="w-full aspect-[5/4] object-cover object-top rounded-xl border border-cream/10 mb-4"
                 />
                 <p className="text-cream/80 font-light leading-relaxed text-[clamp(0.9375rem,0.85vw,1.25rem)]">
-                  {m.text}
+                  {textForLocale(m.text)}
                 </p>
               </li>
             ))}

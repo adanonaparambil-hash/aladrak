@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 /** Head Office showcase — full-screen building backdrop with GSAP parallax
  *  and a glassmorphism information panel. */
 export default function HeadOffice() {
+  const textForLocale = useText();
   const root = useRef<HTMLElement>(null);
   const bg = useRef<HTMLImageElement>(null);
 
@@ -57,7 +58,7 @@ export default function HeadOffice() {
         <img
           ref={bg}
           src={headOffice.img}
-          alt="The Al Adrak head office campus at Halban, Muscat, seen from the air"
+          alt={textForLocale("The Al Adrak head office campus at Halban, Muscat, seen from the air")}
           className="w-full h-full object-cover object-[center_45%] will-change-transform"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/35 to-transparent" />
@@ -70,14 +71,13 @@ export default function HeadOffice() {
           <Reveal tilt>
             <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] p-9 md:p-12">
               <p className="label text-gold mb-6">
-                Head Office · Corporate Command
-              </p>
+                {textForLocale("Head Office · Corporate Command")}</p>
               <h2 className="font-display h-section">
-                {headOffice.title}
+                {textForLocale(headOffice.title)}
               </h2>
-              <p className="label text-cream/70 mt-6">{headOffice.location}</p>
+              <p className="label text-cream/70 mt-6">{textForLocale(headOffice.location)}</p>
               <p className="font-light text-cream/85 leading-relaxed text-[17px] mt-8">
-                {headOffice.body}
+                {textForLocale(headOffice.body)}
               </p>
               <div className="flex flex-wrap gap-3 mt-9">
                 {["Project Management", "Design & CAD", "Procurement & Logistics", "IT & Finance", "Facility Management"].map((t) => (
@@ -85,7 +85,7 @@ export default function HeadOffice() {
                     key={t}
                     className="px-5 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full label label-xs text-cream/85"
                   >
-                    {t}
+                    {textForLocale(t)}
                   </span>
                 ))}
               </div>
@@ -98,12 +98,11 @@ export default function HeadOffice() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={headOffice.img2}
-                alt="The Al Adrak head office building at Halban, seen from the front"
+                alt={textForLocale("The Al Adrak head office building at Halban, seen from the front")}
                 className="w-full h-auto"
               />
               <figcaption className="label text-cream/70 px-6 py-4">
-                The Head Office at Halban — the full frontal elevation
-              </figcaption>
+                {textForLocale("The Head Office at Halban — the full frontal elevation")}</figcaption>
             </figure>
           </Reveal>
         </div>

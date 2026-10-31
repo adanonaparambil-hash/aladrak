@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -76,6 +76,7 @@ const ANNOT = new Map<string, Annot>();
 }
 
 export default function OmanMap() {
+  const textForLocale = useText();
   const section = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const camG = useRef<SVGGElement>(null);
@@ -332,8 +333,8 @@ export default function OmanMap() {
         {/* header */}
         <div className="flex items-end justify-between gap-4 px-6 md:px-14 pt-8 md:pt-10 pb-2 flex-none">
           <div>
-            <p className="label text-gold mb-2.5">Prime Project Locations</p>
-            <h3 className="font-display text-2xl md:text-4xl">From Musandam to Dhofar</h3>
+            <p className="label text-gold mb-2.5">{textForLocale("Prime Project Locations")}</p>
+            <h3 className="font-display text-2xl md:text-4xl">{textForLocale("From Musandam to Dhofar")}</h3>
           </div>
           {/* progress rail */}
           <div className="hidden lg:flex items-center gap-3">
@@ -344,7 +345,7 @@ export default function OmanMap() {
                     i === stopIdx ? "text-gold" : "text-cream/30"
                   }`}
                 >
-                  {s.title}
+                  {textForLocale(s.title)}
                 </span>
                 {i < STOPS.length - 1 && <span className="w-5 h-px bg-cream/15" />}
               </div>
@@ -361,7 +362,7 @@ export default function OmanMap() {
               className="h-full w-full"
               preserveAspectRatio="xMidYMid meet"
               role="group"
-              aria-label="Al Adrak project locations across Oman"
+              aria-label={textForLocale("Al Adrak project locations across Oman")}
             >
               <defs>
                 <linearGradient id="omanFill" x1="0" y1="0" x2="1" y2="1">
@@ -446,7 +447,7 @@ export default function OmanMap() {
                         className="fill-cream"
                         style={{ paintOrder: "stroke", stroke: "rgba(14,27,19,0.9)", strokeWidth: 4 }}
                       >
-                        {p.place}
+                        {textForLocale(p.place)}
                       </text>
                       {/* a generous invisible hit target — the dot itself is 4.5r */}
                       <circle
@@ -458,7 +459,7 @@ export default function OmanMap() {
                         className="cursor-pointer"
                         role="button"
                         tabIndex={0}
-                        aria-label={`${p.place}: ${p.projects.length} project${p.projects.length === 1 ? "" : "s"}`}
+                        aria-label={textForLocale(`${p.place}: ${p.projects.length} project${p.projects.length === 1 ? "" : "s"}`)}
                         onClick={() => setSel((prev) => (prev?.place === p.place ? null : p))}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
@@ -467,7 +468,7 @@ export default function OmanMap() {
                           }
                         }}
                       >
-                        <title>{p.projects.join(" · ")}</title>
+                        <title>{textForLocale(p.projects.join(" · "))}</title>
                       </circle>
                     </g>
                   );
@@ -482,24 +483,24 @@ export default function OmanMap() {
                 className="absolute z-30 w-[min(320px,74vw)]"
                 style={{ left: 0, top: 0, transform: "translate(-50%, -100%)" }}
                 role="dialog"
-                aria-label={`${sel.place} projects`}
+                aria-label={textForLocale(`${sel.place} projects`)}
               >
                 <div className="relative rounded-xl border border-gold/40 bg-ink/95 px-5 py-4 shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
                   <button
                     onClick={() => setSel(null)}
-                    aria-label="Close"
+                    aria-label={textForLocale("Close")}
                     className="absolute top-2.5 right-3 text-cream/45 hover:text-gold transition-colors text-lg leading-none"
                   >
                     ×
                   </button>
-                  <p className="label text-gold mb-1.5">{sel.gov}</p>
-                  <h5 className="font-display text-xl mb-3 pr-5">{sel.place}</h5>
+                  <p className="label text-gold mb-1.5">{textForLocale(sel.gov)}</p>
+                  <h5 className="font-display text-xl mb-3 pr-5">{textForLocale(sel.place)}</h5>
                   <ul className="space-y-2">
                     {sel.projects.map((pr) => (
                       <li key={pr} className="flex items-start gap-2.5">
                         <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-gold flex-none" />
                         <span className="text-[clamp(0.84375rem,0.6vw,1rem)] leading-snug text-cream/85 font-light">
-                          {pr}
+                          {textForLocale(pr)}
                         </span>
                       </li>
                     ))}
@@ -532,8 +533,8 @@ export default function OmanMap() {
                   className="absolute inset-x-0 bottom-0 lg:inset-0 lg:flex lg:items-center"
                 >
                   <div className="w-full max-h-[46dvh] lg:max-h-[70dvh] overflow-y-auto overflow-x-hidden map-scroll rounded-2xl border border-cream/12 bg-ink/70 backdrop-blur-xl p-6 md:p-9 shadow-[0_35px_80px_rgba(0,0,0,0.5)]">
-                    <p className="label text-gold mb-2">{stop.sub}</p>
-                    <h4 className="font-display text-2xl md:text-4xl mb-5">{stop.title}</h4>
+                    <p className="label text-gold mb-2">{textForLocale(stop.sub)}</p>
+                    <h4 className="font-display text-2xl md:text-4xl mb-5">{textForLocale(stop.title)}</h4>
                     {sites.length > 0 ? (
                       <ul
                         className={`gap-x-8 ${
@@ -544,8 +545,8 @@ export default function OmanMap() {
                           <li key={pr} className="flex items-start gap-3 py-[3px] sm:py-[7px] break-inside-avoid">
                             <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-gold flex-none" />
                             <span className="text-cream/85 font-light text-[clamp(0.84375rem,0.8vw,1.125rem)] leading-snug">
-                              {pr}
-                              <span className="text-cream/70"> — {pl}</span>
+                              {textForLocale(pr)}
+                              <span className="text-cream/70"> — {textForLocale(pl)}</span>
                             </span>
                           </li>
                         ))}
@@ -554,17 +555,17 @@ export default function OmanMap() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-6 mt-2 [&>div]:min-w-0 [&>div:last-child]:col-span-2 sm:[&>div:last-child]:col-span-1 [&_.label]:tracking-[0.12em]">
                         <div>
                           <p className="font-display text-4xl md:text-5xl text-gold">{MAP_PINS.length}</p>
-                          <p className="label label-xs text-cream/75 mt-2">Pinned Locations</p>
+                          <p className="label label-xs text-cream/75 mt-2">{textForLocale("Pinned Locations")}</p>
                         </div>
                         <div>
                           <p className="font-display text-4xl md:text-5xl text-gold">
                             {MAP_PINS.reduce((n, p) => n + p.projects.length, 0)}
                           </p>
-                          <p className="label label-xs text-cream/40 mt-2">Sites on the Map</p>
+                          <p className="label label-xs text-cream/40 mt-2">{textForLocale("Sites on the Map")}</p>
                         </div>
                         <div>
                           <p className="font-display text-4xl md:text-5xl text-gold">11</p>
-                          <p className="label label-xs text-cream/40 mt-2">Governorates</p>
+                          <p className="label label-xs text-cream/40 mt-2">{textForLocale("Governorates")}</p>
                         </div>
                       </div>
                     )}
@@ -577,8 +578,7 @@ export default function OmanMap() {
 
         {/* scroll hint */}
         <p className="label label-xs text-cream/30 text-center pb-4 flex-none lg:hidden">
-          Keep scrolling to travel the map
-        </p>
+          {textForLocale("Keep scrolling to travel the map")}</p>
       </div>
     </section>
   );

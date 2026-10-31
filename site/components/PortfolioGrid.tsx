@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -24,6 +24,7 @@ type WallCard = Project & {
 const open = (p: WallCard): Project => (p.detail ? { ...p, desc: p.detail } : p);
 
 export default function PortfolioGrid() {
+  const textForLocale = useText();
   const { moreProjects, projectNames } = useContentFor();
   const root = useRef<HTMLElement>(null);
 
@@ -97,18 +98,13 @@ export default function PortfolioGrid() {
         <Reveal>
           <div className="grid md:grid-cols-12 md:items-end gap-8 mb-16 md:mb-20">
             <div className="md:col-span-7">
-              <p className="label text-brand mb-4">The Wider Portfolio</p>
+              <p className="label text-brand mb-4">{textForLocale("The Wider Portfolio")}</p>
               <h2 className="font-display h-section">
-                Every sector.
-                <br />
-                Every governorate.
-              </h2>
+                {textForLocale("Every sector.")}<br />
+                {textForLocale("Every governorate.")}</h2>
             </div>
             <p className="md:col-span-4 md:col-start-9 text-ink/75 text-[clamp(1rem,0.95vw,1.25rem)] font-light leading-relaxed">
-              From ministries to factories, campuses to villages — a selection
-              from more than 450 delivered projects, and the sixteen in
-              delivery across Oman today.
-            </p>
+              {textForLocale("From ministries to factories, campuses to villages — a selection from more than 450 delivered projects, and the sixteen in delivery across Oman today.")}</p>
           </div>
         </Reveal>
 
@@ -129,7 +125,7 @@ export default function PortfolioGrid() {
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && openProject(open(p))}
-              aria-label={`View ${p.name} details`}
+              aria-label={textForLocale(`View ${p.name} details`)}
               className={`group relative rounded-2xl overflow-hidden bg-forest cursor-pointer transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)] ${
                 i % 7 === 0 && !p.wide
                   ? "row-span-2 aspect-[3/4.5]"
@@ -139,24 +135,24 @@ export default function PortfolioGrid() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={p.img}
-                alt={p.name}
+                alt={textForLocale(p.name)}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/25 to-transparent" />
               <span className="absolute top-4 left-4 bg-white/10 backdrop-blur-md border border-white/25 text-cream px-4 py-1.5 rounded-full label label-xs">
-                {p.sector}
+                {textForLocale(p.sector)}
               </span>
-              {p.code && (
+              {textForLocale(p.code && (
                 <span className="absolute top-5 right-4 label label-xs text-cream/60">
-                  {p.code}
+                  {textForLocale(p.code)}
                 </span>
-              )}
+              ))}
               <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                 <h3 className="font-display text-lg md:text-[22px] leading-tight text-cream">
-                  {p.name}
+                  {textForLocale(p.name)}
                 </h3>
-                <p className="label text-gold mt-2">{p.code ? p.place.replace(`${p.code} · `, "") : p.place}</p>
+                <p className="label text-gold mt-2">{textForLocale(p.code ? p.place.replace(`${p.code} · `, "") : p.place)}</p>
                 {/* Clamped, not merely short. The blurbs are one line each,
                     but this block is absolutely positioned against the bottom
                     of a fixed-aspect tile: without a cap, a long string grows
@@ -165,7 +161,7 @@ export default function PortfolioGrid() {
                     descriptions did here. Three lines is the most the shortest
                     tile can hold. */}
                 <p className="hidden sm:[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-3">
-                  {p.desc}
+                  {textForLocale(p.desc)}
                 </p>
               </div>
             </article>
@@ -175,15 +171,14 @@ export default function PortfolioGrid() {
         {/* Name wall */}
         <Reveal className="mt-20 md:mt-28">
           <p className="label text-brand text-center mb-10">
-            …and the story continues
-          </p>
+            {textForLocale("…and the story continues")}</p>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-4 max-w-[1500px] mx-auto">
             {projectNames.map((n) => (
               <span
                 key={n}
                 className="px-6 py-3 border border-ink/20 rounded-full text-[clamp(0.9375rem,1.05vw,1.3125rem)] text-ink/85 hover:border-gold hover:text-brand transition-colors duration-300"
               >
-                {n}
+                {textForLocale(n)}
               </span>
             ))}
           </div>

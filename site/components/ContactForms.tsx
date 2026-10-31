@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useId, useState } from "react";
 import { enquiryTypes, site, vendorProducts } from "@/lib/content";
 
@@ -113,6 +113,7 @@ function validate(fields: Field[], values: Record<string, string>) {
  * top edges agree by construction.
  */
 export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
+  const textForLocale = useText();
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("client");
   const active = TABS.find((t) => t.key === tab)!;
   const idBase = useId();
@@ -203,7 +204,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
   return (
     <div>
       {/* ── tabs ── */}
-      <div role="tablist" aria-label="Contact forms" className="flex flex-wrap gap-3 mb-10">
+      <div role="tablist" aria-label={textForLocale("Contact forms")} className="flex flex-wrap gap-3 mb-10">
         {TABS.map((t) => {
           const on = t.key === tab;
           return (
@@ -221,7 +222,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                   : "border border-ink/20 text-ink/70 hover:border-brand hover:text-brand"
               }`}
             >
-              {t.title}
+              {textForLocale(t.title)}
             </button>
           );
         })}
@@ -233,7 +234,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
         aria-labelledby={`${idBase}-tab-${active.key}`}
       >
         <p className="text-ink/70 font-light leading-relaxed mb-7 max-w-2xl">
-          {active.blurb}
+          {textForLocale(active.blurb)}
         </p>
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
@@ -251,7 +252,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
               come back differently. Kept out of `fields` deliberately: it must
               never be validated, labelled or counted as a question. */}
           <div aria-hidden className="hidden">
-            <label htmlFor={fieldId("website")}>Leave this field empty</label>
+            <label htmlFor={fieldId("website")}>{textForLocale("Leave this field empty")}</label>
             <input
               id={fieldId("website")}
               type="text"
@@ -283,9 +284,9 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                     nine-field form they lose track of which box they are in,
                     and it is invisible to assistive technology. */}
                 <label htmlFor={id} className="label label-xs text-ink/60 block mb-1">
-                  {f.label}
+                  {textForLocale(f.label)}
                   {f.required && <span className="text-brand ml-1.5" aria-hidden>*</span>}
-                  {f.required && <span className="sr-only"> (required)</span>}
+                  {f.required && <span className="sr-only"> {textForLocale(" (required)")}</span>}
                 </label>
 
                 {f.type === "textarea" ? (
@@ -301,10 +302,10 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                     onChange={(e) => set(f.name, e.target.value)}
                     className={`${inputBase} ${border} font-light [&>option]:bg-white [&>option]:text-ink`}
                   >
-                    <option value="">Please choose…</option>
+                    <option value="">{textForLocale("Please choose…")}</option>
                     {f.options?.map((o) => (
                       <option key={o} value={o}>
-                        {o}
+                        {textForLocale(o)}
                       </option>
                     ))}
                   </select>
@@ -317,11 +318,11 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
                   />
                 )}
 
-                {bad && (
+                {textForLocale(bad && (
                   <p id={`${id}-err`} className="text-red-700 text-[13px] font-light mt-1.5">
-                    {bad}
+                    {textForLocale(bad)}
                   </p>
-                )}
+                ))}
               </div>
             );
           })}
@@ -332,7 +333,7 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
               disabled={state === "sending"}
               className="px-9 py-4 bg-gold text-ink rounded-full label font-bold hover:bg-forest hover:text-cream transition-colors duration-300 disabled:opacity-60"
             >
-              {state === "sending" ? "Sending…" : `Submit ${active.title.toLowerCase()}`}
+              {textForLocale(state === "sending" ? "Sending…" : `Submit ${active.title.toLowerCase()}`)}
             </button>
 
             {/* announced, not just shown — a sighted user sees the colour
@@ -340,38 +341,36 @@ export default function ContactForms({ aside }: { aside?: React.ReactNode }) {
             <p role="status" aria-live="polite" className="text-[15px] font-light">
               {state === "sent" && !ENDPOINT && (
                 <span className="text-ink/75">
-                  Your email should now be open with the details filled in — press send and we
-                  will come back to you. Nothing reaching you? Write to{" "}
+                  {textForLocale("Your email should now be open with the details filled in — press send and we will come back to you. Nothing reaching you? Write to")}{textForLocale(" ")}
                   <a href={`mailto:${site.email}`} className="text-brand underline hover:text-forest transition-colors">
-                    {site.email}
+                    {textForLocale(site.email)}
                   </a>
                   .
                 </span>
               )}
-              {state === "sent" && ENDPOINT && (
-                <span className="text-brand">Thank you — we have your details and will be in touch.</span>
-              )}
+              {textForLocale(state === "sent" && ENDPOINT && (
+                <span className="text-brand">{textForLocale("Thank you — we have your details and will be in touch.")}</span>
+              ))}
               {state === "failed" && (
                 <span className="text-red-700">
-                  That did not go through. Please email{" "}
+                  {textForLocale("That did not go through. Please email")}{textForLocale(" ")}
                   <a href={`mailto:${site.email}`} className="underline hover:text-forest">
-                    {site.email}
-                  </a>{" "}
-                  instead.
-                </span>
+                    {textForLocale(site.email)}
+                  </a>{textForLocale(" ")}
+                  {textForLocale("instead.")}</span>
               )}
               {Object.keys(errors).length > 0 && state === "idle" && (
                 <span className="text-red-700">
-                  {Object.keys(errors).length === 1
+                  {textForLocale(Object.keys(errors).length === 1
                     ? "One field needs attention."
-                    : `${Object.keys(errors).length} fields need attention.`}
+                    : `${Object.keys(errors).length} fields need attention.`)}
                 </span>
               )}
             </p>
           </div>
         </form>
 
-        {aside && <div className="lg:col-span-5">{aside}</div>}
+        {textForLocale(aside && <div className="lg:col-span-5">{textForLocale(aside)}</div>)}
         </div>
       </div>
     </div>

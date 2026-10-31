@@ -1,6 +1,6 @@
 "use client";
-
-import { useCallback, useEffect, useState, type RefObject } from "react";
+import { useText } from "@/lib/translate-client";
+import { useEffect, useState, type RefObject } from "react";
 
 /**
  * Arrow controls for a horizontally scrolling strip.
@@ -23,33 +23,31 @@ export default function StripNav({
   label: string;
   className?: string;
 }) {
+  const textForLocale = useText();
   const [prev, setPrev] = useState(false);
   const [next, setNext] = useState(false);
-
-  const measure = useCallback(() => {
-    const el = target.current;
-    if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    // 8px of slack so a sub-pixel resting position does not leave a live button
-    setPrev(el.scrollLeft > 8);
-    setNext(el.scrollLeft < max - 8);
-  }, [target]);
 
   useEffect(() => {
     const el = target.current;
     if (!el) return;
-    measure();
+    const measure = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      const position = Math.abs(el.scrollLeft);
+      setPrev(position > 8);
+      setNext(position < max - 8);
+    };
+    const frame = requestAnimationFrame(measure);
     el.addEventListener("scroll", measure, { passive: true });
     window.addEventListener("resize", measure);
-    // images and videos landing late change scrollWidth
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => {
+      cancelAnimationFrame(frame);
       el.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
       ro.disconnect();
     };
-  }, [target, measure]);
+  }, [target]);
 
   const step = (dir: 1 | -1) => {
     const el = target.current;
@@ -58,7 +56,7 @@ export default function StripNav({
     const card = el.firstElementChild as HTMLElement | null;
     const gap = parseFloat(getComputedStyle(el).columnGap || "20") || 20;
     const by = card ? card.getBoundingClientRect().width + gap : el.clientWidth * 0.8;
-    el.scrollBy({ left: dir * by, behavior: "smooth" });
+    el.scrollBy({ left: dir * by * (getComputedStyle(el).direction === "rtl" ? -1 : 1), behavior: "smooth" });
   };
 
   if (!prev && !next) return null;
@@ -72,10 +70,10 @@ export default function StripNav({
       <button
         onClick={() => step(-1)}
         disabled={!prev}
-        aria-label={`Previous ${label}`}
+        aria-label={textForLocale(`Previous ${label}`)}
         className={`${btn} border-current/25 text-current hover:not-disabled:bg-current/10 focus-visible:outline-current`}
       >
-        <svg width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+        <svg className="rtl:rotate-180" width="15" height="15" viewBox="0 0 15 15" aria-hidden>
           <path
             d="M9.5 2.5 L4.5 7.5 L9.5 12.5"
             stroke="currentColor"
@@ -89,10 +87,10 @@ export default function StripNav({
       <button
         onClick={() => step(1)}
         disabled={!next}
-        aria-label={`Next ${label}`}
+        aria-label={textForLocale(`Next ${label}`)}
         className={`${btn} border-current/25 text-current hover:not-disabled:bg-current/10 focus-visible:outline-current`}
       >
-        <svg width="15" height="15" viewBox="0 0 15 15" aria-hidden>
+        <svg className="rtl:rotate-180" width="15" height="15" viewBox="0 0 15 15" aria-hidden>
           <path
             d="M5.5 2.5 L10.5 7.5 L5.5 12.5"
             stroke="currentColor"

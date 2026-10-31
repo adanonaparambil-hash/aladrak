@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -23,6 +23,7 @@ gsap.registerPlugin(ScrollTrigger);
  * wall of digits; the same treatment the anniversary dial uses on the homepage.
  */
 export default function HseKpi() {
+  const textForLocale = useText();
   const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -75,12 +76,12 @@ export default function HseKpi() {
       />
 
       <div className="relative shell py-24 md:py-32">
-        <p className="label text-gold mb-5">{kickerLabel}</p>
+        <p className="label text-gold mb-5">{textForLocale(kickerLabel)}</p>
         <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] max-w-3xl">
-          {heading}
+          {textForLocale(heading)}
         </h2>
         <p className="mt-6 max-w-2xl text-cream/75 font-light leading-relaxed text-[clamp(1rem,1.1vw,1.15rem)]">
-          {lead}
+          {textForLocale(lead)}
         </p>
 
         {/* the two running totals */}
@@ -91,9 +92,9 @@ export default function HseKpi() {
                 data-count={k.value}
                 className="font-display tabular-nums leading-none text-[clamp(2.6rem,6vw,4.75rem)] text-gold"
               >
-                {k.value.toLocaleString("en-GB")}
+                {textForLocale(k.value.toLocaleString("en-GB"))}
               </p>
-              <p className="label label-xs text-cream/60 mt-4">{k.label}</p>
+              <p className="label label-xs text-cream/60 mt-4">{textForLocale(k.label)}</p>
             </div>
           ))}
         </div>
@@ -109,8 +110,8 @@ export default function HseKpi() {
                 {k.value}
               </p>
               <div>
-                <p className="label label-xs text-cream/85">{k.label}</p>
-                <p className="label label-xs text-cream/45 mt-1.5">{toDate}</p>
+                <p className="label label-xs text-cream/85">{textForLocale(k.label)}</p>
+                <p className="label label-xs text-cream/45 mt-1.5">{textForLocale(toDate)}</p>
               </div>
             </div>
           ))}
@@ -123,15 +124,15 @@ export default function HseKpi() {
               <p className="font-display tabular-nums leading-none text-2xl md:text-3xl text-cream">
                 <span data-count={k.value}>{k.value}</span>
                 {k.note ? (
-                  <span className="label label-xs text-cream/45 ml-2.5 align-middle">{k.note}</span>
+                  <span className="label label-xs text-cream/45 ml-2.5 align-middle">{textForLocale(k.note)}</span>
                 ) : null}
               </p>
-              <p className="label label-xs text-cream/55 mt-3 leading-relaxed">{k.label}</p>
+              <p className="label label-xs text-cream/55 mt-3 leading-relaxed">{textForLocale(k.label)}</p>
             </div>
           ))}
         </div>
 
-        <p className="label label-xs text-cream/40 mt-14">{asAt}</p>
+        <p className="label label-xs text-cream/40 mt-14">{textForLocale(asAt)}</p>
       </div>
     </section>
   );

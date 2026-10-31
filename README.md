@@ -58,3 +58,29 @@ The site is ~109MB and a desktop visit pulls ~37MB, most of it `hero-web.mp4` at
 that Pages not be used as free hosting for a business, so the static build is
 worth moving to Cloudflare Pages or Netlify for production use — it is portable
 as-is.
+
+## English and Arabic
+
+The header language button works on desktop and mobile and keeps the current
+page, query string and section. English routes remain at the root; Arabic
+versions are at /ar/, /ar/news/, /ar/careers/ and /ar/hse/. Each language renders
+its own HTML lang and dir attributes, including without JavaScript.
+
+Display copy is translated through site/lib/translations.ar.json and the
+useText hook. Keep URLs, project IDs, form values and user-entered text out of
+the translation helper. Translate full sentences before splitting animated
+text. Arabic copy has not received an independent native-speaker review.
+Original PDFs, films, logos and text embedded in photographs remain source assets.
+
+After building, run npm --prefix site run check:locales. This checks all eight
+routes, language switches, internal links and translation behavior.
+
+## Vercel
+
+Import this repository with its root directory left at the repository root.
+vercel.json installs and builds site/ and publishes its static site/out output.
+Leave NEXT_PUBLIC_BASE_PATH and NEXT_PUBLIC_CONTACT_ENDPOINT unset on Vercel;
+the contact forms use their existing email-client fallback. PHP is only for the
+separate GoDaddy build. The CLI allowlist excludes source media archives.
+
+From the repository root, after vercel login, deploy with vercel --prod.

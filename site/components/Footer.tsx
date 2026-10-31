@@ -1,8 +1,13 @@
-import { getContent, type Locale } from "@/lib/i18n";
+"use client";
+import { useText } from "@/lib/translate-client";
+import { getContent, localePath, type Locale } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n-client";
 import Reveal from "./Reveal";
 import { asset } from "@/lib/asset";
 
 export default function Footer({ lang = "en" }: { lang?: Locale }) {
+  const textForLocale = useText();
+  const locale = useLocale();
   const { site } = getContent(lang);
   return (
     <footer className="relative z-20 bg-forest text-cream/85 overflow-hidden">
@@ -10,25 +15,22 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
       <div className="shell pt-24 md:pt-32 pb-16 text-center border-b border-white/10">
         <Reveal>
           <p className="font-serifit italic text-2xl text-cream/70 mb-6">
-            Have a vision worth building?
-          </p>
+            {textForLocale("Have a vision worth building?")}</p>
           <h2 className="font-display text-[11vw] md:text-7xl lg:text-8xl leading-none">
-            Let&apos;s build the
-            <br />
-            next landmark
-          </h2>
+            {textForLocale("Let's build the")}<br />
+            {textForLocale("next landmark")}</h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
             <a
               href={`mailto:${site.email}`}
               className="px-12 py-5 bg-gold text-ink rounded-full label font-bold hover:bg-cream transition-colors duration-500"
             >
-              {site.email}
+              {textForLocale(site.email)}
             </a>
             <a
               href={`tel:${site.phone.replace(/\s/g, "")}`}
               className="px-12 py-5 border border-white/25 rounded-full label font-bold hover:border-gold hover:text-gold transition-colors duration-500"
             >
-              {site.phone}
+              {textForLocale(site.phone)}
             </a>
           </div>
         </Reveal>
@@ -40,21 +42,21 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/logo-light.png")}
-            alt="Al Adrak"
+            alt={textForLocale("Al Adrak")}
             className="h-10 w-auto"
           />
-          <span className="label text-gold/80">est. 1986</span>
+          <span className="label text-gold/80">{textForLocale("est. 1986")}</span>
         </div>
         <nav className="flex flex-wrap justify-center items-center gap-7">
           {["About", "Expertise", "Projects", "Facilities", "Team"].map((l) => (
             <a
               key={l}
-              href={asset(`/#${l.toLowerCase()}`)}
+              href={asset(localePath(locale, `/#${l.toLowerCase()}`))}
               // py-2.5 lifts these off a 19px line box; the gap-7 row already
               // spaces them horizontally, so this only buys vertical reach
               className="label text-cream/60 hover:text-gold transition-colors py-2.5"
             >
-              {l}
+              {textForLocale(l)}
             </a>
           ))}
           <a
@@ -62,29 +64,25 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
             download
             className="label text-gold hover:text-cream transition-colors py-2.5"
           >
-            Brochure ↓
-          </a>
+            {textForLocale("Brochure ↓")}</a>
           <a
-            href={asset("/news")}
+            href={asset(localePath(locale, "/news/"))}
             className="label text-gold hover:text-cream transition-colors py-2.5"
           >
-            News
-          </a>
+            {textForLocale("News")}</a>
           <a
-            href={asset("/careers")}
+            href={asset(localePath(locale, "/careers/"))}
             className="label text-gold hover:text-cream transition-colors py-2.5"
           >
-            Careers
-          </a>
+            {textForLocale("Careers")}</a>
           <a
-            href={asset("/hse")}
+            href={asset(localePath(locale, "/hse/"))}
             className="label text-gold hover:text-cream transition-colors py-2.5"
           >
-            HSE
-          </a>
+            {textForLocale("HSE")}</a>
         </nav>
         <p className="label text-cream/70">
-          © {new Date().getFullYear()} {site.legalName}
+          © {new Date().getFullYear()} {textForLocale(site.legalName)}
         </p>
       </div>
     </footer>

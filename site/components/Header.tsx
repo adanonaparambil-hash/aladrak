@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
@@ -35,9 +35,10 @@ const hasChildren = (i: NavItem): i is { label: string; children: NavLink[] } =>
   "children" in i;
 
 export default function Header() {
+  const textForLocale = useText();
   const pathname = usePathname();
   // usePathname() reports the route without the base path, so "/" is the home page
-  const onHome = pathname === "/";
+  const onHome = pathname === "/" || pathname === "/ar" || pathname === "/ar/";
   const locale = useLocale();
   const ui = useUI();
   /** a page link that keeps the visitor in the language they are reading */
@@ -127,7 +128,7 @@ export default function Header() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/logo.png")}
-            alt="Al Adrak"
+            alt={textForLocale("Al Adrak")}
             className={`w-auto transition-all duration-500 ${
               scrolled ? "h-8 sm:h-9 md:h-10" : "h-10 sm:h-12 md:h-14"
             } drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]`}
@@ -147,7 +148,7 @@ export default function Header() {
                   aria-haspopup="true"
                   className="label text-cream/70 group-hover/nav:text-gold group-focus-within/nav:text-gold transition-colors duration-300 flex items-center gap-1.5"
                 >
-                  {l.label}
+                  {textForLocale(l.label)}
                   <svg
                     width="8"
                     height="5"
@@ -178,17 +179,17 @@ export default function Header() {
                         className="block rounded-xl px-4 py-3 hover:bg-cream/[0.07] transition-colors duration-200"
                       >
                         <span className="label text-cream/90 block">
-                          {c.label}
+                          {textForLocale(c.label)}
                         </span>
                         {/* Not .label: at 0.3em tracking and uppercase these
                             descriptions wrapped onto two lines and made the
                             panel ragged. Plain sentence case is narrower, and
                             reads better as a description than as a kicker. */}
-                        {c.note && (
+                        {textForLocale(c.note && (
                           <span className="block mt-1 text-[12px] leading-snug text-cream/45 whitespace-nowrap">
-                            {c.note}
+                            {textForLocale(c.note)}
                           </span>
-                        )}
+                        ))}
                       </a>
                     ))}
                   </div>
@@ -200,7 +201,7 @@ export default function Header() {
                 href={l.href}
                 className="label text-cream/70 hover:text-gold transition-colors duration-300"
               >
-                {l.label}
+                {textForLocale(l.label)}
               </a>
             ),
           )}
@@ -211,7 +212,7 @@ export default function Header() {
             href={`mailto:${site.email}`}
             className="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 label text-ink bg-gold rounded-full hover:bg-cream transition-colors duration-300"
           >
-            {ui.nav.enquire}
+            {textForLocale(ui.nav.enquire)}
           </a>
           {/* The language switch: the same page in the other language. It is a
               real <a> with a real URL rather than a toggle, so it can be
@@ -227,16 +228,18 @@ export default function Header() {
                   pathname.replace(/^\/ar(?=\/|$)/, "") || "/"
                 )
               )}
+              data-language-switch
+              onClick={(event) => { const target = new URL(event.currentTarget.href); target.search = window.location.search; target.hash = window.location.hash; event.currentTarget.href = target.href; }}
               lang={locale === "ar" ? "en" : "ar"}
-              aria-label={ui.switchLabel}
-              className="hidden lg:inline-flex items-center rounded-full border border-cream/35 px-4 py-2 label label-xs text-cream/80 hover:text-cream hover:border-cream/70 transition-colors duration-300"
+              aria-label={textForLocale(ui.switchLabel)}
+              className="inline-flex shrink-0 items-center rounded-full border border-cream/35 px-4 py-2 label label-xs text-cream/80 hover:text-cream hover:border-cream/70 transition-colors duration-300"
             >
-              {ui.switchTo}
+              {textForLocale(ui.switchTo)}
             </a>
           )}
           {/* Mobile burger */}
           <button
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={textForLocale(open ? "Close menu" : "Open menu")}
             // A screen reader needs to know this is a toggle and which way it
             // is currently set — without aria-expanded it is announced as a
             // plain button called "Menu", with no hint that it opens anything
@@ -301,7 +304,7 @@ export default function Header() {
                  under it, which is one tap instead of two. */
                   <div key={l.label} className="mt-2">
                     <span className="label label-xs text-gold/70 block mb-1">
-                      {l.label}
+                      {textForLocale(l.label)}
                     </span>
                     {l.children.map((c) => (
                       <a
@@ -311,7 +314,7 @@ export default function Header() {
                         tabIndex={open ? 0 : -1}
                         className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors block"
                       >
-                        {c.label}
+                        {textForLocale(c.label)}
                       </a>
                     ))}
                   </div>
@@ -325,7 +328,7 @@ export default function Header() {
                     // these 26px tall, well under the 44px minimum for a thumb
                     className="font-display text-[7vw] min-[420px]:text-2xl leading-none py-2.5 text-cream/90 hover:text-gold transition-colors"
                   >
-                    {l.label}
+                    {textForLocale(l.label)}
                   </a>
                 ),
               )}
@@ -335,7 +338,7 @@ export default function Header() {
                 tabIndex={open ? 0 : -1}
                 className="mt-3 self-start px-7 py-3 label text-ink bg-gold rounded-full"
               >
-                {ui.nav.enquire}
+                {textForLocale(ui.nav.enquire)}
               </a>
             </nav>
           </div>,

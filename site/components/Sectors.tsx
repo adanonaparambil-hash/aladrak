@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 /** Sectors We Serve — 11 sectors from the brochure, snap-scroll strip
  *  with a gentle GSAP drift as the section scrolls into view. */
 export default function Sectors() {
+  const textForLocale = useText();
   const root = useRef<HTMLElement>(null);
   const strip = useRef<HTMLDivElement>(null);
 
@@ -40,12 +41,10 @@ export default function Sectors() {
         <Reveal>
           <div className="grid md:grid-cols-12 md:items-end gap-8">
             <div className="md:col-span-8">
-              <p className="label text-gold mb-4">Sectors We Serve</p>
+              <p className="label text-gold mb-4">{textForLocale("Sectors We Serve")}</p>
               <h2 className="font-display h-section">
-                Eleven sectors.
-                <br />
-                One standard.
-              </h2>
+                {textForLocale("Eleven sectors.")}<br />
+                {textForLocale("One standard.")}</h2>
             </div>
             <div className="pb-2 md:col-span-3 md:col-start-10 flex md:justify-end text-cream/70">
               <StripNav target={strip} label="sector" />
@@ -67,18 +66,18 @@ export default function Sectors() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={s.img}
-              alt={s.name}
+              alt={textForLocale(s.name)}
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-ink/10" />
             <span className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/25 flex items-center justify-center label text-gold">
-              {String(i + 1).padStart(2, "0")}
+              {textForLocale(String(i + 1).padStart(2, "0"))}
             </span>
             <div className="absolute inset-x-0 bottom-0 p-6">
-              <h3 className="font-display text-xl leading-tight">{s.name}</h3>
+              <h3 className="font-display text-xl leading-tight">{textForLocale(s.name)}</h3>
               <p className="text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-2.5">
-                {s.desc}
+                {textForLocale(s.desc)}
               </p>
             </div>
           </article>

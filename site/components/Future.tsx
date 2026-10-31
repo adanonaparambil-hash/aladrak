@@ -1,3 +1,5 @@
+"use client";
+import { useText } from "@/lib/translate-client";
 import { getContent, type Locale } from "@/lib/i18n";
 import Reveal from "./Reveal";
 import GroupCompanies from "./GroupCompanies";
@@ -5,6 +7,7 @@ import ContactForms from "./ContactForms";
 import { asset } from "@/lib/asset";
 
 export default function Future({ lang = "en" }: { lang?: Locale }) {
+  const textForLocale = useText();
   const { future, offices, site, sustainability } = getContent(lang);
   return (
     <>
@@ -14,7 +17,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={asset("/images/projects/al-maskaan.jpg")}
-          alt=""
+          alt={textForLocale("")}
           className="w-full h-full object-cover opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/75 to-ink" />
@@ -23,12 +26,11 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
       <div className="relative shell py-28 md:py-40">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <Reveal className="lg:col-span-7">
-            <p className="label text-gold mb-6">Commitment to the Future</p>
+            <p className="label text-gold mb-6">{textForLocale("Commitment to the Future")}</p>
             <h2 className="font-display h-section">
-              The next chapter is regional.
-            </h2>
+              {textForLocale("The next chapter is regional.")}</h2>
             <p className="font-light text-cream/80 text-lg leading-relaxed mt-8">
-              {future}
+              {textForLocale(future)}
             </p>
           </Reveal>
           <Reveal delay={0.15} tilt className="lg:col-span-5">
@@ -36,26 +38,25 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={asset("/images/projects/dubai-ellington.jpg")}
-                alt="Ellington House, Dubai — architectural render"
+                alt={textForLocale("Ellington House, Dubai — architectural render")}
                 className="w-full h-auto"
               />
               <figcaption className="label text-cream/70 px-6 py-4">
-                Ellington House, Dubai — under development
-              </figcaption>
+                {textForLocale("Ellington House, Dubai — under development")}</figcaption>
             </figure>
           </Reveal>
         </div>
 
         {/* Sustainability */}
         <Reveal delay={0.1} className="mt-14">
-          <p className="label text-cream/70 mb-6">Reducing · Reusing · Recycling</p>
+          <p className="label text-cream/70 mb-6">{textForLocale("Reducing · Reusing · Recycling")}</p>
           <div className="flex flex-wrap gap-3">
             {sustainability.map((s) => (
               <span
                 key={s}
                 className="px-6 py-2.5 bg-white/5 backdrop-blur-sm border border-white/15 rounded-full label text-cream/80 hover:border-gold hover:text-gold transition-colors duration-300"
               >
-                {s}
+                {textForLocale(s)}
               </span>
             ))}
           </div>
@@ -63,7 +64,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
 
         {/* Group companies — logo wall */}
         <Reveal delay={0.15} className="mt-16">
-          <p className="label text-cream/50 mb-8">The Adrak Group</p>
+          <p className="label text-cream/50 mb-8">{textForLocale("The Adrak Group")}</p>
           <GroupCompanies />
         </Reveal>
 
@@ -87,10 +88,9 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
       >
         <div className="shell py-24 md:py-32">
           <Reveal>
-            <p className="label text-brand mb-5">Work with us</p>
+            <p className="label text-brand mb-5">{textForLocale("Work with us")}</p>
             <h2 className="font-display text-3xl md:text-5xl leading-tight text-forest mb-10">
-              Start a conversation
-            </h2>
+              {textForLocale("Start a conversation")}</h2>
           </Reveal>
           {/* The five columns beside the form carry what someone weighing up
               whether to write actually wants to know: what happens after they
@@ -107,7 +107,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
             <ContactForms
               aside={
                 <div className="rounded-3xl border border-ink/10 bg-white shadow-[0_2px_18px_rgba(10,15,12,0.05)] p-7 md:p-8">
-                  <p className="label text-brand mb-6">What happens next</p>
+                  <p className="label text-brand mb-6">{textForLocale("What happens next")}</p>
                   <ol className="space-y-6">
                     {[
                       ["01", "We acknowledge it", "Every enquiry and registration reaches a named person — not a shared tray — within one working day."],
@@ -115,32 +115,31 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
                       ["03", "We come back with next steps", "A scope conversation, a site visit, a request for documents, or an honest no — but an answer either way."],
                     ].map(([no, title, body]) => (
                       <li key={no} className="flex gap-4">
-                        <span className="label label-xs text-brand flex-none pt-1">{no}</span>
+                        <span className="label label-xs text-brand flex-none pt-1">{textForLocale(no)}</span>
                         <div>
-                          <p className="font-display text-lg text-forest leading-snug">{title}</p>
-                          <p className="text-ink/70 font-light text-[14px] leading-relaxed mt-1.5">{body}</p>
+                          <p className="font-display text-lg text-forest leading-snug">{textForLocale(title)}</p>
+                          <p className="text-ink/70 font-light text-[14px] leading-relaxed mt-1.5">{textForLocale(body)}</p>
                         </div>
                       </li>
                     ))}
                   </ol>
 
                   <div className="mt-8 pt-7 border-t border-ink/10">
-                    <p className="label label-xs text-ink/50 mb-4">Rather just talk?</p>
+                    <p className="label label-xs text-ink/50 mb-4">{textForLocale("Rather just talk?")}</p>
                     <a
                       href={`tel:${site.phone.replace(/[^0-9+]/g, "")}`}
                       className="font-display text-2xl md:text-[28px] text-forest hover:text-brand transition-colors duration-300 block leading-none"
                     >
-                      {site.phone}
+                      {textForLocale(site.phone)}
                     </a>
                     <a
                       href={`mailto:${site.email}`}
                       className="text-ink/75 font-light hover:text-brand transition-colors duration-300 inline-block mt-3"
                     >
-                      {site.email}
+                      {textForLocale(site.email)}
                     </a>
                     <p className="label label-xs text-ink/45 mt-5 leading-relaxed">
-                      Head office · Halban, Barka · Sun–Thu
-                    </p>
+                      {textForLocale("Head office · Halban, Barka · Sun–Thu")}</p>
                   </div>
                 </div>
               }
@@ -171,7 +170,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
             return (
               <Reveal key={o.name} delay={i * 0.08} y={26}>
                 <div className="space-y-4">
-                  <p className="label text-gold">{o.name}</p>
+                  <p className="label text-gold">{textForLocale(o.name)}</p>
 
                   <p className={line}>
                     <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
@@ -186,13 +185,13 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
                     <span>
                       {o.address.map((a) => (
                         <span key={a} className="block">
-                          {a}
+                          {textForLocale(a)}
                         </span>
                       ))}
                     </span>
                   </p>
 
-                  {o.phone && (
+                  {textForLocale(o.phone && (
                     <p className={line}>
                       <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
                         <path
@@ -208,14 +207,14 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
                           href={`tel:${o.phone.replace(/[^0-9+]/g, "")}`}
                           className={`hover:text-gold transition-colors duration-300 ${tap}`}
                         >
-                          {o.phone}
+                          {textForLocale(o.phone)}
                         </a>
-                        {o.fax && (
-                          <span className="block text-cream/60">Fax: {o.fax}</span>
-                        )}
+                        {textForLocale(o.fax && (
+                          <span className="block text-cream/60">{textForLocale("Fax: ")}{textForLocale(o.fax)}</span>
+                        ))}
                       </span>
                     </p>
-                  )}
+                  ))}
 
                   <p className={line}>
                     <svg className={icon} width="15" height="15" viewBox="0 0 15 15" aria-hidden>
@@ -235,7 +234,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
                       href={`mailto:${o.email}`}
                       className={`hover:text-gold transition-colors duration-300 break-all ${tap}`}
                     >
-                      {o.email}
+                      {textForLocale(o.email)}
                     </a>
                   </p>
 
@@ -258,8 +257,7 @@ export default function Future({ lang = "en" }: { lang?: Locale }) {
                       rel="noopener noreferrer"
                       className={`hover:text-gold transition-colors duration-300 ${tap}`}
                     >
-                      Location
-                    </a>
+                      {textForLocale("Location")}</a>
                   </p>
                 </div>
               </Reveal>

@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,6 +9,7 @@ import { asset } from "@/lib/asset";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Intro() {
+  const textForLocale = useText();
   const { headOffice, introStatement, stats, vision, mission } = useContentFor();
   const root = useRef<HTMLElement>(null);
 
@@ -53,7 +54,7 @@ export default function Intro() {
       className="relative z-10 -mt-[100svh] bg-cream text-ink rounded-t-[2.5rem] md:rounded-t-[4rem] shadow-[0_-40px_80px_rgba(0,0,0,0.45)]"
     >
       <div className="shell pt-24 md:pt-36 pb-28 md:pb-36">
-        <p className="label text-brand mb-10 text-center">The Company</p>
+        <p className="label text-brand mb-10 text-center">{textForLocale("The Company")}</p>
 
         <h2
           data-statement
@@ -64,9 +65,9 @@ export default function Intro() {
              the 2.3vw / 2200px pairing below gives at 1280, 1920 and 2560 alike. */
           className="font-display text-[7.5vw] md:text-[clamp(1.7rem,2.3vw,3.5rem)] leading-[1.2] text-center max-w-[min(2200px,100%)] mx-auto"
         >
-          {introStatement.split(" ").map((w, i) => (
+          {textForLocale(introStatement).split(" ").map((w, i) => (
             <span key={i} className="reveal-word inline-block mr-[0.26em]">
-              {w}
+              {textForLocale(w)}
             </span>
           ))}
         </h2>
@@ -83,22 +84,22 @@ export default function Intro() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={asset("/images/about/company.jpg")}
-              alt="The Al Adrak head office at Halban, seen from the front"
+              alt={textForLocale("The Al Adrak head office at Halban, seen from the front")}
               loading="lazy"
               className="w-full rounded-2xl border border-ink/10 shadow-[0_24px_60px_rgba(16,39,26,0.14)]"
             />
             <figcaption className="label text-taupe mt-4">
-              Head Office &middot; {headOffice.location}
+              {textForLocale("Head Office · ")}{textForLocale(headOffice.location)}
             </figcaption>
           </figure>
 
           <div className="lg:col-span-5">
-            <p className="label text-brand mb-5">Head Office &middot; Corporate Command</p>
+            <p className="label text-brand mb-5">{textForLocale("Head Office · Corporate Command")}</p>
             <h3 className="font-display text-[8vw] sm:text-4xl lg:text-[2.6vw] leading-[1.1] mb-6">
-              {headOffice.title}
+              {textForLocale(headOffice.title)}
             </h3>
             <p className="text-ink/75 font-light leading-relaxed text-[clamp(0.9375rem,0.9vw,1.1875rem)]">
-              {headOffice.body}
+              {textForLocale(headOffice.body)}
             </p>
             <div className="flex flex-wrap gap-2.5 mt-8">
               {[
@@ -112,7 +113,7 @@ export default function Intro() {
                   key={t}
                   className="px-4 py-2 border border-ink/15 rounded-full label label-xs text-ink/70"
                 >
-                  {t}
+                  {textForLocale(t)}
                 </span>
               ))}
             </div>
@@ -124,11 +125,11 @@ export default function Intro() {
           {stats.map((s) => (
             <div key={s.label} className="text-center">
               <div className="font-display text-5xl md:text-6xl text-forest">
-                {"prefix" in s ? s.prefix : ""}
+                {textForLocale("prefix" in s ? s.prefix : "")}
                 <span data-count={s.value}>0</span>
-                {s.suffix}
+                {textForLocale(s.suffix)}
               </div>
-              <div className="label text-taupe mt-4">{s.label}</div>
+              <div className="label text-taupe mt-4">{textForLocale(s.label)}</div>
             </div>
           ))}
         </div>
@@ -138,15 +139,15 @@ export default function Intro() {
           <div className="pointer-events-none absolute -inset-y-8 inset-x-0 bg-gradient-to-br from-brand/25 via-gold/15 to-forest/25 blur-2xl rounded-[3rem]" />
           <div className="relative grid md:grid-cols-2 gap-6 md:gap-8">
             <div className="rounded-3xl bg-white/50 backdrop-blur-xl border border-white/70 shadow-[0_20px_50px_rgba(16,39,26,0.12)] p-10 md:p-12 transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(1deg)]">
-              <p className="label text-brand mb-6">Vision</p>
+              <p className="label text-brand mb-6">{textForLocale("Vision")}</p>
               <p className="font-serifit text-2xl md:text-[26px] leading-snug text-ink/85">
-                {vision}
+                {textForLocale(vision)}
               </p>
             </div>
             <div className="rounded-3xl bg-forest/90 backdrop-blur-xl border border-white/10 text-cream shadow-[0_20px_50px_rgba(16,39,26,0.3)] p-10 md:p-12 transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1deg)]">
-              <p className="label text-gold mb-6">Mission</p>
+              <p className="label text-gold mb-6">{textForLocale("Mission")}</p>
               <p className="font-serifit text-2xl md:text-[26px] leading-snug text-cream/90">
-                {mission}
+                {textForLocale(mission)}
               </p>
             </div>
           </div>

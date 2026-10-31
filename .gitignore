@@ -130,3 +130,6 @@ Al-Adrak-HSE-page.docx
 
 # the GoDaddy upload folder, built from site/out
 /public_html/
+
+# Local Vercel project linkage
+.vercel/

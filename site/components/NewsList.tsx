@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -29,6 +29,7 @@ const posts = (newsData as Post[]).map((p) => ({
 
 /** News grid + GSAP article reader overlay. */
 export default function NewsList() {
+  const textForLocale = useText();
   const [post, setPost] = useState<Post | null>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -106,27 +107,26 @@ export default function NewsList() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={p.img}
-                  alt={p.title}
+                  alt={textForLocale(p.title)}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-forest">
-                  <span className="font-display text-4xl text-gold/60">A</span>
+                  <span className="font-display text-4xl text-gold/60">{textForLocale("A")}</span>
                 </div>
               )}
             </div>
             <div className="p-6">
-              <p className="label text-brand">{p.date}</p>
+              <p className="label text-brand">{textForLocale(p.date)}</p>
               <h3 className="font-display text-xl leading-snug mt-3 text-ink">
-                {p.title}
+                {textForLocale(p.title)}
               </h3>
               <p className="text-taupe text-sm font-light leading-relaxed mt-3 line-clamp-2">
-                {p.body[0]}
+                {textForLocale(p.body[0])}
               </p>
               <span className="label label-xs text-gold mt-4 inline-block">
-                Read Story →
-              </span>
+                {textForLocale("Read Story →")}</span>
             </div>
           </article>
         ))}
@@ -164,30 +164,30 @@ export default function NewsList() {
               data-lenis-prevent
               className="chat-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain"
             >
-            {post.img && (
+            {textForLocale(post.img && (
               <div className="relative aspect-[16/8] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.img}
-                  alt={post.title}
+                  alt={textForLocale(post.title)}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-            )}
+            ))}
             <div className="p-8 md:p-12">
               <p data-news-stagger className="label text-brand">
-                {post.date}
+                {textForLocale(post.date)}
               </p>
               <h2
                 data-news-stagger
                 className="font-display text-3xl md:text-4xl leading-tight mt-4"
               >
-                {post.title}
+                {textForLocale(post.title)}
               </h2>
               <div data-news-stagger className="mt-8 space-y-5">
                 {post.body.map((para, i) => (
                   <p key={i} className="font-light text-ink/80 leading-relaxed">
-                    {para}
+                    {textForLocale(para)}
                   </p>
                 ))}
               </div>
@@ -195,7 +195,7 @@ export default function NewsList() {
             </div>
             <button
               onClick={close}
-              aria-label="Close"
+              aria-label={textForLocale("Close")}
               className="absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-ink/60 backdrop-blur-md text-cream flex items-center justify-center hover:bg-gold hover:text-ink hover:rotate-90 transition-all duration-400"
             >
               <svg width="14" height="14" viewBox="0 0 14 14">

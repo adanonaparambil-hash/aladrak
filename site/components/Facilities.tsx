@@ -1,5 +1,5 @@
 "use client";
-
+import { useText } from "@/lib/translate-client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 /** In-house production facilities — photo cards with glass badges,
  *  revealed with a staggered 3D flip-up. */
 export default function Facilities() {
+  const textForLocale = useText();
   const { facilities, shopFloor } = useContentFor();
   const root = useRef<HTMLElement>(null);
   const reel = useRef<HTMLDivElement>(null);
@@ -50,18 +51,13 @@ export default function Facilities() {
         <Reveal>
           <div className="grid md:grid-cols-12 md:items-end gap-8 mb-16 md:mb-20">
             <div className="md:col-span-7">
-              <p className="label text-brand mb-4">Support Facilities</p>
+              <p className="label text-brand mb-4">{textForLocale("Support Facilities")}</p>
               <h2 className="font-display h-section">
-                Everything in-house.
-                <br />
-                Nothing left to chance.
-              </h2>
+                {textForLocale("Everything in-house.")}<br />
+                {textForLocale("Nothing left to chance.")}</h2>
             </div>
             <p className="md:col-span-4 md:col-start-9 text-taupe font-light leading-relaxed">
-              Eleven dedicated production and support facilities give Al Adrak
-              complete control over quality, cost and time — a rare industry
-              blend of true turnkey capability.
-            </p>
+              {textForLocale("Eleven dedicated production and support facilities give Al Adrak complete control over quality, cost and time — a rare industry blend of true turnkey capability.")}</p>
           </div>
         </Reveal>
 
@@ -72,7 +68,7 @@ export default function Facilities() {
               data-fcard
               role="button"
               tabIndex={0}
-              aria-label={`View the ${f.name} gallery`}
+              aria-label={textForLocale(`View the ${f.name} gallery`)}
               onClick={() => openFacilityMedia(f.name)}
               onKeyDown={(e) => e.key === "Enter" && openFacilityMedia(f.name)}
               className="group relative rounded-2xl overflow-hidden bg-ink aspect-[4/3] cursor-pointer transform-gpu transition-transform duration-500 hover:[transform:rotateX(1.5deg)_rotateY(-1.5deg)_scale(1.015)]"
@@ -80,21 +76,21 @@ export default function Facilities() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={f.img}
-                alt={f.name}
+                alt={textForLocale(f.name)}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
               {/* glass number badge */}
               <span className="absolute top-4 left-4 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/25 flex items-center justify-center label text-gold">
-                {String(i + 1).padStart(2, "0")}
+                {textForLocale(String(i + 1).padStart(2, "0"))}
               </span>
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <h3 className="font-display text-xl md:text-2xl text-cream">
-                  {f.name}
+                  {textForLocale(f.name)}
                 </h3>
                 <p className="text-[clamp(0.8125rem,0.85vw,1.0625rem)] text-cream/80 font-light leading-relaxed mt-2.5 max-w-md">
-                  {f.desc}
+                  {textForLocale(f.desc)}
                 </p>
               </div>
             </article>
@@ -107,13 +103,10 @@ export default function Facilities() {
             className="group relative rounded-2xl aspect-[4/3] border border-ink/15 bg-white/40 backdrop-blur-sm flex flex-col items-center justify-center gap-5 hover:border-gold transition-colors duration-500"
           >
             <span className="font-display text-2xl md:text-3xl text-center leading-snug px-8 text-ink">
-              100% in-house.
-              <br />
-              Zero compromise.
-            </span>
+              {textForLocale("100% in-house.")}<br />
+              {textForLocale("Zero compromise.")}</span>
             <span className="px-7 py-3.5 bg-forest text-cream rounded-full label font-bold group-hover:bg-brand transition-colors duration-300">
-              Talk to Us
-            </span>
+              {textForLocale("Talk to Us")}</span>
           </a>
         </div>
 
@@ -121,10 +114,9 @@ export default function Facilities() {
         <Reveal className="mt-20 md:mt-24">
           <div className="flex items-end justify-between gap-6 mb-8">
             <h3 className="font-display text-2xl md:text-4xl">
-              Step inside our factories
-            </h3>
+              {textForLocale("Step inside our factories")}</h3>
             <div className="hidden md:flex items-center gap-6 text-taupe">
-              <p className="label">live from the shop floor</p>
+              <p className="label">{textForLocale("live from the shop floor")}</p>
               <StripNav target={reel} label="factory clip" />
             </div>
           </div>
@@ -139,7 +131,7 @@ export default function Facilities() {
               onClick={() => openFacilityMedia(i)}
               role="button"
               tabIndex={0}
-              aria-label={`View ${m.label}`}
+              aria-label={textForLocale(`View ${m.label}`)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
@@ -162,7 +154,7 @@ export default function Facilities() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={m.src}
-                  alt={m.label}
+                  alt={textForLocale(m.label)}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -180,12 +172,11 @@ export default function Facilities() {
                 </svg>
               </span>
               <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink/85 to-transparent px-6 pt-10 pb-4">
-                <span className="label text-cream/90">{m.label}</span>
+                <span className="label text-cream/90">{textForLocale(m.label)}</span>
                 {m.type === "video" && (
                   <span className="ml-3 inline-flex items-center gap-1.5 label label-xs text-gold">
                     <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                    Live
-                  </span>
+                    {textForLocale("Live")}</span>
                 )}
               </figcaption>
             </figure>

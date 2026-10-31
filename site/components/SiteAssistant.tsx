@@ -1,5 +1,6 @@
 "use client";
-
+import { useLocale } from "@/lib/i18n-client";
+import { useText } from "@/lib/translate-client";
 import { useEffect, useId, useRef, useState } from "react";
 import { SUGGESTIONS, search, type Hit } from "@/lib/knowledge";
 import { site } from "@/lib/content";
@@ -35,6 +36,8 @@ type Turn =
 const THINKING_MS = 420;
 
 export default function SiteAssistant() {
+  const textForLocale = useText();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -106,7 +109,7 @@ export default function SiteAssistant() {
   const ask = (question: string) => {
     const text = question.trim();
     if (!text || thinking) return;
-    const hits = search(text, 3);
+    const hits = search(text, 3, locale);
     setTurns((t) => [...t, { who: "you", text }]);
     setQ("");
     setAtBottom(true);
@@ -121,7 +124,7 @@ export default function SiteAssistant() {
           hits,
           text: hits.length
             ? hits[0].entry.body
-            : `I could not find that on this site. For anything I do not cover, call ${site.phone} or email ${site.email} — or use the enquiry form below.`,
+            : locale === "ar" ? `لم أجد هذه المعلومة في الموقع. اتصل على ${site.phone} أو راسل ${site.email}، أو استخدم نموذج الاستفسار أدناه.` : `I could not find that on this site. For anything I do not cover, call ${site.phone} or email ${site.email} — or use the enquiry form below.`,
         },
       ]);
       input.current?.focus();
@@ -144,7 +147,7 @@ export default function SiteAssistant() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={panelId}
-        aria-label={open ? "Close the Al Adrak assistant" : "Ask a question about Al Adrak"}
+        aria-label={textForLocale(open ? "Close the Al Adrak assistant" : "Ask a question about Al Adrak")}
         data-assistant
         className="group fixed bottom-24 right-6 z-[95] flex items-center gap-2.5 rounded-full bg-gold text-ink pl-4 pr-5 py-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)] hover:bg-cream transition-all duration-300 hover:-translate-y-0.5"
       >
@@ -166,14 +169,14 @@ export default function SiteAssistant() {
             </svg>
           )}
         </span>
-        <span className="label label-xs font-bold">{open ? "Close" : "Ask Adrak"}</span>
+        <span className="label label-xs font-bold">{textForLocale(open ? "Close" : "Ask Adrak")}</span>
       </button>
 
       {open && (
         <div
           id={panelId}
           role="dialog"
-          aria-label="Ask Adrak — search this site"
+          aria-label={textForLocale("Ask Adrak — search this site")}
           data-assistant
           className="chat-in fixed bottom-44 right-6 z-[95] w-[min(25rem,calc(100vw-3rem))] max-h-[min(34rem,calc(100vh-14rem))] flex flex-col rounded-3xl bg-[#fbf8f0] border border-ink/10 shadow-[0_40px_120px_rgba(10,15,12,0.35)] overflow-hidden isolate"
         >
@@ -188,10 +191,10 @@ export default function SiteAssistant() {
                 <span className="w-2 h-2 rounded-full bg-gold chat-dot" aria-hidden />
               </span>
               <div>
-                <p className="font-display text-lg text-cream leading-none">Ask Adrak</p>
+                <p className="font-display text-lg text-cream leading-none">{textForLocale("Ask Adrak")}</p>
                 {/* Say what it is. A visitor who thinks this is ChatGPT will ask
                     it to write them a poem and conclude the site is broken. */}
-                <p className="label label-xs text-sand mt-1.5 leading-relaxed">Searches this website</p>
+                <p className="label label-xs text-sand mt-1.5 leading-relaxed">{textForLocale("Searches this website")}</p>
               </div>
             </div>
             {/* Close only. "Start again" used to sit beside it, which put the
@@ -201,7 +204,7 @@ export default function SiteAssistant() {
             <button
               type="button"
               onClick={() => { setOpen(false); opener.current?.focus(); }}
-              aria-label="Close"
+              aria-label={textForLocale("Close")}
               className="w-8 h-8 flex-none rounded-full border border-cream/30 text-cream/80 hover:border-gold hover:text-gold hover:bg-ink/20 transition-colors grid place-items-center"
             >
               <svg width="11" height="11" viewBox="0 0 14 14" aria-hidden>
@@ -218,19 +221,17 @@ export default function SiteAssistant() {
               {turns.length === 0 && (
                 <div className="chat-in">
                   <p className="text-ink/70 font-light text-[15px] leading-relaxed">
-                    Ask about our projects, capabilities, certifications, safety record or
-                    how to reach us.
-                  </p>
+                    {textForLocale("Ask about our projects, capabilities, certifications, safety record or how to reach us.")}</p>
                   <div className="flex flex-wrap gap-2 mt-4">
                     {SUGGESTIONS.map((s, i) => (
                       <button
                         key={s}
                         type="button"
-                        onClick={() => ask(s)}
+                        onClick={() => ask(textForLocale(s))}
                         style={{ animationDelay: `${i * 45}ms` }}
                         className="chat-in text-left text-[13px] font-light px-3.5 py-2 rounded-full bg-brand/[0.07] border border-brand/25 text-brand hover:bg-brand hover:border-brand hover:text-cream hover:-translate-y-0.5 transition-all duration-300"
                       >
-                        {s}
+                        {textForLocale(s)}
                       </button>
                     ))}
                   </div>
@@ -255,14 +256,14 @@ export default function SiteAssistant() {
                           left edge — enough colour to separate it from the
                           question above without another filled bubble. */}
                       <div className="rounded-2xl rounded-bl-sm bg-white border border-ink/10 border-l-[3px] border-l-brand shadow-[0_2px_14px_rgba(10,15,12,0.07)] px-4 py-3">
-                        <p className="text-ink/80 font-light text-[14px] leading-relaxed">{t.text}</p>
+                        <p className="text-ink/80 font-light text-[14px] leading-relaxed">{textForLocale(t.text)}</p>
                         {t.hits[0] && (
                           <a
                             href={t.hits[0].entry.href}
                             onClick={() => setOpen(false)}
                             className="group/link label label-xs text-brand hover:text-forest transition-colors inline-flex items-center gap-1.5 mt-3"
                           >
-                            {t.hits[0].entry.title}
+                            {textForLocale(t.hits[0].entry.title)}
                             <span className="inline-block transition-transform duration-300 group-hover/link:translate-x-1">→</span>
                           </a>
                         )}
@@ -278,7 +279,7 @@ export default function SiteAssistant() {
                               onClick={() => setOpen(false)}
                               className="text-[12px] font-light px-3 py-1.5 rounded-full bg-gold/10 border border-gold/40 text-ink/70 hover:bg-gold hover:border-gold hover:text-ink transition-colors"
                             >
-                              {h.entry.title}
+                              {textForLocale(h.entry.title)}
                             </a>
                           ))}
                         </div>
@@ -289,7 +290,7 @@ export default function SiteAssistant() {
               )}
 
               {thinking && (
-                <div className="chat-in flex gap-2.5" aria-live="polite" aria-label="Searching">
+                <div className="chat-in flex gap-2.5" aria-live="polite" aria-label={textForLocale("Searching")}>
                   <span className="grid place-items-center w-7 h-7 rounded-full bg-gradient-to-br from-gold to-sand border border-gold/50 flex-none mt-0.5" aria-hidden>
                     <span className="w-1.5 h-1.5 rounded-full bg-forest" />
                   </span>
@@ -309,10 +310,10 @@ export default function SiteAssistant() {
             <button
               type="button"
               onClick={() => { setAtBottom(true); toBottom(); }}
-              aria-label="Jump to the latest answer"
+              aria-label={textForLocale("Jump to the latest answer")}
               className="chat-in absolute bottom-[4.6rem] left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full bg-forest text-cream px-3.5 py-1.5 shadow-[0_6px_20px_rgba(10,15,12,0.25)] hover:bg-brand transition-colors"
             >
-              <span className="label label-xs">Latest</span>
+              <span className="label label-xs">{textForLocale("Latest")}</span>
               <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden>
                 <path d="M6 1v9M2.5 6.5 6 10l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -331,8 +332,8 @@ export default function SiteAssistant() {
               type="button"
               onClick={reset}
               disabled={turns.length === 0}
-              aria-label="Start again"
-              title="Start again"
+              aria-label={textForLocale("Start again")}
+              title={textForLocale("Start again")}
               className="flex-none w-9 h-9 rounded-full bg-white border border-brand/30 text-brand/70 hover:bg-brand hover:border-brand hover:text-cream transition-colors grid place-items-center disabled:opacity-0 disabled:pointer-events-none"
             >
               <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden>
@@ -343,14 +344,14 @@ export default function SiteAssistant() {
               ref={input}
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Ask a question…"
-              aria-label="Ask a question about Al Adrak"
+              placeholder={textForLocale("Ask a question…")}
+              aria-label={textForLocale("Ask a question about Al Adrak")}
               className="flex-1 min-w-0 rounded-full bg-white border border-ink/12 text-ink placeholder-ink/35 px-4 py-2.5 text-[14px] font-light outline-none focus:border-brand focus:shadow-[0_0_0_3px_rgba(61,115,69,0.14)] transition-all"
             />
             <button
               type="submit"
               disabled={!q.trim() || thinking}
-              aria-label="Send"
+              aria-label={textForLocale("Send")}
               className="group/send flex-none w-11 h-11 rounded-full bg-gradient-to-br from-gold to-[#b2823a] text-ink grid place-items-center shadow-[0_4px_14px_rgba(201,155,69,0.4)] hover:from-brand hover:to-forest hover:text-cream transition-all duration-300 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed enabled:hover:scale-105"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden className="transition-transform duration-300 group-enabled/send:group-hover/send:translate-x-0.5">
