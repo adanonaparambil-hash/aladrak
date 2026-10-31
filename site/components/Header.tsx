@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/content";
 import { useLocale, useUI } from "@/lib/i18n-client";
-import { localePath, hasArabic } from "@/lib/i18n";
+import { localePath, showSwitch } from "@/lib/i18n";
 import { asset } from "@/lib/asset";
 
 /**
@@ -219,7 +219,7 @@ export default function Header() {
               JavaScript never runs. It is rendered only where the other
               language actually has this page, so it can never lead to a 404
               while the Arabic side is still being built out. */}
-          {hasArabic(pathname) && (
+          {showSwitch(locale, pathname) && (
             <a
               href={asset(
                 localePath(
