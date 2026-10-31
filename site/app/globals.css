@@ -611,3 +611,17 @@ textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .chat-in, .chat-dot { animation: none; }
 }
+
+
+/* Arabic subtree: one face for everything, since the Latin display faces have
+   no Arabic glyphs and would fall back silently to whatever the browser had. */
+.font-arabic,
+.font-arabic .font-display,
+.font-arabic .label {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+}
+/* Arabic needs a little more line height than the Latin setting allows */
+.font-arabic p,
+.font-arabic li {
+  line-height: 1.85;
+}

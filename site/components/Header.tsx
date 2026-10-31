@@ -4,6 +4,8 @@ import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/content";
+import { useLocale, useUI } from "@/lib/i18n-client";
+import { localePath, hasArabic } from "@/lib/i18n";
 import { asset } from "@/lib/asset";
 
 /**
@@ -36,7 +38,12 @@ export default function Header() {
   const pathname = usePathname();
   // usePathname() reports the route without the base path, so "/" is the home page
   const onHome = pathname === "/";
-  const section = (id: string) => (onHome ? `#${id}` : asset(`/#${id}`));
+  const locale = useLocale();
+  const ui = useUI();
+  /** a page link that keeps the visitor in the language they are reading */
+  const lp = (path: string) => asset(localePath(locale, path));
+  const section = (id: string) =>
+    onHome ? `#${id}` : asset(localePath(locale, `/#${id}`));
 
   /**
    * Careers and HSE live under Resources rather than at the top level.
@@ -47,30 +54,25 @@ export default function Header() {
    * such page to go.
    */
   const links: NavItem[] = [
+    /* labels come from the UI dictionary now rather than being title-cased
+       from the section id — that only ever worked because the ids happened to
+       be English words, and says nothing in Arabic */
     ...SECTIONS.map((id) => ({
       href: section(id),
-      label: id[0].toUpperCase() + id.slice(1),
+      label: (ui.nav as Record<string, string>)[id] ?? id,
     })),
-    { href: asset("/news"), label: "News" },
+    { href: lp("/news"), label: ui.nav.news },
     {
-      label: "Resources",
+      label: ui.nav.resources,
       children: [
-        {
-          href: asset("/careers"),
-          label: "Careers",
-          note: "Openings and life at Adrak",
-        },
-        {
-          href: asset("/hse"),
-          label: "HSE",
-          note: "Health, safety & environment",
-        },
+        { href: lp("/careers"), label: ui.nav.careers, note: ui.nav.careersNote },
+        { href: lp("/hse"), label: ui.nav.hse, note: ui.nav.hseNote },
       ],
     },
     /* the forms, not the top of the contact section — that opens on a
        paragraph about regional expansion, two screens above anything a
        visitor clicking "Contact" is looking for */
-    { href: section("work-with-us"), label: "Contact" },
+    { href: section("work-with-us"), label: ui.nav.contact },
   ];
 
   const menuId = useId();
@@ -209,8 +211,29 @@ export default function Header() {
             href={`mailto:${site.email}`}
             className="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 label text-ink bg-gold rounded-full hover:bg-cream transition-colors duration-300"
           >
-            Enquire
+            {ui.nav.enquire}
           </a>
+          {/* The language switch: the same page in the other language. It is a
+              real <a> with a real URL rather than a toggle, so it can be
+              bookmarked, shared and indexed — and it still works if the
+              JavaScript never runs. It is rendered only where the other
+              language actually has this page, so it can never lead to a 404
+              while the Arabic side is still being built out. */}
+          {hasArabic(pathname) && (
+            <a
+              href={asset(
+                localePath(
+                  locale === "ar" ? "en" : "ar",
+                  pathname.replace(/^\/ar(?=\/|$)/, "") || "/"
+                )
+              )}
+              lang={locale === "ar" ? "en" : "ar"}
+              aria-label={ui.switchLabel}
+              className="hidden lg:inline-flex items-center rounded-full border border-cream/35 px-4 py-2 label label-xs text-cream/80 hover:text-cream hover:border-cream/70 transition-colors duration-300"
+            >
+              {ui.switchTo}
+            </a>
+          )}
           {/* Mobile burger */}
           <button
             aria-label={open ? "Close menu" : "Open menu"}
@@ -312,7 +335,7 @@ export default function Header() {
                 tabIndex={open ? 0 : -1}
                 className="mt-3 self-start px-7 py-3 label text-ink bg-gold rounded-full"
               >
-                Enquire
+                {ui.nav.enquire}
               </a>
             </nav>
           </div>,

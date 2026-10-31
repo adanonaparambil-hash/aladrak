@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { hse } from "@/lib/content";
+import { useContentFor } from "@/lib/i18n-client";
 import { motionOK } from "@/lib/intro";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -63,7 +63,8 @@ export default function HseKpi() {
     return () => ctx.revert();
   }, []);
 
-  const { lead, asAt, headline, zero, incidents } = hse.kpi;
+  const { hse } = useContentFor();
+  const { kickerLabel, heading, toDate, lead, asAt, headline, zero, incidents } = hse.kpi;
 
   return (
     <section ref={root} className="relative bg-forest text-cream overflow-hidden">
@@ -74,9 +75,9 @@ export default function HseKpi() {
       />
 
       <div className="relative shell py-24 md:py-32">
-        <p className="label text-gold mb-5">The record</p>
+        <p className="label text-gold mb-5">{kickerLabel}</p>
         <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] max-w-3xl">
-          Seventeen million hours, nobody lost
+          {heading}
         </h2>
         <p className="mt-6 max-w-2xl text-cream/75 font-light leading-relaxed text-[clamp(1rem,1.1vw,1.15rem)]">
           {lead}
@@ -109,7 +110,7 @@ export default function HseKpi() {
               </p>
               <div>
                 <p className="label label-xs text-cream/85">{k.label}</p>
-                <p className="label label-xs text-cream/45 mt-1.5">to date</p>
+                <p className="label label-xs text-cream/45 mt-1.5">{toDate}</p>
               </div>
             </div>
           ))}

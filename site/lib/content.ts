@@ -745,6 +745,9 @@ export const hse = {
    * zero, they are recorded, and showing them is what makes the zeros credible.
    */
   kpi: {
+    kickerLabel: "The record",
+    heading: "Seventeen million hours, nobody lost",
+    toDate: "to date",
     lead: "More than 17 million safe man hours, across three completed and five ongoing projects.",
     asAt: "Cumulative as at 31 December 2024",
     headline: [
