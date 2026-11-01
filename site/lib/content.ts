@@ -409,7 +409,7 @@ export const leadership = {
     { name: "Kausthubh Rai", role: "General Manager — QA/QC & Training", img: asset("/images/team/roster/kausthubh.jpg") },
     { name: "Gnanasekaran Thangavelu", role: "General Manager — Production & PT", img: asset("/images/team/roster/gnanasekaran.jpg") },
     { name: "Adv. Farah Mukhtar", role: "Deputy General Manager — Contracts & Claims", img: asset("/images/team/roster/farah.jpg") },
-    { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpg") },
+    { name: "Hauriya Al Balushi", role: "Deputy General Manager — Operations & Follow-up", img: asset("/images/team/roster/huriya.jpeg") },
     { name: "Nauf Al Bulushi", role: "Deputy General Manager — Projects", img: asset("/images/team/roster/nauf.jpg") },
     { name: "Amani Said Humaid Masoud Al Ofi", role: "Deputy General Manager — Finance & Accounts, Real Estate", img: asset("/images/team/roster/amani-al-ofi.jpg") },
     { name: "Vinod PV Pillai", role: "Assistant General Manager — IT", img: asset("/images/team/roster/vinod.jpg") },
