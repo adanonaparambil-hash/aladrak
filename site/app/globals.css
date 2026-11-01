@@ -660,6 +660,19 @@ html[lang="ar"] .text-\[13px\] { font-size: 15px; }
 html[lang="ar"] .text-\[14px\] { font-size: 16px; }
 html[lang="ar"] .text-\[15px\] { font-size: 17px; }
 html[lang="ar"] .text-\[17px\] { font-size: 19px; }
+/* The menu is the one place Arabic is read at a glance, every page, so it gets
+   more than the general bump: the desktop links were landing at ~12px. */
+html[lang="ar"] .desktop-nav { gap: 1.25rem; }
+@media (min-width: 1280px) { html[lang="ar"] .desktop-nav { gap: 1.75rem; } }
+/* one line per word: the general rule that lets Arabic labels wrap anywhere
+   was splitting menu words mid-letter once they were large enough to be read */
+html[lang="ar"] .desktop-nav .label { font-size: clamp(14px, 1.15vw, 19px); font-weight: 500; white-space: nowrap; overflow-wrap: normal; }
+html[lang="ar"] header a.label.bg-gold { white-space: nowrap; overflow-wrap: normal; }
+html[lang="ar"] .desktop-nav .text-\[12px\] { font-size: 14.5px; }
+html[lang="ar"] [data-language-switch] { font-size: 14px; }
+html[lang="ar"] header a.label.bg-gold { font-size: clamp(14.5px, 1.05vw, 17px); }
+html[lang="ar"] .mobile-nav .label { font-size: 15px; }
+html[lang="ar"] .mobile-nav a.font-display { font-size: clamp(26px, 8vw, 32px); }
 @media (max-width: 640px) {
   html[lang="ar"] .label { font-size: 13.5px; }
   html[lang="ar"] .label-xs { font-size: 12.5px; }

@@ -136,7 +136,7 @@ export default function Header() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-9">
+        <nav className="desktop-nav hidden lg:flex items-center gap-9">
           {links.map((l) =>
             hasChildren(l) ? (
               /* The group opens on hover AND on focus-within, so it is reachable
@@ -296,7 +296,7 @@ export default function Header() {
             }`}
             aria-hidden={!open}
           >
-            <nav className="h-full overflow-y-auto overscroll-contain px-7 pt-24 pb-10 flex flex-col gap-5">
+            <nav className="mobile-nav h-full overflow-y-auto overscroll-contain px-7 pt-24 pb-10 flex flex-col gap-5">
               {links.map((l) =>
                 hasChildren(l) ? (
                   /* No dropdown on a phone — a hover panel has nothing to hover.
