@@ -635,6 +635,37 @@ html[lang="ar"] a[href^="tel:"], html[lang="ar"] a[href^="mailto:"], input[type=
 html[lang="ar"] .label, html[lang="ar"] h1, html[lang="ar"] h2 { overflow-wrap: anywhere; }
 [data-language-switch] { min-height: 44px; }
 
+/**
+ * Arabic reads smaller than Latin at the same nominal size.
+ *
+ * Arabic letterforms sit low on the line and carry far less height than the
+ * Latin faces the type scale was tuned against — IBM Plex Sans Arabic has a
+ * visibly smaller x-height than Space Grotesk or Marcellus at the same
+ * font-size. So text that is comfortable in English (14px body, 10px labels)
+ * comes out thin and hard to read in Arabic, and the uppercase tracking the
+ * labels lean on does nothing for it. English is left exactly as tuned.
+ *
+ * Two levers, both scoped to html[lang="ar"]:
+ *   - the root size, which carries everything set in rem (text-sm, text-base,
+ *     text-lg and up) up together, so the scale keeps its proportions;
+ *   - the sizes that were hard-coded in px and therefore ignore the root.
+ * The root is raised 12.5%, not more: rem also sets padding and gaps, and the
+ * layouts were not drawn for a bigger page, only for bigger words.
+ */
+html[lang="ar"] { font-size: 112.5%; }
+html[lang="ar"] .label { font-size: clamp(12px, 0.6vw, 15px); }
+html[lang="ar"] .label-xs { font-size: clamp(11.5px, 0.55vw, 14px); }
+html[lang="ar"] .text-\[12px\] { font-size: 14px; }
+html[lang="ar"] .text-\[13px\] { font-size: 15px; }
+html[lang="ar"] .text-\[14px\] { font-size: 16px; }
+html[lang="ar"] .text-\[15px\] { font-size: 17px; }
+html[lang="ar"] .text-\[17px\] { font-size: 19px; }
+@media (max-width: 640px) {
+  html[lang="ar"] .label { font-size: 13.5px; }
+  html[lang="ar"] .label-xs { font-size: 12.5px; }
+  html[lang="ar"] a.label, html[lang="ar"] button.label { font-size: 14px; letter-spacing: 0; }
+}
+
 /* Keep the chat launcher and scroll indicator on one horizontal baseline. */
 .floating-control { bottom: max(1.5rem, env(safe-area-inset-bottom)); height: 56px; }
 @media (max-width: 1023px), (orientation: portrait), (max-height: 520px) {
