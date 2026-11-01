@@ -66,10 +66,28 @@ Options -Indexes
   AddType font/woff2 .woff2
   AddType image/svg+xml .svg
 </IfModule>
-# The enquiry handler is the one executable file here; everything else is
-# static. Make sure it is never served as plain text if PHP is misconfigured.
-<Files "send-enquiry.php">
+# Two executable files live here — the enquiry handler and the visitor
+# counter; everything else is static. Neither may be cached: a cached reply
+# means an enquiry that was never sent, or a count frozen at whatever the first
+# visitor saw.
+<FilesMatch "^(send-enquiry|visits)\.php$">
   <IfModule mod_headers.c>
     Header set Cache-Control "no-store"
   </IfModule>
-</Files>
+</FilesMatch>
+
+# The counter keeps its running total in .htvisits beside this file. Apache
+# refuses to serve anything matching .ht* out of the box, which is what keeps
+# the store unreadable from the web; this says so out loud rather than leaving
+# it to a default a future host might not share. Both spellings are here
+# because 2.4 and 2.2 disagree on how access is refused, and the wrong one
+# alone is a 500 rather than a quiet no.
+<FilesMatch "^\.ht">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

@@ -8,6 +8,11 @@
  *     makes the enquiry forms POST to public/send-enquiry.php instead of falling
  *     back to a mailto: the visitor has to send themselves.
  *
+ *   NEXT_PUBLIC_VISITS_ENDPOINT=/visits.php
+ *     turns on the footer visitor counter, which needs somewhere to keep the
+ *     total. Left unset — as it is for GitHub Pages — the counter renders
+ *     nothing rather than showing a number it cannot stand behind.
+ *
  *   NEXT_PUBLIC_BASE_PATH is left empty
  *     because the site sits at the root of its own domain there, not in a
  *     /aladrak/ subfolder as it does on GitHub Pages.
@@ -26,6 +31,7 @@ import { spawnSync } from "node:child_process";
 const env = {
   ...process.env,
   NEXT_PUBLIC_CONTACT_ENDPOINT: "/send-enquiry.php",
+  NEXT_PUBLIC_VISITS_ENDPOINT: "/visits.php",
   NEXT_PUBLIC_BASE_PATH: "",
 };
 

@@ -1,40 +1,126 @@
 "use client";
 
-import { useState } from "react";
-import { useLocale } from "@/lib/i18n-client";
+import { useEffect, useState } from "react";
+import { useText } from "@/lib/translate-client";
 
-// One shared hosted counter across every route and language. This measures
-// page views, not unique people; never seed it with an invented historical total.
-const COUNTER_URL = "https://hits.sh/aladrak.vercel.app.svg?label=Site%20views&color=183d35&labelColor=183d35&style=flat-square";
+/**
+ * Visitors since the counter was switched on.
+ *
+ * Two things were wrong with what this replaced, and they are worth writing
+ * down because they are easy to reintroduce.
+ *
+ * It counted page loads, not people. The old counter was a hosted badge image,
+ * and an image counts once every time it is fetched — so one person reading
+ * four pages was four, and opening the site twice in a morning added two more.
+ * The figure only ever went up faster than the truth. A browser is counted once
+ * here: the first visit POSTs, and every visit after that only reads. Whether
+ * this browser has been here before is remembered in localStorage, because the
+ * browser is the only party that knows it — the server cannot tell two visits
+ * apart without identifying people, which is not worth doing for a number in a
+ * footer.
+ *
+ * And it was a picture. The badge arrived as a flat PNG-ish SVG from another
+ * domain, in another typeface, at whatever size it felt like, and it looked
+ * pasted on — because it was. The number is now the site's own markup in the
+ * site's own faces, so it can be set, spaced and animated like everything else.
+ *
+ * If the endpoint is not configured (GitHub Pages, which serves files and never
+ * executes them) or cannot be reached, this renders nothing at all. An
+ * invented or stale number would be worse than no number.
+ */
+
+/** Set by the PHP-host build; unset on GitHub Pages, where PHP does not run. */
+const ENDPOINT = process.env.NEXT_PUBLIC_VISITS_ENDPOINT ?? "";
+
+/** Remembers that this browser has been counted. */
+const SEEN = "aladrak-visitor";
 
 export default function VisitorCounter() {
-  const locale = useLocale();
-  const [unavailable, setUnavailable] = useState(false);
-  const arabic = locale === "ar";
+  const textForLocale = useText();
+  const [count, setCount] = useState<number | null>(null);
+  const [shown, setShown] = useState(0);
+
+  useEffect(() => {
+    if (!ENDPOINT) return;
+
+    /* A browser that has been here before only reads. If localStorage is
+       unavailable — private windows, blocked site data — the visit is treated
+       as a repeat rather than a new one: undercounting is the safer error,
+       since the alternative inflates the figure on every page load. */
+    let first = false;
+    try {
+      first = !localStorage.getItem(SEEN);
+    } catch {
+      first = false;
+    }
+
+    const ctrl = new AbortController();
+    fetch(ENDPOINT, { method: first ? "POST" : "GET", signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((j: { ok?: boolean; count?: number }) => {
+        if (!j.ok || typeof j.count !== "number") return;
+        if (first) {
+          try {
+            localStorage.setItem(SEEN, "1");
+          } catch {
+            /* nothing to do: next visit counts again, which is the old behaviour */
+          }
+        }
+        setCount(j.count);
+      })
+      .catch(() => {
+        /* stays hidden */
+      });
+
+    return () => ctrl.abort();
+  }, []);
+
+  /* The number counts up once, the way the safety figures on the HSE page do.
+     Under reduced motion it simply appears — the same information, no movement. */
+  useEffect(() => {
+    if (count === null) return;
+
+    /* Reduced motion runs the same loop over no time at all, so the first
+       frame lands on the final figure. Writing the value straight into state
+       here instead would be a synchronous setState inside an effect — a
+       cascading render, and something the lint rule rightly objects to. */
+    const ms = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1600;
+
+    let raf = 0;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = ms === 0 ? 1 : Math.min(1, (now - start) / ms);
+      setShown(Math.round(count * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [count]);
+
+  if (count === null) return null;
+
+  const label = textForLocale(count === 1 ? "visitor" : "visitors");
+  /* Western digits in both languages: that is what Gulf business writing uses,
+     and what the rest of this site's figures are set in. */
+  const final = count.toLocaleString("en-US");
 
   return (
-    <div className="inline-flex rounded-full border border-gold/25 bg-white/[0.03] px-3 py-2">
-      <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-cream/70">
-        <svg aria-hidden="true" className="h-4 w-4 text-gold/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-        {unavailable ? (
-          <span className="text-xs">{arabic ? "العدّاد غير متاح مؤقتًا" : "Counter temporarily unavailable"}</span>
-        ) : (
-          // Use the original image: optimization/caching would prevent counting visits.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            ref={(img) => {
-              // An external image can fail before React attaches onError.
-              if (img?.complete && img.naturalWidth === 0) setUnavailable(true);
-            }}
-            src={arabic ? COUNTER_URL.replace("label=Site%20views", `label=${encodeURIComponent("المشاهدات")}`) : COUNTER_URL}
-            alt={arabic ? "عدّاد مشاهدات الموقع" : "Site view counter"}
-            title={arabic ? "المشاهدات منذ تفعيل العدّاد، وليست عدد الزوار الفريدين" : "Views since the counter was enabled, not unique visitors"}
-            className="h-6 w-auto rounded-sm"
-            referrerPolicy="no-referrer"
-            onError={() => setUnavailable(true)}
-          />
-        )}
-      </div>
+    <div
+      className="inline-flex items-baseline gap-2"
+      /* the animated digits are decoration; a screen reader is told the real
+         figure once, as a sentence, instead of hearing it tick */
+      aria-label={`${final} ${textForLocale("site visitors")}`}
+    >
+      <span
+        aria-hidden="true"
+        dir="ltr"
+        className="font-display text-xl leading-none text-gold tabular-nums"
+      >
+        {shown.toLocaleString("en-US")}
+      </span>
+      <span aria-hidden="true" className="label label-xs text-cream/55">
+        {label}
+      </span>
     </div>
   );
 }

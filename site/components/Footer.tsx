@@ -37,8 +37,14 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
         </Reveal>
       </div>
 
-      {/* Bottom bar */}
-      <div className="shell py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Bottom bar.
+          The deep bottom padding is not decoration: the assistant bubble and
+          the scroll ring are position:fixed near the foot of the viewport, and
+          at the very end of the page this row lands underneath them — the
+          counter's label was being sliced in half by the ring. The controls
+          stand 24px off the edge and are 56px tall, so anything less than 80px
+          here puts content back under them. */}
+      <div className="shell pt-10 pb-28 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -83,10 +89,10 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
             {textForLocale("HSE")}</a>
         </nav>
         <div className="flex shrink-0 flex-col items-center gap-3 md:items-end">
-        <p className="label text-cream/70">
-          © {new Date().getFullYear()} {textForLocale(site.legalName)}
-        </p>
-        <VisitorCounter />
+          <p className="label text-cream/70">
+            © {new Date().getFullYear()} {textForLocale(site.legalName)}
+          </p>
+          <VisitorCounter />
         </div>
       </div>
     </footer>
