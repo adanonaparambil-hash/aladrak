@@ -794,3 +794,19 @@ html[lang="ar"] .mobile-nav a.font-display { font-size: clamp(26px, 8vw, 32px); 
   .glass-spark { display: none; }
   .glass-num { background-position: 50% 0; }
 }
+
+/* Arabic HSE content stays in flow so taller text/cards cannot reach the header. */
+html[lang="ar"] .hse-hero-content { display: grid; gap: 3rem; align-items: center; }
+html[lang="ar"] .hse-hero-content > * { min-width: 0; }
+html[lang="ar"] .hse-hero-content h1,
+html[lang="ar"] .hse-hero-content p { max-width: 100%; }
+html[lang="ar"] .hse-hero-stats {
+  position: relative; inset: auto; margin-top: 0; width: 100%; max-width: 25rem;
+}
+html[lang="ar"] .hse-hero-stats [data-glass] { margin-inline: 0; }
+html[lang="ar"] .hse-hero-stats [data-hero-count] {
+  font-size: clamp(1.65rem, 7.2vw, 3rem); letter-spacing: 0; white-space: nowrap;
+}
+@media (min-width: 1280px) {
+  html[lang="ar"] .hse-hero-content { grid-template-columns: minmax(0, 1fr) minmax(0, 25rem); }
+}

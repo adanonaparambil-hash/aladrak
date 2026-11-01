@@ -137,7 +137,7 @@ export default function HseHeroStats() {
   return (
     <div
       ref={root}
-      className="relative mt-12 xl:mt-0 xl:absolute xl:end-[clamp(1.5rem,3vw,5.5rem)] xl:bottom-0 w-full max-w-md xl:w-[25rem] space-y-5 [text-shadow:none]"
+      className="hse-hero-stats relative mt-12 xl:mt-0 xl:absolute xl:end-[clamp(1.5rem,3vw,5.5rem)] xl:bottom-0 w-full max-w-md xl:w-[25rem] space-y-5 [text-shadow:none]"
     >
       {/* light behind the glass, so the blur has something to refract */}
       <span aria-hidden className="glass-orb -top-10 -start-12 h-44 w-44 bg-gold/45" />

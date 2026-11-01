@@ -116,7 +116,7 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
               fifth, where there is nothing but floor. */}
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,15,12,0.55)_0%,rgba(10,15,12,0)_34%,rgba(10,15,12,0)_80%,var(--color-cream)_100%)]" />
         </div>
-        <div className="relative shell [text-shadow:0_1px_2px_rgba(10,15,12,0.98),0_2px_8px_rgba(10,15,12,0.92),0_4px_26px_rgba(10,15,12,0.85)]">
+        <div className="hse-hero-content relative shell [text-shadow:0_1px_2px_rgba(10,15,12,0.98),0_2px_8px_rgba(10,15,12,0.92),0_4px_26px_rgba(10,15,12,0.85)]">
           <Reveal>
             <p className="label text-gold mb-6">{textForLocale(hse.kicker)}</p>
             <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl xl:max-w-[calc(100%-31rem)]">
