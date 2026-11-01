@@ -49,7 +49,7 @@ function Tile({ g, onChoose }: { g: GroupCompany; onChoose: () => void }) {
           src={g.img}
           alt={textForLocale(`${g.name} logo`)}
           loading="lazy"
-          className="w-full aspect-[2/1] object-contain bg-white p-4"
+          className={`w-full aspect-[2/1] object-contain p-4 ${g.darkLogoBackground ? "bg-[#101c19]" : "bg-white"}`}
         />
       ) : (
         <div className="w-full aspect-[2/1] bg-white flex items-center justify-center p-4">

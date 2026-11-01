@@ -542,6 +542,7 @@ export const adrakHotelProperties: HotelProperty[] = [
 ];
 
 export type GroupCompany = {
+  darkLogoBackground?: boolean;
   name: string;
   img?: string;
   url?: string;
@@ -564,6 +565,7 @@ export const groupCompanies: GroupCompany[] = [
   { name: "Adante Realty", img: asset("/images/group/adante.jpg"), url: "https://www.adanterealty.com" },
   { name: "Adrak Facilities", img: asset("/images/group/facilities.jpg") },
   { name: "Adrak Ventures", img: asset("/images/group/ventures.jpg") },
+  { name: "BeyondTeq", img: asset("/images/group/beyondteq.png"), url: "https://www.beyondteq.com/", darkLogoBackground: true },
   { name: "Al Khaith Industries", img: asset("/images/group/khaith.jpg") },
   { name: "Thanveer Concrete & Stone Products", img: asset("/images/group/thanveer.jpg") },
   { name: "Insight Solutions", img: asset("/images/group/insight.jpg"), url: "https://insightoman.org" },
