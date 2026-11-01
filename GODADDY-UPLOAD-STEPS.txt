@@ -3,10 +3,10 @@ AL ADRAK WEBSITE - HOW TO PUT IT ON GODADDY
 
 You have two files (in the same folder as this one):
 
-   1-aladrak-site.zip      49 MB   the website: pages, images, the brochure, the enquiry mailer
-   2-aladrak-videos.zip    78 MB   the three big films (hero + our-story) and the small facility clips
+   1-aladrak-site.zip      the website: English + Arabic pages, images, brochure, PHP forms and counter
+   2-aladrak-videos.zip    the website videos
 
-They are two files because one 130 MB upload can time out in GoDaddy's file manager.
+The split ZIPs keep each upload smaller for GoDaddy's file manager.
 Both go into the same folder: public_html
 
 
@@ -30,7 +30,7 @@ UPLOAD
 
 You should now see, inside public_html:
    index.html   404.html   .htaccess   send-enquiry.php   al-adrak-brochure.pdf
-   and folders:  images  videos  docs  _next  careers  hse  news  404
+   visits.php and folders: ar  images  videos  docs  _next  careers  hse  news  404
 (.htaccess starts with a dot, so File Manager hides it until you open Settings at the top right
 and tick "Show Hidden Files (dotfiles)". It must be there.)
 
@@ -63,3 +63,14 @@ GOOD TO KNOW
 * If anything looks wrong: delete the new files, then Extract old-site-backup.zip into public_html.
 * Whenever the site is rebuilt (for example on 1 January so the "years" count rolls over), you
   will get two new zip files and repeat these steps.
+
+LATEST PACKAGE - 1 NOVEMBER 2026
+--------------------------------
+Rebuilt from the latest local source, including the Arabic HSE layout correction.
+The public_html folder and all three ZIPs contain this build.
+Alternative: upload aladrak-godaddy-public_html.zip instead of the two split ZIPs.
+Each ZIP extracts directly into public_html; do not create a nested public_html folder.
+Preserve the server's .htvisits file when updating: it holds the live visitor total.
+Do not delete it or replace it with a local copy. It is not included in these ZIPs.
+Check /ar/, /ar/hse/, the enquiry form and visitor counter after upload.
+PHP mail delivery and counter storage must be checked on GoDaddy; PHP was not available locally.
