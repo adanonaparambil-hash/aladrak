@@ -82,11 +82,13 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
           >
             {textForLocale("HSE")}</a>
         </nav>
+        <div className="flex shrink-0 flex-col items-center gap-3 md:items-end">
         <p className="label text-cream/70">
           © {new Date().getFullYear()} {textForLocale(site.legalName)}
         </p>
+        <VisitorCounter />
+        </div>
       </div>
-      <VisitorCounter />
     </footer>
   );
 }

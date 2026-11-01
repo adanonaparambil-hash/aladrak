@@ -5,7 +5,7 @@ import { useLocale } from "@/lib/i18n-client";
 
 // One shared hosted counter across every route and language. This measures
 // page views, not unique people; never seed it with an invented historical total.
-const COUNTER_URL = "https://hits.sh/aladrak.vercel.app.svg?label=Views&color=c5a46d&labelColor=183d35";
+const COUNTER_URL = "https://hits.sh/aladrak.vercel.app.svg?label=Site%20views&color=183d35&labelColor=183d35&style=flat-square";
 
 export default function VisitorCounter() {
   const locale = useLocale();
@@ -13,9 +13,9 @@ export default function VisitorCounter() {
   const arabic = locale === "ar";
 
   return (
-    <div className="border-t border-white/10 py-5 px-6 text-center">
+    <div className="inline-flex rounded-full border border-gold/25 bg-white/[0.03] px-3 py-2">
       <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-cream/70">
-        <span>{arabic ? "إجمالي مشاهدات الموقع" : "Total site views"}</span>
+        <svg aria-hidden="true" className="h-4 w-4 text-gold/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
         {unavailable ? (
           <span className="text-xs">{arabic ? "العدّاد غير متاح مؤقتًا" : "Counter temporarily unavailable"}</span>
         ) : (
@@ -26,10 +26,10 @@ export default function VisitorCounter() {
               // An external image can fail before React attaches onError.
               if (img?.complete && img.naturalWidth === 0) setUnavailable(true);
             }}
-            src={arabic ? COUNTER_URL.replace("label=Views", `label=${encodeURIComponent("المشاهدات")}`) : COUNTER_URL}
+            src={arabic ? COUNTER_URL.replace("label=Site%20views", `label=${encodeURIComponent("المشاهدات")}`) : COUNTER_URL}
             alt={arabic ? "عدّاد مشاهدات الموقع" : "Site view counter"}
             title={arabic ? "المشاهدات منذ تفعيل العدّاد، وليست عدد الزوار الفريدين" : "Views since the counter was enabled, not unique visitors"}
-            className="h-5 w-auto"
+            className="h-6 w-auto rounded-sm"
             referrerPolicy="no-referrer"
             onError={() => setUnavailable(true)}
           />

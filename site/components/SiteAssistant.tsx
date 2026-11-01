@@ -149,7 +149,7 @@ export default function SiteAssistant() {
         aria-controls={panelId}
         aria-label={textForLocale(open ? "Close the Al Adrak assistant" : "Ask a question about Al Adrak")}
         data-assistant
-        className="group fixed bottom-24 right-6 z-[95] flex items-center gap-2.5 rounded-full bg-gold text-ink pl-4 pr-5 py-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)] hover:bg-cream transition-all duration-300 hover:-translate-y-0.5"
+        className="group fixed bottom-24 left-6 z-[95] flex items-center gap-2.5 rounded-full bg-gold text-ink pl-4 pr-5 py-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)] hover:bg-cream transition-all duration-300 hover:-translate-y-0.5"
       >
         <span className="relative grid place-items-center w-5 h-5">
           {/* a slow ring, so the launcher reads as live rather than as furniture */}
@@ -178,7 +178,7 @@ export default function SiteAssistant() {
           role="dialog"
           aria-label={textForLocale("Ask Adrak — search this site")}
           data-assistant
-          className="chat-in fixed bottom-44 right-6 z-[95] w-[min(25rem,calc(100vw-3rem))] max-h-[min(34rem,calc(100vh-14rem))] flex flex-col rounded-3xl bg-[#fbf8f0] border border-ink/10 shadow-[0_40px_120px_rgba(10,15,12,0.35)] overflow-hidden isolate"
+          className="chat-in fixed bottom-44 left-6 z-[95] w-[min(25rem,calc(100vw-3rem))] max-h-[min(34rem,calc(100vh-14rem))] flex flex-col rounded-3xl bg-[#fbf8f0] border border-ink/10 shadow-[0_40px_120px_rgba(10,15,12,0.35)] overflow-hidden isolate"
         >
           {/* A coloured crown on a light body, rather than light on light.
               All-cream read as a blank form; the green band with its gold rule
