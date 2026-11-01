@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import HseKpi from "@/components/HseKpi";
+import HseHeroStats from "@/components/HseHeroStats";
 import { getContent, type Locale } from "@/lib/i18n";
 import { asset } from "@/lib/asset";
 
@@ -118,13 +119,15 @@ export default function HsePage({ lang = "en" }: { lang?: Locale }) {
         <div className="relative shell [text-shadow:0_1px_2px_rgba(10,15,12,0.98),0_2px_8px_rgba(10,15,12,0.92),0_4px_26px_rgba(10,15,12,0.85)]">
           <Reveal>
             <p className="label text-gold mb-6">{textForLocale(hse.kicker)}</p>
-            <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl">
+            <h1 className="font-display text-cream text-5xl md:text-7xl leading-[1.02] max-w-3xl xl:max-w-[calc(100%-31rem)]">
               {textForLocale(hse.title)}
             </h1>
-            <p className="text-cream font-light text-lg md:text-xl leading-relaxed mt-8 max-w-2xl">
+            <p className="text-cream font-light text-lg md:text-xl leading-relaxed mt-8 max-w-2xl xl:max-w-[calc(100%-31rem)]">
               {textForLocale(hse.lead)}
             </p>
           </Reveal>
+          {/* the two running totals, counting up over the open side of the photo */}
+          <HseHeroStats />
         </div>
       </section>
 
