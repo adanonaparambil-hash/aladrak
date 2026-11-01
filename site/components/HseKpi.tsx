@@ -104,9 +104,9 @@ export default function HseKpi() {
           {zero.map((k) => (
             <div
               key={k.label}
-              className="rounded-2xl border border-gold/30 bg-gold/[0.07] px-5 py-4 flex items-center gap-4"
+              className="border-t border-cream/12 pt-3 flex items-center gap-3"
             >
-              <p className="font-sans font-semibold tabular-nums leading-none text-4xl text-gold">
+              <p className="font-sans font-semibold tabular-nums leading-none text-2xl text-gold">
                 {k.value}
               </p>
               <div>

@@ -812,9 +812,9 @@ html[lang="ar"] .hse-hero-stats [data-hero-count] {
 }
 /* A light, translucent surface for the HSE hero totals. */
 .hse-hero-stats .glass-card {
-  background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.08)), rgba(243,239,224,.48);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   border-color: rgba(255,255,255,.4);
   box-shadow: 0 12px 28px -18px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.45);
 }
@@ -827,3 +827,5 @@ html[lang="ar"] .hse-hero-stats [data-hero-count] {
 }
 .hse-hero-stats .glass-card .label { color: #263c2e; }
 .hse-hero-stats .glass-orb { opacity: .2; }
+.hse-hero-stats .glass-card::after { opacity: .15; }
+.hse-hero-stats .glass-orb { opacity: .06; }

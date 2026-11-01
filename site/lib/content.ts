@@ -751,7 +751,7 @@ export const hse = {
     heading: "Seventeen million hours, nobody lost",
     toDate: "to date",
     lead: "More than 17 million safe man hours, across three completed and five ongoing projects.",
-    asAt: "Cumulative as at 31 December 2024",
+    asAt: "Cumulative as at 31 December 2025",
     headline: [
       { label: "Safe man hours", value: 17211243 },
       { label: "Safe kilometres", value: 10924157 },
