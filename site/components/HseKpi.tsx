@@ -75,38 +75,38 @@ export default function HseKpi() {
         className="pointer-events-none absolute -top-24 right-[-10%] w-[46rem] h-[46rem] rounded-full blur-[150px] bg-brand/20"
       />
 
-      <div className="relative shell py-24 md:py-32">
-        <p className="label text-gold mb-5">{textForLocale(kickerLabel)}</p>
-        <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] max-w-3xl">
+      <div className="relative shell py-12 md:py-16">
+        <p className="label text-gold mb-3">{textForLocale(kickerLabel)}</p>
+        <h2 className="font-display text-[clamp(1.8rem,3vw,2.75rem)] leading-[1.05] max-w-3xl">
           {textForLocale(heading)}
         </h2>
-        <p className="mt-6 max-w-2xl text-cream/75 font-light leading-relaxed text-[clamp(1rem,1.1vw,1.15rem)]">
+        <p className="mt-3 max-w-3xl text-cream/75 font-light leading-relaxed text-[clamp(1rem,1.1vw,1.15rem)]">
           {textForLocale(lead)}
         </p>
 
         {/* the two running totals */}
-        <div className="mt-14 grid sm:grid-cols-2 gap-10 md:gap-14">
+        <div className="mt-7 grid sm:grid-cols-2 gap-5 md:gap-8">
           {headline.map((k) => (
-            <div key={k.label} className="border-t border-cream/15 pt-6">
+            <div key={k.label} className="border-t border-cream/15 pt-4">
               <p
                 data-count={k.value}
-                className="font-display tabular-nums leading-none text-[clamp(2.6rem,6vw,4.75rem)] text-gold"
+                className="font-sans font-medium tabular-nums leading-none text-[clamp(1.65rem,4.5vw,3.25rem)] text-gold"
               >
                 {textForLocale(k.value.toLocaleString("en-GB"))}
               </p>
-              <p className="label label-xs text-cream/60 mt-4">{textForLocale(k.label)}</p>
+              <p className="label label-xs text-cream/60 mt-2">{textForLocale(k.label)}</p>
             </div>
           ))}
         </div>
 
         {/* the two that matter most */}
-        <div className="mt-12 grid sm:grid-cols-2 gap-5">
+        <div className="mt-6 grid sm:grid-cols-2 gap-4">
           {zero.map((k) => (
             <div
               key={k.label}
-              className="rounded-2xl border border-gold/30 bg-gold/[0.07] px-7 py-7 flex items-baseline gap-5"
+              className="rounded-2xl border border-gold/30 bg-gold/[0.07] px-5 py-4 flex items-center gap-4"
             >
-              <p className="font-display tabular-nums leading-none text-[clamp(2.4rem,5vw,3.75rem)] text-gold">
+              <p className="font-sans font-semibold tabular-nums leading-none text-4xl text-gold">
                 {k.value}
               </p>
               <div>
@@ -118,21 +118,21 @@ export default function HseKpi() {
         </div>
 
         {/* everything that was not zero, recorded */}
-        <div className="mt-12 grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-7">
+        <div className="mt-6 grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
           {incidents.map((k) => (
-            <div key={k.label} className="border-t border-cream/12 pt-5">
-              <p className="font-display tabular-nums leading-none text-2xl md:text-3xl text-cream">
+            <div key={k.label} className="border-t border-cream/12 pt-3">
+              <p className="font-sans font-medium tabular-nums leading-none text-2xl text-cream">
                 <span data-count={k.value}>{k.value}</span>
                 {k.note ? (
                   <span className="label label-xs text-cream/45 ml-2.5 align-middle">{textForLocale(k.note)}</span>
                 ) : null}
               </p>
-              <p className="label label-xs text-cream/55 mt-3 leading-relaxed">{textForLocale(k.label)}</p>
+              <p className="label label-xs text-cream/55 mt-2 leading-relaxed">{textForLocale(k.label)}</p>
             </div>
           ))}
         </div>
 
-        <p className="label label-xs text-cream/40 mt-14">{textForLocale(asAt)}</p>
+        <p className="label label-xs text-cream/40 mt-6">{textForLocale(asAt)}</p>
       </div>
     </section>
   );
