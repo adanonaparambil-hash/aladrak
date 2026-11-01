@@ -26,7 +26,7 @@ export default function VisitorCounter() {
               // An external image can fail before React attaches onError.
               if (img?.complete && img.naturalWidth === 0) setUnavailable(true);
             }}
-            src={COUNTER_URL}
+            src={arabic ? COUNTER_URL.replace("label=Views", `label=${encodeURIComponent("المشاهدات")}`) : COUNTER_URL}
             alt={arabic ? "عدّاد مشاهدات الموقع" : "Site view counter"}
             title={arabic ? "المشاهدات منذ تفعيل العدّاد، وليست عدد الزوار الفريدين" : "Views since the counter was enabled, not unique visitors"}
             className="h-5 w-auto"

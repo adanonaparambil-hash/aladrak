@@ -87,7 +87,7 @@ export const UI = {
       news: "الأخبار",
       resources: "مصادر",
       careers: "الوظائف",
-      careersNote: "الشواغر والعمل في الأدرك",
+      careersNote: "الشواغر والعمل في الأدراك",
       hse: "الصحة والسلامة",
       hseNote: "الصحة والسلامة والبيئة",
       contact: "اتصل بنا",

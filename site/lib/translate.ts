@@ -11,7 +11,7 @@ export function translateText(text: string, locale: Locale): string {
     const intro = key.match(/^For over (\d+) years, Al Adrak has shaped/);
     const milestone = key.match(/^GEMS School Management and Adrak Developers partner.*? (\d+) years on,/);
     const validation = key.match(/^(\d+) fields need attention\.$/);
-    if (intro) translated = `على مدى أكثر من ${intro[1]} عاماً، أسهمت الأدرك في تشكيل أفق السلطنة — شركة إنشاءات متكاملة مملوكة بالكامل لعُمانيين، تنفّذ معالم بنظام تسليم المفتاح وبإمكانات داخلية كاملة.`;
+    if (intro) translated = `على مدى أكثر من ${intro[1]} عاماً، أسهمت الأدراك في تشكيل أفق السلطنة — شركة إنشاءات متكاملة مملوكة بالكامل لعُمانيين، تنفّذ معالم بنظام تسليم المفتاح وبإمكانات داخلية كاملة.`;
     else if (milestone) translated = `جيمس لإدارة المدارس وأدرك للتطوير تتعاونان لإنشاء مدرسة دولية في حي النسيم ببركاء، تفتتح في سبتمبر 2027 وتستوعب 1,600 طالب. وبعد ${milestone[1]} عاماً، نواصل بناء مستقبل عُمان.`;
     else if (validation) translated = `يرجى مراجعة ${validation[1]} حقول.`;
     else if (key.includes(" · ")) translated = key.split(" · ").map(part => translateText(part, locale)).join(" · ");

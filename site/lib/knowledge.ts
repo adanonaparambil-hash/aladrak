@@ -303,7 +303,7 @@ const AR_INDEX = makeIndex(KNOWLEDGE.map(e => {
  const article = newsItems.find(n => e.id === "news-" + n.slug);
  let body = article ? [article.date, ...article.body].map(s => translateText(s, "ar")).join(" ") : translatePassage(e.body, "ar");
  if (e.id === "contact") body = `اتصل على ${site.phone} أو راسل ${site.email}. يقع المكتب الرئيسي في حلبان، بركاء، الباطنة. يمكنك إرسال استفسار أو التسجيل كمورد عبر النماذج في قسم التواصل.`;
- return { ...e, title: e.id === "company" ? `الأدرك — ${years()} عاماً من بناء عُمان` : translatePassage(e.title, "ar"), body,
+ return { ...e, title: e.id === "company" ? `الأدراك — ${years()} عاماً من بناء عُمان` : translatePassage(e.title, "ar"), body,
  href: asset(localePath("ar", BASE_PATH && e.href.startsWith(BASE_PATH) ? e.href.slice(BASE_PATH.length) : e.href)),
  tags: [...(e.tags ?? []), ...(arabicTags[e.id] ?? [])] };
 }));
