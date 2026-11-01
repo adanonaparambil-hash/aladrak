@@ -810,3 +810,20 @@ html[lang="ar"] .hse-hero-stats [data-hero-count] {
 @media (min-width: 1280px) {
   html[lang="ar"] .hse-hero-content { grid-template-columns: minmax(0, 1fr) minmax(0, 25rem); }
 }
+/* A light, translucent surface for the HSE hero totals. */
+.hse-hero-stats .glass-card {
+  background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.08)), rgba(243,239,224,.48);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-color: rgba(255,255,255,.4);
+  box-shadow: 0 12px 28px -18px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.45);
+}
+.hse-hero-stats .glass-num {
+  color: #263c2e;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  filter: none;
+  text-shadow: 0 1px 1px rgba(255,255,255,.3);
+}
+.hse-hero-stats .glass-card .label { color: #263c2e; }
+.hse-hero-stats .glass-orb { opacity: .2; }
