@@ -685,3 +685,112 @@ html[lang="ar"] .mobile-nav a.font-display { font-size: clamp(26px, 8vw, 32px); 
   .floating-control { bottom: max(1rem, env(safe-area-inset-bottom)); height: 48px; }
   .floating-control.right-6 { right: 1rem; width: 48px; }
 }
+
+/* ===== glass cards — the safety page's opening figures ===================== */
+@property --glass-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.glass-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.4rem;
+  /* frosted body. The dark base is what the figures are read against: the
+     photograph behind is bright yellow coveralls, and gold on frosted yellow
+     is close to invisible — measured by eye on the first pass. The highlight
+     rides on top of it, bright top-left, clearing to a gold cast bottom-right. */
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(201, 162, 75, 0.14) 100%),
+    rgba(10, 18, 14, 0.66);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 28px 60px -24px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+/* a gold light that travels round the edge */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--glass-angle), transparent 0deg, rgba(243, 226, 169, 0.95) 55deg, transparent 120deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: glass-spin 7s linear infinite;
+}
+/* a pane of light sliding across the glass */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 55%;
+  z-index: 1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  transform: translateX(-130%) skewX(-12deg);
+  pointer-events: none;
+  animation: glass-glint 6.5s ease-in-out infinite;
+  animation-delay: var(--glint-delay, 1.8s);
+}
+.glass-num {
+  color: #d9b45e; /* fallback where background-clip:text is unavailable */
+  background: linear-gradient(100deg, #b98f35 0%, #f6e7b0 38%, #d9b45e 52%, #b98f35 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glass-shine 5s ease-in-out infinite;
+  filter: drop-shadow(0 2px 14px rgba(201, 162, 75, 0.35));
+}
+.glass-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(42px);
+  pointer-events: none;
+  animation: glass-drift 11s ease-in-out infinite alternate;
+}
+.glass-spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #f6e7b0;
+  box-shadow: 0 0 10px 2px rgba(246, 231, 176, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  animation: glass-rise 6s ease-in infinite;
+}
+@keyframes glass-spin { to { --glass-angle: 360deg; } }
+@keyframes glass-glint {
+  0%, 55% { transform: translateX(-130%) skewX(-12deg); }
+  100% { transform: translateX(330%) skewX(-12deg); }
+}
+@keyframes glass-shine {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+}
+@keyframes glass-drift {
+  from { transform: translate3d(-14px, 8px, 0) scale(1); }
+  to { transform: translate3d(18px, -14px, 0) scale(1.18); }
+}
+@keyframes glass-rise {
+  0% { transform: translateY(18px) scale(0.6); opacity: 0; }
+  20% { opacity: 0.95; }
+  100% { transform: translateY(-86px) scale(1); opacity: 0; }
+}
+/* the figures are the point; the shimmer is not, so it stops for anyone who asked */
+@media (prefers-reduced-motion: reduce) {
+  .glass-card::before, .glass-card::after, .glass-num, .glass-orb, .glass-spark { animation: none; }
+  .glass-spark { display: none; }
+  .glass-num { background-position: 50% 0; }
+}
