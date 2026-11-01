@@ -446,7 +446,7 @@ export default function CursorFX() {
         ref={wrap}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label={textForLocale("Back to top")}
-        className="fixed bottom-6 right-6 z-[90] w-14 h-14 rounded-full bg-ink/60 backdrop-blur-md border border-white/15 flex items-center justify-center transition-opacity duration-500 opacity-0 hover:border-gold"
+        className="floating-control fixed right-6 z-[90] w-14 h-14 rounded-full bg-ink/60 backdrop-blur-md border border-white/15 flex items-center justify-center transition-opacity duration-500 opacity-0 hover:border-gold"
       >
         <svg width="48" height="48" viewBox="0 0 48 48" className="-rotate-90 absolute">
           <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />

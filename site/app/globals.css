@@ -634,3 +634,10 @@ html[lang="ar"] .text-left { text-align: right; }
 html[lang="ar"] a[href^="tel:"], html[lang="ar"] a[href^="mailto:"], input[type="email"], input[type="tel"] { direction: ltr; unicode-bidi: isolate; }
 html[lang="ar"] .label, html[lang="ar"] h1, html[lang="ar"] h2 { overflow-wrap: anywhere; }
 [data-language-switch] { min-height: 44px; }
+
+/* Keep the chat launcher and scroll indicator on one horizontal baseline. */
+.floating-control { bottom: max(1.5rem, env(safe-area-inset-bottom)); height: 56px; }
+@media (max-width: 1023px), (orientation: portrait), (max-height: 520px) {
+  .floating-control { bottom: max(1rem, env(safe-area-inset-bottom)); height: 48px; }
+  .floating-control.right-6 { right: 1rem; width: 48px; }
+}
