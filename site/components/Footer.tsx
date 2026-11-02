@@ -44,17 +44,21 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
           counter's label was being sliced in half by the ring. The controls
           stand 24px off the edge and are 56px tall, so anything less than 80px
           here puts content back under them. */}
-      <div className="shell pt-10 pb-28 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
+      <div className="shell pt-10 pb-28 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-10">
+        {/* logo and year stay together on one line and never shrink — the year
+            was wrapping onto two lines whenever the menu got crowded */}
+        <div className="flex shrink-0 items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/images/logo-light.png")}
             alt={textForLocale("Al Adrak")}
             className="h-10 w-auto"
           />
-          <span className="label text-gold/80">{textForLocale("est. 1986")}</span>
+          <span className="label text-gold/80 whitespace-nowrap">{textForLocale("est. 1986")}</span>
         </div>
-        <nav className="flex flex-wrap justify-center items-center gap-7">
+        {/* the menu takes the middle and centres its rows, so a wrapped second row
+            sits under the first rather than hanging off one side */}
+        <nav className="flex flex-wrap justify-center items-center gap-x-7 gap-y-1 lg:flex-1">
           {["About", "Expertise", "Projects", "Facilities", "Team"].map((l) => (
             <a
               key={l}
@@ -88,8 +92,8 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
           >
             {textForLocale("HSE")}</a>
         </nav>
-        <div className="flex shrink-0 flex-col items-center gap-3 md:items-end">
-          <p className="label text-cream/70">
+        <div className="flex shrink-0 flex-col items-center gap-3 lg:items-end">
+          <p className="label text-cream/70 text-center lg:text-end">
             © {new Date().getFullYear()} {textForLocale(site.legalName)}
           </p>
           <VisitorCounter />
