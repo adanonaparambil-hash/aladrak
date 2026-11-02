@@ -120,16 +120,16 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
   ];
   const [at, setAt] = useState(0);
   const cur = slides[at];
-  const maps = p.address
+  const maps = p.mapsUrl ?? (p.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name}, ${p.address}`)}`
-    : undefined;
+    : undefined);
 
   return (
     <div
       data-hotel-card
       className="mt-[clamp(10px,2.2dvh,20px)] rounded-2xl overflow-hidden border border-white/15 bg-ink/30"
     >
-      <div className="grid sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="grid sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
         {/* media: the pane, then the strip */}
         <div className="bg-ink/50">
           {/* Height from the viewport, not a fixed ratio. Three property
@@ -137,7 +137,7 @@ function UnlinkedProperty({ p }: { p: HotelProperty }) {
               which is what made the modal need scrolling at all; tying the
               media to dvh means the whole panel fits on a short laptop and
               still fills a tall one. */}
-          <div className="relative h-[clamp(120px,22dvh,240px)] overflow-hidden">
+          <div className="relative h-[clamp(170px,36dvh,420px)] overflow-hidden">
             {cur.kind === "film" ? (
               <video
                 key={cur.src}
@@ -346,7 +346,7 @@ function HotelChooser({
         role="dialog"
         aria-modal="true"
         aria-label={textForLocale(`${title} — choose a property`)}
-        className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-5 md:p-[clamp(18px,3.4dvh,36px)]"
+        className="relative w-full max-w-5xl max-h-[92dvh] overflow-y-auto no-scrollbar rounded-3xl bg-forest border border-white/15 shadow-[0_60px_140px_rgba(0,0,0,0.7)] p-5 md:p-[clamp(18px,3.4dvh,36px)]"
       >
         <p className="label text-gold">{textForLocale(title)}</p>
         <h3 className="font-display text-2xl md:text-[32px] leading-tight text-cream mt-2">

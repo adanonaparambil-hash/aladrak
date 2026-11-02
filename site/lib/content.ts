@@ -482,6 +482,8 @@ export type HotelProperty = {
   url?: string;
   /** postal address; the thing shown in place of a site */
   address?: string;
+  /** the exact place on Google Maps, when a search by name and address would not land on it */
+  mapsUrl?: string;
   /** who to call, while there is no website to visit */
   contact?: { name: string; phone: string };
   /** further photographs, offered as a small gallery on the card */
@@ -526,6 +528,7 @@ export const adrakHotelProperties: HotelProperty[] = [
     kind: "Backwater Resort",
     place: "Paravoor, Kollam",
     address: "Adrak Ventures, Paravoor, Kollam, Kerala",
+    mapsUrl: "https://maps.app.goo.gl/pQpH3ioVZ7Ly2bZu6",
     contact: { name: "Ajaykumar", phone: "+91 70348 45624" },
     img: asset("/images/hotels/leisure-island.jpg"),
     gallery: [
