@@ -133,3 +133,4 @@ Al-Adrak-HSE-page.docx
 
 # Local Vercel project linkage
 .vercel/
+/site/scripts/.src-clients/
