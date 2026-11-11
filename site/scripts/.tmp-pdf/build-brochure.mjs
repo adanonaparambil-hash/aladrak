@@ -194,7 +194,7 @@ const PEOPLE = [
   { name: "Kausthubh Rai", role: "General Manager - QA/QC & Training", tile: "kausthubh" },
   { name: "Gnanasekaran Thangavelu", role: "General Manager - Production & PT", tile: "gnanasekaran" },
   { name: "Adv. Farah Mukhtar", role: "Deputy General Manager - Contracts & Claims", tile: "farah" },
-  { name: "Hauriya Hassan Hussain Al Balushi", role: "Deputy General Manager - Operations & Follow-up", tile: "huriya" },
+  { name: "Hauriya Hassan Hussain Al Balushi", role: "Chief Communication Officer", tile: "huriya" },
   { name: "Nauf Abdullah Sabil Al Bulushi", role: "Deputy General Manager - Projects", tile: "nauf" },
   { name: "Amani Said Humaid Masoud Al Ofi", role: "Deputy General Manager - Finance & Accounts, Real Estate", tile: "amani-al-ofi" },
   { name: "Vinod PV Pillai", role: "Assistant General Manager - IT", tile: "vinod" },

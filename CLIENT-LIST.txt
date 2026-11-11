@@ -1,0 +1,85 @@
+AL ADRAK - CLIENT LIST (as shown on the website, "Trusted by the nation's finest")
+
+A. The scrolling name bands at the top of the section (20 names)
+  1. Central Bank of Oman
+  2. Royal Oman Police
+  3. Ministry of Defense
+  4. Ministry of Health
+  5. Ministry of Higher Education
+  6. Ahli Bank
+  7. Haya Water
+  8. Sultan Qaboos University
+  9. Mazoon Dairy
+  10. Renaissance
+  11. Oman Refinery Co.
+  12. Saud Bahwan Group
+  13. Suhail Bahwan Group
+  14. Zubair Corporation
+  15. Madayn
+  16. Ministry of Housing & Urban Planning
+  17. Public Prosecution
+  18. Sohar University
+  19. Muscat Insurance
+  20. Al Maha Petroleum
+
+B. The full clientele list underneath, by category
+
+Government & Public Sector (21)
+  - Government of Oman
+  - Ministry of Defense
+  - Ministry of Health
+  - Ministry of Higher Education
+  - Ministry of Education
+  - Ministry of Justice
+  - Ministry of Foreign Affairs
+  - Ministry of Manpower
+  - Ministry of Housing & Urban Planning
+  - Ministry of Agriculture & Fisheries
+  - Ministry of Environment & Climate Affairs
+  - Ministry of Social Development
+  - Ministry of Sports Affairs
+  - Ministry of Regional Municipalities & Water Resources
+  - Royal Oman Police
+  - Public Prosecution
+  - Public Authority for Craft Industries
+  - Public Establishment for Industrial Estates
+  - Madayn
+  - Haya Water
+  - Oman Electricity Transmission Company
+
+Banking, Finance & Corporate (17)
+  - Central Bank of Oman
+  - Ahli Bank
+  - Muscat Insurance Company SAOG
+  - Al Maha Petroleum
+  - Oman Gas Co.
+  - Oman Refinery Co.
+  - Saud Bahwan Group
+  - Suhail Bahwan Group
+  - Zubair Corporation
+  - Shumookh Investment & Services
+  - Sohar International Development & Investment
+  - Majis Industrial Services
+  - Renaissance
+  - Mazoon Dairy
+  - Barzaman Group
+  - ASAAS
+  - Muscat Hills Joint Development
+
+Education, Health & Research (8)
+  - Sultan Qaboos University
+  - Sultan Qaboos University Hospital
+  - Sohar University
+  - Waljat Colleges of Applied Sciences
+  - Mazoon College
+  - Al Buraimi College
+  - The Research Council
+  - Al Tamkeen International School
+
+Diplomatic Missions (2)
+  - Iraq Embassy
+  - Qatar Embassy
+
+Total in the full list: 48 names.
+
+Note: the website text says "Muscat Insurance" in the bands and "Muscat Insurance Company SAOG" in the full list - same client.
