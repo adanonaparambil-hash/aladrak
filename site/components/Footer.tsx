@@ -3,7 +3,6 @@ import { useText } from "@/lib/translate-client";
 import { getContent, localePath, type Locale } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n-client";
 import Reveal from "./Reveal";
-import VisitorCounter from "./VisitorCounter";
 import { asset } from "@/lib/asset";
 
 export default function Footer({ lang = "en" }: { lang?: Locale }) {
@@ -96,7 +95,6 @@ export default function Footer({ lang = "en" }: { lang?: Locale }) {
           <p className="label text-cream/70 text-center lg:text-end">
             © {new Date().getFullYear()} {textForLocale(site.legalName)}
           </p>
-          <VisitorCounter />
         </div>
       </div>
     </footer>
